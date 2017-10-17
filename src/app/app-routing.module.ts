@@ -7,7 +7,7 @@ import { ProgressionEditorComponent }      from './progression-editor/progressio
 const routes: Routes = [
   { path: '', redirectTo: '/piano', pathMatch: 'full' },
   { path: 'piano',  component: PianoComponent },
-  { path: 'progression-editor/:id', component: ProgressionEditorComponent }
+  { path: 'progression-editor', component: ProgressionEditorComponent }
 ];
 
 @NgModule({

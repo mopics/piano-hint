@@ -7,7 +7,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class PianoComponent implements OnInit {
 
-  selectedTonic:string = "F#";
+  selectedTonic:string = "C";
   @ViewChild('pianoOctave') pianoOctave;
 
   constructor( ) { }

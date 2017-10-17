@@ -6,5 +6,10 @@
             id="octave-{{wk.octave}}-{{wk.name}}-key" stroke="#555555" fill="#FFFFF7" [attr.x]="wk.xPos" y="0" [attr.width]="keyWidth" [attr.height]="keyHeight"></rect>
       <rect *ngFor="let bk of blackKeys"
             id="octave-{{bk.octave}}-{{bk.name}}-key" stroke="#979797" fill="#4B4B4B" [attr.x]="bk.xPos" y="0" [attr.width]="keyWidth*0.5" [attr.height]="keyHeight*0.75"></rect>
-  </g>
+   </g>
+   <g id="piano-hints">
+      <ellipse *ngFor="let ch of chordHints" 
+            [attr.cx]="ch.x" [attr.cy]="ch.y" [attr.rx]="hintRadius" [attr.ry]="hintRadius"
+            [attr.style]="ch.style" />
+   </g>
 </svg>

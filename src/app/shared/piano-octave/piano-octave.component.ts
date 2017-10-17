@@ -2,6 +2,14 @@ import { Component, OnInit, Input, Output, ViewChild, ElementRef } from '@angula
 
 import { Note, Notes } from '../../services';
 
+export class Hint {
+  x:number = 0;
+  y:number = 0;
+  style:string = "fill:yellow;stroke:purple;stroke-width:2";
+
+  constructor(){}
+}
+
 @Component({
   selector: 'app-piano-octave',
   templateUrl: './piano-octave.component.html',
@@ -9,15 +17,21 @@ import { Note, Notes } from '../../services';
 })
 export class PianoOctaveComponent implements OnInit {
 
-  @Input() root:string;
-  @Input() numOctaves:number;
-  @Input() keyHeight:number;
-  @Input() keyWidth:number;
+  @Input() root:string = "C";
+  @Input() chord:string;
+  @Input() scale:string;
+
+  @Input() numOctaves:number = 1;
+  @Input() keyHeight:number = 400;
+  @Input() keyWidth:number = 80;
+  @Input() hintWidth:number = 30;
 
   octaves:number[];
   keys:Note[];
   whiteKeys:Note[];
   blackKeys:Note[];
+  chordHints:Hint[];
+  scaleHints:Hint[];
   viewBox:string;
   octaveWidth:number;
 
@@ -28,10 +42,10 @@ export class PianoOctaveComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.redraw(this.root);
+    this.redrawKeys(this.root);
     this.octaveWidth = this.keyWidth*7;
   }
-  redraw(r:string):void {
+  redrawKeys(r:string):void {
     this.root = r;
     this.viewBox = `0 0 ${this.keyWidth*7*this.numOctaves+this.keyWidth} ${this.keyHeight}`;
     this.octaves = Array( this.numOctaves ).fill(1).map( (x,i) =>i );
@@ -57,8 +71,12 @@ export class PianoOctaveComponent implements OnInit {
           pk = k;
         }
     });
-    
-    
+
+    this.redrawHints();
+  }
+  redrawHints():void {
+    this.chordHints = new Array<Hint>();
+    this.scaleHints = new Array<Hint>();
   }
 
 }

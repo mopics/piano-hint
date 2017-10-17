@@ -1,4 +1,4 @@
-<div class="ui container">
+<div *ngIf="progression" class="ui container">
   <p></p>
   <h1 class="ui large header">{{progression.name}}</h1>
   <br>
@@ -11,5 +11,9 @@
     </div>
     <div class="card" (click)="addPart()"><div class="content"><i class="plus icon"></i></div></div>
   </div>
+</div>
+<div *ngIf="!progression" class="ui container">
+  <br><br>
+  <div class="ui red inverted big message">No progressions selected. Please pick a progression in the topleft dropdown-menu</div>
 </div>
 

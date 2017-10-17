@@ -14,6 +14,7 @@ import { InMemoryDataService }  from './services';
 
 //services
 import { ProgressionsService } from './services';
+import { GlobalSelectionsService } from './services';
 
 //components
 import { AppComponent } from './app.component';
@@ -24,6 +25,7 @@ import { NoteDropdownComponent } from './shared/note-dropdown/note-dropdown.comp
 import { PartComponent } from './progression-editor/part/part.component';
 import { ModeDropdownComponent } from './shared/mode-dropdown/mode-dropdown.component';
 import { MenuComponent } from './menu/menu.component';
+import { ProgressionSelectComponent } from './progression-select/progression-select.component';
 
 
 @NgModule({
@@ -35,7 +37,8 @@ import { MenuComponent } from './menu/menu.component';
     NoteDropdownComponent,
     PartComponent,
     ModeDropdownComponent,
-    MenuComponent
+    MenuComponent,
+    ProgressionSelectComponent
   ],
   imports: [
     SuiModule,
@@ -45,7 +48,7 @@ import { MenuComponent } from './menu/menu.component';
     InMemoryWebApiModule.forRoot(InMemoryDataService),
     AppRoutingModule
   ],
-  providers: [ProgressionsService],
+  providers: [ProgressionsService, GlobalSelectionsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

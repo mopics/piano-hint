@@ -3,19 +3,34 @@
 <!-- Sidebar Menu -->
 <sui-sidebar-container class="ui bottom attached segment">
     <!-- Mobile Menu -->
-    <div class="ui top attached menu inverted " id="app-narrow-menu">
-        <a class="item" (click)="sidebar.toggle()">
-            <i class="sidebar icon big"></i>
-        </a>
-    </div>
+    
     <sui-sidebar class="inverted vertical huge"  #sidebar>
         <a routerLink="./piano" class="item" (click)="sidebar.toggle()">Piano</a>
-        <a routerLink="./progression-editor/0" class="item" (click)="sidebar.toggle()">Progression Editor</a>
+        <a routerLink="./progression-editor" class="item" (click)="sidebar.toggle()">Progression Editor</a>
     </sui-sidebar>
     <sui-sidebar-sibling [isDimmedWhenVisible]="true">
-        <div class="ui top horizontal attached menu inverted" id="app-wide-menu">
-            <a routerLink="./piano" class="item">Piano</a>
-            <a routerLink="./progression-editor/0" class="item">Progression Editor</a>
+        <div class="ui top attached menu borderless inverted " id="app-narrow-menu">
+            <div class="menu borderless">
+                <a class="item" (click)="sidebar.toggle()">
+                    <i class="sidebar icon big"></i>
+                </a>
+                <div class="right borderless menu">
+                    <div class="item">
+                        <app-progression-select></app-progression-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui attached horizontal menu inverted" id="app-wide-menu">
+            <div class="left menu">
+                <a routerLink="./piano" class="item">Piano</a>
+                <a routerLink="./progression-editor" class="item">Progression Editor</a>
+                <div class="right menu borderless">
+                    <div class="item borderless">
+                        <app-progression-select></app-progression-select>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <router-outlet></router-outlet>
