@@ -1,5 +1,8 @@
 # Pianohint
 
+## Description
+An application to help visualize scales and chords on the piano.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.1.3.
 
 ## Development server
