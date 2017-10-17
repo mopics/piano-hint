@@ -1,0 +1,10 @@
+<p></p>
+<app-note-dropdown 
+[message]="'Select a tonic'"
+[note]="selectedTonic"
+(change)="handleNoteChange($event)"
+></app-note-dropdown>
+
+<app-piano-octave class="ui fixed footer"
+  [root]="selectedTonic" [numOctaves]="4" [keyWidth]="80" [keyHeight]="400" #pianoOctave>
+</app-piano-octave>
