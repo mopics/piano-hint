@@ -80,4 +80,9 @@ export class PianoOctaveComponent implements OnInit {
     // TODO
   }
 
+  // key click events
+  onKeyClick( name:string ):void {
+    alert( `TODO:play ${name} with webkit.midi?` );
+  }
+
 }

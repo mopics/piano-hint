@@ -1,8 +1,8 @@
 
     <!-- select Key root -->
     <div class="ui grid">
-      <div class="column four wide">
-        <sui-select class="button icon" 
+      <div class="column three wide">
+        <sui-select class="tiny button icon" 
           placeholder="Select a root" [(ngModel)]="part.root.name"
           (ngModelChange)="emitPartChange()"
           >
@@ -12,8 +12,8 @@
         </sui-select>
     </div>
       <!-- select mode/chord -->
-      <div class="column four wide">
-          <sui-select class="button icon" 
+      <div class="column five wide">
+          <sui-select class="mini button icon fluid" 
           placeholder="Select a chord" [(ngModel)]="part.chord.name"
           (ngModelChange)="emitPartChange()"
           >
@@ -23,8 +23,8 @@
         </sui-select>
       </div>
       <!-- select measures -->
-      <div class="column four wide">
-          <sui-select class="button icon" 
+      <div class="column three wide">
+          <sui-select class="tiny button icon" 
             placeholder="Measures" [(ngModel)]="part.measuresStr"
             (ngModelChange)="emitPartChange()"
             >
@@ -40,7 +40,7 @@
         <i (click)="deletePart()" class="right floated remove circle big red icon"></i>
       </div>
       <div class="column sixteen wide">
-        <sui-select class="button icon fluid" 
+        <sui-select class="tiny button icon fluid" 
           placeholder="Scale" [(ngModel)]="part.scale.name"
           (ngModelChange)="emitPartChange()"
           >
