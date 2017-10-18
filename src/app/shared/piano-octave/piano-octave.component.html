@@ -11,7 +11,7 @@
    </g>
    <g id="piano-hints">
       <ellipse *ngFor="let ch of chordHints" 
-            [attr.cx]="ch.x" [attr.cy]="ch.y" [attr.rx]="hintRadius" [attr.ry]="hintRadius"
-            [attr.style]="ch.style" />
+            [attr.cx]="ch.x" [attr.cy]="ch.y" [attr.rx]="ch.rx" [attr.ry]="ch.ry"
+            style="fill: red;"  />
    </g>
 </svg>

@@ -22,13 +22,28 @@ export class PartComponent implements OnInit {
   scales:Scale[] = Array<Scale>(ChordSteps.length).fill(new Scale(0)).map((c,i)=> new Scale(i));
 
   constructor() {
-
   }
 
   ngOnInit() {
+    this.piano.root = this.part.root.name;
+    this.piano.numOctaves = 2;
+    this.piano.keyHeight = 200;
+    this.piano.keyWidth = 80;
+    this.piano.redrawHints( this.part );
   }
-  updatePiano():void {
+  onRootChange():void {
     this.piano.redrawKeys(this.part.root.name);
+    this.emitPartChange();
+  }
+  onChordChange():void{
+    this.part.chord.midiNotes = Note.createMidiNotes( this.part.root, this.part.chord.steps );
+    this.piano.redrawHints(this.part);
+    this.emitPartChange();
+  }
+  onScaleChange():void{
+    this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
+    this.piano.redrawHints(this.part);
+    this.emitPartChange();
   }
   emitPartChange():void {
     this.change.emit( this.part );

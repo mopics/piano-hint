@@ -100,21 +100,20 @@ export class Note {
         let octave:number = 0;
         let note:Note = new Note(0);
         let i:number = MidiRange[0];
-        return Array( MidiRange[1]-MidiRange[0]).fill(note).map(
-            midiNote => {
-                if( steps[stepIdx]===1 ){
+        return Array( MidiRange[1]-MidiRange[0]).fill(new Note(0)).map(
+            note => {
+                let midiNote = new Note(noteIdx);
+                if( steps[stepIdx]===1 )
                     midiNote.octave = Math.floor(i/12)-2;
-                    midiNote.index = noteIdx;
-                }
                 else
                     midiNote.octave = -1; // gets filtered out later on
                 
                 stepIdx ++;
-                if( stepIdx > 12 ){ stepIdx = 0; }
+                if( stepIdx === 12 ){ stepIdx = 0; }
                 noteIdx ++;
-                if( noteIdx > 12+root.index ) { noteIdx = root.index; }
+                if( noteIdx === 12 ) { noteIdx = 0; }
                 i++;
-                return note;
+                return midiNote;
             }
         ).filter( midiNote => midiNote.octave>-1 );
     }

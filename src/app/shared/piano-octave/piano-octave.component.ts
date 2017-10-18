@@ -1,13 +1,17 @@
 import { Component, OnInit, Input, Output, ViewChild, ElementRef } from '@angular/core';
 
-import { Note, Notes } from '../../services';
+// models
+import { Note, Notes, Chord, Scale, ProgressionPart } from '../../services';
 
 export class Hint {
   x:number = 0;
   y:number = 0;
-  style:string = "fill:yellow;stroke:purple;stroke-width:2";
+  rx:number = 10;
+  ry:number = 10;
+  note:Note;
 
   constructor(){}
+
 }
 
 @Component({
@@ -42,7 +46,6 @@ export class PianoOctaveComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.redrawKeys(this.root);
     this.octaveWidth = this.keyWidth*7;
   }
   redrawKeys(r:string):void {
@@ -71,11 +74,33 @@ export class PianoOctaveComponent implements OnInit {
           pk = k;
         }
     });
-
-    this.redrawHints();
   }
-  redrawHints():void {
-    this.chordHints = new Array<Hint>();
+  redrawHints( part:ProgressionPart ):void {
+    this.redrawKeys(part.root.name);
+
+    this.chordHints = new Array<Hint>(3).fill( new Hint() ).map( ( hint, i )=>{
+      let nHint:Hint = new Hint();
+      let midiNote:Note = part.chord.midiNotes[i];
+      let key:Note;
+      let yPos:number;
+      let xPos:number;
+      if( midiNote.whiteKey ) {
+        key = this.whiteKeys.find( n=> n.name===midiNote.name ); 
+        yPos = this.keyHeight*.85;
+        xPos = key.xPos + this.keyWidth/2;
+      }
+      else {
+        key = this.blackKeys.find(n=>n.name===midiNote.name); 
+        yPos = this.keyHeight*.6;
+        xPos = key.xPos + this.keyWidth/2;
+      }
+      // TODO: set x and y using white&black keys already present
+      nHint.x = xPos;
+      nHint.y = yPos;
+      nHint.rx = nHint.ry = this.keyWidth/5;
+
+      return nHint;
+    });
     this.scaleHints = new Array<Hint>();
     // TODO
   }

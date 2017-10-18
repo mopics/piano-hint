@@ -4,7 +4,7 @@
       <div class="column three wide">
         <sui-select class="tiny button icon" 
           placeholder="Select a root" [(ngModel)]="part.root.name"
-          (ngModelChange)="emitPartChange()" (ngModelChange)="updatePiano()"
+          (ngModelChange)="onRootChange()"
           >
             <!--<div class="scrolling menu">-->
             <sui-select-option *ngFor="let n of notes" value="{{n.name}}"></sui-select-option>
@@ -15,7 +15,7 @@
       <div class="column five wide">
           <sui-select class="mini button icon fluid" 
           placeholder="Select a chord" [(ngModel)]="part.chord.name"
-          (ngModelChange)="emitPartChange()"
+          (ngModelChange)="onChordChange()"
           >
             <!--<div class="scrolling menu">-->
             <sui-select-option *ngFor="let c of chords" value="{{c.name}}"></sui-select-option>
@@ -26,7 +26,7 @@
       <div class="column three wide">
           <sui-select class="tiny button icon" 
             placeholder="Measures" [(ngModel)]="part.measuresStr"
-            (ngModelChange)="emitPartChange()"
+            (ngModelChange)="onScaleChange()"
             >
             <!--<div class="scrolling menu">-->
             <sui-select-option value="1"></sui-select-option>
@@ -49,8 +49,7 @@
           <!--</div>-->
         </sui-select>
       </div>
-      <app-piano-octave class="ui fixed footer"
-      [root]="part.root.name" [numOctaves]="1" [keyWidth]="80" [keyHeight]="200" #piano>
+      <app-piano-octave #pianoOctave>
     </app-piano-octave>
     </div>
     
