@@ -1,21 +1,21 @@
 
     <!-- select Key root -->
     <div class="ui grid">
-      <div class="column five wide">
+      <div class="column four wide">
         <app-note-dropdown 
           [message]="'Select a tonic'"
           [note]="part.key.tonic.name"
           (change)="handleTonicChange($event)"></app-note-dropdown>
       </div>
       <!-- select mode/chord -->
-      <div class="column five wide">
+      <div class="column four wide">
         <app-mode-dropdown 
           [message]="'Select a chord'"
           [mode]="part.chord.name"
           (change)="handleChordChange($event)"></app-mode-dropdown>
       </div>
       <!-- select measures -->
-      <div class="column five wide">
+      <div class="column four wide">
           <sui-select class="button icon fluid" 
             placeholder="Measures" [(ngModel)]="part.measuresStr"
             >
@@ -27,12 +27,15 @@
             <!--</div>-->
           </sui-select>
       </div>
+      <div class="column four wide">
+        <i (click)="deletePart()" class="remove circle big red icon"></i>
+      </div>
       <div class="column sixteen wide">
         <sui-select class="button icon fluid" 
           placeholder="Scale" [(ngModel)]="part.key.scale.name"
           >
           <!--<div class="scrolling menu">-->
-          <sui-select-option value="Major"></sui-select-option>
+          <sui-select-option value="Lydian"></sui-select-option>
           <sui-select-option value="Minor"></sui-select-option>
           <!--</div>-->
         </sui-select>

@@ -24,7 +24,7 @@ export class PianoOctaveComponent implements OnInit {
   @Input() numOctaves:number = 1;
   @Input() keyHeight:number = 400;
   @Input() keyWidth:number = 80;
-  @Input() hintWidth:number = 30;
+  @Input() hintWidth:number = 70;
 
   octaves:number[];
   keys:Note[];
@@ -77,6 +77,7 @@ export class PianoOctaveComponent implements OnInit {
   redrawHints():void {
     this.chordHints = new Array<Hint>();
     this.scaleHints = new Array<Hint>();
+    // TODO
   }
 
 }

@@ -6,10 +6,14 @@ import { Progression } from './progression.models';
 export class GlobalSelectionsService   {
 
   private _selectedProgression:Progression;
-  private _selectedProgressionEmitter:EventEmitter<Progression> = new EventEmitter();
+  private _selectedProgressionEmitter:EventEmitter<Progression>;
 
-  constructor() { }
 
+  constructor() {
+    this._selectedProgressionEmitter = new EventEmitter();
+   }
+
+   // progression selection
   selectProgression( p:Progression ):void{
     this._selectedProgression = p;
     this._selectedProgressionEmitter.emit( p );
@@ -20,5 +24,6 @@ export class GlobalSelectionsService   {
   get selectedProgressionEmitter():EventEmitter<Progression> {
     return this._selectedProgressionEmitter;
   }
+
 
 }

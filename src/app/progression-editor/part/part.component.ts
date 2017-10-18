@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
+
 // models
 import { Chords, Notes, Note } from '../../services';
 import { Progression, ProgressionPart } from '../../services';
@@ -12,6 +13,7 @@ import { Progression, ProgressionPart } from '../../services';
 export class PartComponent implements OnInit {
   @Input() part:ProgressionPart;
   @Output() change:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
+  @Output() delete:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
 
   constructor() { }
 
@@ -29,5 +31,8 @@ export class PartComponent implements OnInit {
   }
   emitPartChange():void {
     this.change.emit( this.part );
+  }
+  deletePart():void {
+    this.delete.emit( this.part );
   }
 }

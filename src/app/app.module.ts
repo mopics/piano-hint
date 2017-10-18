@@ -15,6 +15,7 @@ import { InMemoryDataService }  from './services';
 //services
 import { ProgressionsService } from './services';
 import { GlobalSelectionsService } from './services';
+import { SuiModalService } from 'ng2-semantic-ui';
 
 //components
 import { AppComponent } from './app.component';
@@ -26,6 +27,7 @@ import { PartComponent } from './progression-editor/part/part.component';
 import { ModeDropdownComponent } from './shared/mode-dropdown/mode-dropdown.component';
 import { MenuComponent } from './menu/menu.component';
 import { ProgressionSelectComponent } from './progression-select/progression-select.component';
+import { ConfirmModalComponent } from './modal-confirm/modal-confirm.component';
 
 
 @NgModule({
@@ -38,7 +40,11 @@ import { ProgressionSelectComponent } from './progression-select/progression-sel
     PartComponent,
     ModeDropdownComponent,
     MenuComponent,
-    ProgressionSelectComponent
+    ProgressionSelectComponent,
+    ConfirmModalComponent
+  ],
+  entryComponents:[
+    ConfirmModalComponent // dynamicly created components also need to be added to entryComponents
   ],
   imports: [
     SuiModule,
@@ -48,7 +54,11 @@ import { ProgressionSelectComponent } from './progression-select/progression-sel
     InMemoryWebApiModule.forRoot(InMemoryDataService),
     AppRoutingModule
   ],
-  providers: [ProgressionsService, GlobalSelectionsService],
+  providers: [
+    ProgressionsService,
+    GlobalSelectionsService,
+    SuiModalService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

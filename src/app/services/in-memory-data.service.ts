@@ -21,7 +21,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     },
                     chord:{
                         index:0, // 0 = I, 1 = II, etc.
-                        name:"I"
+                        name:"Ionian"
                     },
                     measures:2 
                 },
@@ -32,15 +32,15 @@ export class InMemoryDataService implements InMemoryDbService {
                             index:0, // 0 = C, 1 = C#, etc.
                             octave:1,
                             midiIndex:35, // midi:C1 index
-                            name:"C"
+                            name:"D"
                         },
                         scale:{
                             index:1 // 0 = Major, 1 = Minor
-                        }
+                        } 
                     },
                     chord:{
                         index:1, // 0 = I, 1 = II, etc.
-                        name:"II"
+                        name:"Dorian"
                     },
                     measures:1 
                 },

@@ -1,8 +1,25 @@
 import { clone } from 'ramda/src/';
 
 export enum Notes { C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B }
-export enum Scales { Major, Minor };
-export enum Chords { I, II, III, IV, V, VI, VII };
+export enum Scales { Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian, HarmonicMinor, MelodicMinor };
+export const ScaleSteps:number[][] = [
+    [1,0,1,0,1,1,0,1,0,1,0,1], // Ionian
+    [1,0,1,1,0,1,0,1,0,1,1,0], // Dorian
+    [1,1,0,1,0,1,0,1,1,0,1,0], // Phrygian
+    [1,0,1,0,1,1,0,1,0,1,1,0], // Myxolydian
+    [1,0,1,1,0,1,0,1,1,0,1,0], // Aeolian
+    [1,1,0,1,0,1,1,0,1,0,1,0], // Locrian
+    [1,0,1,1,0,1,0,1,1,0,0,1], // HarmonicMinor
+    [1,0,1,1,0,1,0,1,0,1,0,1]  // MelocicMinor
+];
+export enum Chords { Major, Minor, Dom7, HalfDim, FullDim };
+export const ChordSteps:number[][] = [
+    [1,0,0,0,1,0,0,1,0,0,0,0], // Major
+    [1,0,0,1,0,0,0,1,0,0,0,0], // Minor
+    [1,0,0,0,1,0,0,1,0,0,1,0], // Dom7
+    [1,0,0,1,0,0,1,0,0,0,1,0], // HalfDim
+    [1,0,0,1,0,0,1,0,0,1,0,0], // FullDim
+];
 export enum MajorChords { I, ii, iii, IV, V, vi, viiHD };
 export enum MinorChords { i, iiHD, III, iv, V, VII, viiFD };
 export const MidiRange:number[] = [ 35, 127 ];
@@ -74,69 +91,54 @@ export class Note {
         }
         return n;
     }
+    static createMidiNotes( root:Note, steps:number[] ):Note[] {
+        // 1. Set first root in midi-range
+        let mIdx:number = MidiRange[0]+root.index;
+        // 2. loop thru midi-range and push midi-notes using _steps , TODO: use functional programming ?? yep already done sort off
+        let stepIdx:number = 0;
+        let noteIdx:number = root.index;
+        let octave:number = 0;
+        let note:Note = new Note(0);
+        let i:number = MidiRange[0];
+        return Array( MidiRange[1]-MidiRange[0]).fill(note).map(
+            midiNote => {
+                if( steps[stepIdx]===1 ){
+                    midiNote.octave = Math.floor(i/12)-2;
+                    midiNote.index = noteIdx;
+                }
+                else
+                    midiNote.octave = -1; // gets filtered out later on
+                
+                stepIdx ++;
+                if( stepIdx > 12 ){ stepIdx = 0; }
+                noteIdx ++;
+                if( noteIdx > 12+root.index ) { noteIdx = root.index; }
+                i++;
+                return note;
+            }
+        ).filter( midiNote => midiNote.octave>-1 );
+    }
 }
 export class Scale {
-    private _index:number;
     private _name:string;
     midiNotes:Note[];
-    harmonicMinorMidiNotes:Note[];
-    melodicMinorMidiNotes:Note[];
-
     steps:number[];
-    harmonicMinorSteps:number[];
-    melodicMinorSteps:number[];
 
-    constructor( index:number){
-        this._index = index;
+    constructor( private _index:number){
         this._name = Scales[this._index];
+        this.steps = ScaleSteps[this._index];
      }
     get name():string { return this._name; }
     set name( s:string ){
         this._name = s;
         this._index = Scales[s];
+        this.steps = ScaleSteps[this._index];
     }
     get index():number { return this._index; }
     set index( i:number ) {
         this._name = Scales[i];
         this._index = i;
-    }
-    createSteps():void{
-        if( this._index===Scales.Major ) {
-            this.steps =                [1,0,1,0,1,1,0,1,0,1,0,1];
-        } else if( this._index===Scales.Minor ){
-            this.steps =                [1,0,1,1,0,1,0,1,1,0,1,0];
-            this.harmonicMinorSteps =   [1,0,1,1,0,1,0,1,1,0,0,1];
-            this.melodicMinorSteps  =   [1,0,1,1,0,1,0,1,0,1,0,1];
-        }
-    }
-    createMidiNotes( root:Note ):void {
-        // create natural minor/major midi notes
-        this.midiNotes = this._createMidiNotes( root, this.steps );
-        // create seperate extra minor midi notes
-        if( this.harmonicMinorSteps.length>0){
-            this.harmonicMinorMidiNotes = this._createMidiNotes( root, this.harmonicMinorSteps );
-            this.melodicMinorMidiNotes = this._createMidiNotes( root, this.harmonicMinorSteps );
-        }
-    }
-    private _createMidiNotes( root:Note, steps:number[] ):Note[] {
-        let midiNotes = new Array<Note>();
-        // 1. Set first root in midi-range
-        let mIdx:number = MidiRange[0]+root.index;
-        // 2. loop thru midi-range and push midi-notes using _steps
-        let stepIdx:number = 0;
-        let noteIdx:number = root.index;
-        let octave:number = 0;
-        for( let i:number=mIdx; i<MidiRange[1]; i++ ){
-            if( steps[stepIdx]===1 ){
-                octave = Math.floor(i/12)-2;
-                midiNotes.push( new Note( noteIdx, octave, i ) );
-            }
-            stepIdx ++;
-            if( stepIdx > 12 ){ stepIdx = 0; }
-            noteIdx ++;
-            if( noteIdx > 12+root.index ) { noteIdx = root.index; }
-        }
-        return midiNotes;
+        this.steps = ScaleSteps[this._index];
     }
     clone():Scale{ return new Scale(this._index);}
 }
@@ -144,19 +146,24 @@ export class Scale {
 export class Chord{
 
     private _name:string;
+    midiNotes:Note[];
+    steps:number[];
 
     constructor( private _index:number ){
         this._name = Chords[this._index];
+        this.steps = ChordSteps[this._index];
     }
     get index():number { return this._index; }
     get name():string { return this._name; }
     set index( i:number ) {
         this._name = Chords[i];
         this._index = i;
+        this.steps = ChordSteps[this._index];
     }
     set name( nm:string ) {
         this._index = Chords[nm];
         this._name = nm;
+        this.steps = ChordSteps[this._index];
     }
 
     clone():Chord {

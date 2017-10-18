@@ -34,9 +34,9 @@ export class Progression {
     }
     addBlankPart():void{
         const t = new Note(Notes.C,1);
-        const s = new Scale( Scales.Major );
+        const s = new Scale( Scales.Ionian );
         const k = new Key( t, s );
-        const c = new Chord( Chords.I );
+        const c = new Chord( Chords.Major );
         const p = new ProgressionPart( k, c, 1 ); 
         this.parts.push( p );
     }
