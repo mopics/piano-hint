@@ -2,13 +2,16 @@ import { Notes, Scales, Chords, Note, Key, Chord, Scale } from './note.models';
 
 export class ProgressionPart {
      index:number = 0;
-     key:Key;
+     root:Note;
+     scale:Scale;
      chord:Chord;
      measures:number;
 
-     constructor( key:Key, chord:Chord, measures:number ){
-         this.key = key;
+     constructor( index:number, root:Note, chord:Chord, scale:Scale, measures:number ){
+         this.index = index;
+         this.root = root;
          this.chord = chord;
+         this.scale = scale;
          this.measures = measures;
      }
      get measuresStr():string{ return `${this.measures}`; }
@@ -16,8 +19,10 @@ export class ProgressionPart {
     }
      clone():ProgressionPart {
          return new ProgressionPart( 
-             this.key.clone(), 
+             this.index,
+             this.root.clone(), 
              this.chord.clone(), 
+             this.scale.clone(),
              this.measures );
      }
 }
@@ -35,9 +40,8 @@ export class Progression {
     addBlankPart():void{
         const t = new Note(Notes.C,1);
         const s = new Scale( Scales.Ionian );
-        const k = new Key( t, s );
         const c = new Chord( Chords.Major );
-        const p = new ProgressionPart( k, c, 1 ); 
+        const p = new ProgressionPart( 0, t, c, s, 1 ); 
         this.parts.push( p );
     }
     duplicatePrevPart():ProgressionPart{

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 
 // models
-import { Chords, Notes, Note } from '../../services';
+import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps } from '../../services';
 import { Progression, ProgressionPart } from '../../services';
 
 @Component({
@@ -15,19 +15,14 @@ export class PartComponent implements OnInit {
   @Output() change:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @Output() delete:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
 
-  constructor() { }
+  notes:Note[] = Array<Note>(12).fill(new Note(0)).map((n,i)=>new Note(i));
+  chords:Chord[] = Array<Chord>(ChordSteps.length).fill(new Chord(0)).map((c,i)=> new Chord(i));
+  scales:Scale[] = Array<Scale>(ChordSteps.length).fill(new Scale(0)).map((c,i)=> new Scale(i));
+
+  constructor() {
+   }
 
   ngOnInit() {
-    console.log( this.part);
-  }
-
-  handleTonicChange( note:string ){
-    this.part.key.tonic.name = note;
-    this.emitPartChange();
-  }
-  handleChordChange( mode:string ){
-    this.part.chord.name = mode;
-    this.emitPartChange();
   }
   emitPartChange():void {
     this.change.emit( this.part );

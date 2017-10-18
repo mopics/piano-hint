@@ -26,9 +26,10 @@ export class ProgressionsService {
         let parts = prog.parts;
         let partsC = new Array<ProgressionPart>();
         parts.forEach( part => {  
-          let key = new Key( new Note( part.key.tonic.index ), new Scale(part.key.scale.index) );
+          let root = new Note( part.root.index );
+          let scale = new Scale(part.scale.index);
           let chord = new Chord( part.chord.index );
-          partsC.push( new ProgressionPart( key, chord, part.measures ) )
+          partsC.push( new ProgressionPart( part.index, root, chord, scale, part.measures ) )
         } );
         let progC = new Progression( prog.id, prog.name );
         progC.parts = partsC;
@@ -47,9 +48,10 @@ export class ProgressionsService {
           let parts = prog.parts;
           let partsC = new Array<ProgressionPart>();
           parts.forEach( part => {  
-            let key = new Key( new Note( part.key.tonic.index ), new Scale(part.key.scale.index) );
+            let root = new Note( part.root.index );
+            let scale = new Scale(part.scale.index);
             let chord = new Chord( part.chord.index );
-            partsC.push( new ProgressionPart( key, chord, part.measures ) )
+            partsC.push( new ProgressionPart( part.index, root, chord, scale, part.measures ) )
           } );
           let progC = new Progression( prog.id, prog.name );
           progC.parts = partsC;

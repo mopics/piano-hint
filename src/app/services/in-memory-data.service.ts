@@ -8,60 +8,54 @@ export class InMemoryDataService implements InMemoryDbService {
             parts: [
                 { 
                     index:0,
-                    key:{
-                        tonic:{
-                            index:0, // 0 = C, 1 = C#, etc.
-                            octave:1,
-                            midiIndex:35, // midi:C1 index
-                            name:"C"
-                        },
-                        scale:{
-                            index:0 // 0 = Major, 1 = Minor
-                        }
+                    root:{
+                        index:0,
+                        octave:1,
+                        name:"C"
+                    },
+                    scale:{
+                        index:0,
+                        name:"Ionian"
                     },
                     chord:{
-                        index:0, // 0 = I, 1 = II, etc.
-                        name:"Ionian"
+                        index:0,
+                        name:"Major"
                     },
                     measures:2 
                 },
                 { 
                     index:1,
-                    key:{
-                        tonic:{
-                            index:0, // 0 = C, 1 = C#, etc.
-                            octave:1,
-                            midiIndex:35, // midi:C1 index
-                            name:"D"
-                        },
-                        scale:{
-                            index:1 // 0 = Major, 1 = Minor
-                        } 
+                    root:{
+                        index:2,
+                        octave:1,
+                        name:"D"
                     },
-                    chord:{
-                        index:1, // 0 = I, 1 = II, etc.
+                    scale:{
+                        index:1,
                         name:"Dorian"
                     },
-                    measures:1 
+                    chord:{
+                        index:1,
+                        name:"Minor"
+                    },
+                    measures:2 
                 },
                 { 
-                    index: 2,
-                    key:{
-                        tonic:{
-                            index:0, // 0 = C, 1 = C#, etc.
-                            octave:1,
-                            midiIndex:35, // midi:C1 index
-                            name:"C"
-                        },
-                        scale:{
-                            index:0 // 0 = Major, 1 = Minor
-                        }
+                    index:2,
+                    root:{
+                        index:7,
+                        octave:1,
+                        name:"G"
+                    },
+                    scale:{
+                        index:4,
+                        name:"Myxolydian"
                     },
                     chord:{
-                        index:4, // 0 = I, 1 = II, etc.
-                        name:"V"
+                        index:2,
+                        name:"Dom7"
                     },
-                    measures:1 
+                    measures:2 
                 }
             ]
         }

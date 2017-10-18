@@ -2,22 +2,31 @@
     <!-- select Key root -->
     <div class="ui grid">
       <div class="column four wide">
-        <app-note-dropdown 
-          [message]="'Select a tonic'"
-          [note]="part.key.tonic.name"
-          (change)="handleTonicChange($event)"></app-note-dropdown>
-      </div>
+        <sui-select class="button icon" 
+          placeholder="Select a root" [(ngModel)]="part.root.name"
+          (ngModelChange)="emitPartChange()"
+          >
+            <!--<div class="scrolling menu">-->
+            <sui-select-option *ngFor="let n of notes" value="{{n.name}}"></sui-select-option>
+            <!--</div>-->
+        </sui-select>
+    </div>
       <!-- select mode/chord -->
       <div class="column four wide">
-        <app-mode-dropdown 
-          [message]="'Select a chord'"
-          [mode]="part.chord.name"
-          (change)="handleChordChange($event)"></app-mode-dropdown>
+          <sui-select class="button icon" 
+          placeholder="Select a chord" [(ngModel)]="part.chord.name"
+          (ngModelChange)="emitPartChange()"
+          >
+            <!--<div class="scrolling menu">-->
+            <sui-select-option *ngFor="let c of chords" value="{{c.name}}"></sui-select-option>
+            <!--</div>-->
+        </sui-select>
       </div>
       <!-- select measures -->
       <div class="column four wide">
-          <sui-select class="button icon fluid" 
+          <sui-select class="button icon" 
             placeholder="Measures" [(ngModel)]="part.measuresStr"
+            (ngModelChange)="emitPartChange()"
             >
             <!--<div class="scrolling menu">-->
             <sui-select-option value="1"></sui-select-option>
@@ -27,21 +36,21 @@
             <!--</div>-->
           </sui-select>
       </div>
-      <div class="column four wide">
-        <i (click)="deletePart()" class="remove circle big red icon"></i>
+      <div class="right floated column">
+        <i (click)="deletePart()" class="right floated remove circle big red icon"></i>
       </div>
       <div class="column sixteen wide">
         <sui-select class="button icon fluid" 
-          placeholder="Scale" [(ngModel)]="part.key.scale.name"
+          placeholder="Scale" [(ngModel)]="part.scale.name"
+          (ngModelChange)="emitPartChange()"
           >
           <!--<div class="scrolling menu">-->
-          <sui-select-option value="Lydian"></sui-select-option>
-          <sui-select-option value="Minor"></sui-select-option>
+          <sui-select-option *ngFor="let s of scales" value="{{s.name}}"></sui-select-option>
           <!--</div>-->
         </sui-select>
       </div>
       <app-piano-octave class="ui fixed footer"
-      [root]="part.key.tonic.name" [numOctaves]="1" [keyWidth]="80" [keyHeight]="200" #pianoOctave>
+      [root]="part.root.name" [numOctaves]="1" [keyWidth]="80" [keyHeight]="200" #pianoOctave>
     </app-piano-octave>
     </div>
     

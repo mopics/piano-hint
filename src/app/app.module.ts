@@ -22,9 +22,7 @@ import { AppComponent } from './app.component';
 import { ProgressionEditorComponent } from './progression-editor/progression-editor.component';
 import { PianoComponent } from './piano/piano.component';
 import { PianoOctaveComponent } from './shared/piano-octave/piano-octave.component';
-import { NoteDropdownComponent } from './shared/note-dropdown/note-dropdown.component';
 import { PartComponent } from './progression-editor/part/part.component';
-import { ModeDropdownComponent } from './shared/mode-dropdown/mode-dropdown.component';
 import { MenuComponent } from './menu/menu.component';
 import { ProgressionSelectComponent } from './progression-select/progression-select.component';
 import { ConfirmModalComponent } from './modal-confirm/modal-confirm.component';
@@ -36,9 +34,7 @@ import { ConfirmModalComponent } from './modal-confirm/modal-confirm.component';
     ProgressionEditorComponent,
     PianoComponent,
     PianoOctaveComponent,
-    NoteDropdownComponent,
     PartComponent,
-    ModeDropdownComponent,
     MenuComponent,
     ProgressionSelectComponent,
     ConfirmModalComponent
