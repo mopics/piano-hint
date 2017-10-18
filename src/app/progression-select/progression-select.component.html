@@ -1,8 +1,17 @@
-<sui-select class="button icon inverted floated right" 
-  placeholder="Select a progression" [(ngModel)]="selectedProgression"
-  (ngModelChange)="onSelect($event)"
-  >
-  <!--<div class="scrolling menu">-->
-  <sui-select-option class="inverted" *ngFor="let p of progressions" value="{{p.name}}"></sui-select-option>
-  <!--</div>-->
-</sui-select>
+
+  <div class="item">
+    <!--<div>Progression:&nbsp;&nbsp;&nbsp;</div>-->
+    <sui-select class="button icon inverted floated right" 
+      placeholder="Select a progression" [(ngModel)]="selectedProgression"
+      (ngModelChange)="onSelect($event)"
+      >
+      <!--<div class="scrolling menu">-->
+      <sui-select-option class="inverted" *ngFor="let p of progressions" value="{{p.name}}"></sui-select-option>
+      <!--</div>-->
+    </sui-select>
+    <div style="cursor:pointer" (click)="showNewProgressionDialog()">
+        &nbsp;&nbsp;&nbsp;&nbsp;Create new <i class="add square inverted big icon"></i>
+    </div>
+
+  </div>
+

@@ -34,5 +34,8 @@ export class ProgressionSelectComponent implements OnInit {
   onSelect( name:string ){
     this.globalSelections.selectProgression( this.progressions.find( p=>p.name===name ) );
   }
+  showNewProgressionDialog():void{
+    alert("TODO: show new progresssion name input modal");
+  }
 
 }

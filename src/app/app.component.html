@@ -14,22 +14,14 @@
                 <a class="item" (click)="sidebar.toggle()">
                     <i class="sidebar icon big"></i>
                 </a>
-                <div class="right borderless menu">
-                    <div class="item">
-                        <app-progression-select></app-progression-select>
-                    </div>
-                </div>
+                <div class="right menu borderless"><app-progression-select></app-progression-select></div>
             </div>
         </div>
         <div class="ui attached horizontal menu inverted" id="app-wide-menu">
             <div class="left menu">
                 <a routerLink="./piano" class="item">Piano</a>
                 <a routerLink="./progression-editor" class="item">Progression Editor</a>
-                <div class="right menu borderless">
-                    <div class="item borderless">
-                        <app-progression-select></app-progression-select>
-                    </div>
-                </div>
+                <div class="right menu borderless"><app-progression-select></app-progression-select></div>
             </div>
         </div>
         
