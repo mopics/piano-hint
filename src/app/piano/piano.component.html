@@ -1,20 +1,33 @@
-<br><br><br>
-<div class="ui centered grid">
-  <div class="item five wide">
-    <div class="ui icon  huge buttons">
-      <button class="ui button">
-        <i class="play white icon"></i>
-      </button>
-      <button class="ui button">
-        <i class="pause white icon"></i>
-      </button>
-      <button class="ui button">
-        <i class="stop white icon"></i>
-      </button>
+<div *ngIf="progression" class="ui container">
+  <br><br><br>
+  <div class="ui centered grid">
+    <div class="item five wide">
+      <div class="ui icon  huge buttons">
+        <button class="ui button">
+          <i class="play white icon"></i>
+        </button>
+        <button class="ui button">
+          <i class="pause white icon"></i>
+        </button>
+        <button class="ui button">
+          <i class="stop white icon"></i>
+        </button>
+      </div>
     </div>
   </div>
+  <br><br><br>
+  <div>Part {{progression.parts[0].index+1}}
+    <br>
+    <div class="ui message red">TODO: make parts playable with webkit.midi</div>
+    <br><br>
+  </div>
 </div>
-<br><br><br>
+
+<div *ngIf="!progression" class="ui container">
+    <br><br>
+    <div class="ui red inverted big message">No progression selected. Please pick a progression in the topleft dropdown-menu</div>
+</div>
+
 <app-piano-octave class="ui fixed bottom"
-  [root]="selectedTonic" [numOctaves]="4" [keyWidth]="80" [keyHeight]="400" #pianoOctave>
+[root]="selectedTonic" [numOctaves]="4" [keyWidth]="80" [keyHeight]="400" #pianoOctave>
 </app-piano-octave>

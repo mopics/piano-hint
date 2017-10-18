@@ -6,7 +6,7 @@ import { Progression, ProgressionPart } from '../services';
 // service
 import { ProgressionsService, GlobalSelectionsService } from '../services';
 import { SuiModalService, ModalSize } from 'ng2-semantic-ui';
-import { ConfirmModal } from '../modal-confirm/modal-confirm.component';
+import { ConfirmModal } from '../shared/modals/modal-confirm/modal-confirm.component';
 
 @Component({
   selector: 'app-progression-editor',

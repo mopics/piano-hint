@@ -1,5 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
+// components
+import { PianoOctaveComponent } from '../shared/piano-octave/piano-octave.component';
+
+// models
+import { ProgressionPart, Progression } from '../services';
+
+// service
+import { ProgressionsService, GlobalSelectionsService } from '../services';
+
 @Component({
   selector: 'app-piano',
   templateUrl: './piano.component.html',
@@ -7,18 +16,31 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class PianoComponent implements OnInit {
 
-  selectedTonic:string = "C";
-  @ViewChild('pianoOctave') pianoOctave;
+  progression:Progression;
 
-  constructor( ) { }
+  @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
+
+  constructor( 
+    private progService:ProgressionsService,
+    private globalSelections:GlobalSelectionsService
+  ) { }
 
   ngOnInit() {
-    
+    this.progression = this.globalSelections.selectedProgression;
+    if( this.progression ){ this.initPiano(); }
+    else {
+      this.globalSelections.selectedProgressionEmitter.subscribe( p => {
+        this.progression = p;
+        this.initPiano();
+       } );
+    }
   }
-  handleNoteChange(event){
-    console.log( event );
-    this.selectedTonic = event;
-    this.pianoOctave.redraw(event);
+  initPiano():void {
+    this.piano.root = "C";
+    this.piano.numOctaves = 2;
+    this.piano.keyHeight = 200;
+    this.piano.keyWidth = 80;
+    this.piano.redrawKeys( this.progression.parts[0] );
   }
 
 }
