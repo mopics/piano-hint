@@ -25,7 +25,7 @@ import { PianoOctaveComponent } from './shared/piano-octave/piano-octave.compone
 import { PartComponent } from './progression-editor/part/part.component';
 import { MenuComponent } from './menu/menu.component';
 import { ProgressionSelectComponent } from './progression-select/progression-select.component';
-import { ConfirmModalComponent } from './modal-confirm/modal-confirm.component';
+import { ConfirmModalComponent } from './shared/modals/modal-confirm/modal-confirm.component';
 
 
 @NgModule({
