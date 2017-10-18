@@ -34,8 +34,6 @@ export class PianoOctaveComponent implements OnInit {
   keys:Note[];
   whiteKeys:Note[];
   blackKeys:Note[];
-  chordHints:Hint[];
-  scaleHints:Hint[];
   viewBox:string;
   octaveWidth:number;
 
@@ -48,8 +46,8 @@ export class PianoOctaveComponent implements OnInit {
   ngOnInit() {
     this.octaveWidth = this.keyWidth*7;
   }
-  redrawKeys(r:string):void {
-    this.root = r;
+  redrawKeys( part:ProgressionPart ):void {
+    this.root = "C";//part.root.name;
     this.viewBox = `0 0 ${this.keyWidth*7*this.numOctaves+this.keyWidth} ${this.keyHeight}`;
     this.octaves = Array( this.numOctaves ).fill(1).map( (x,i) =>i );
     this.keys = Note.getNotesFromRoot( Note.toFlat(this.root), this.numOctaves, true );
@@ -74,35 +72,12 @@ export class PianoOctaveComponent implements OnInit {
           pk = k;
         }
     });
-  }
-  redrawHints( part:ProgressionPart ):void {
-    this.redrawKeys(part.root.name);
-
-    this.chordHints = new Array<Hint>(3).fill( new Hint() ).map( ( hint, i )=>{
-      let nHint:Hint = new Hint();
-      let midiNote:Note = part.chord.midiNotes[i];
-      let key:Note;
-      let yPos:number;
-      let xPos:number;
-      if( midiNote.whiteKey ) {
-        key = this.whiteKeys.find( n=> n.name===midiNote.name ); 
-        yPos = this.keyHeight*.85;
-        xPos = key.xPos + this.keyWidth/2;
-      }
-      else {
-        key = this.blackKeys.find(n=>n.name===midiNote.name); 
-        yPos = this.keyHeight*.6;
-        xPos = key.xPos + this.keyWidth/2;
-      }
-      // TODO: set x and y using white&black keys already present
-      nHint.x = xPos;
-      nHint.y = yPos;
-      nHint.rx = nHint.ry = this.keyWidth/5;
-
-      return nHint;
-    });
-    this.scaleHints = new Array<Hint>();
-    // TODO
+    // set root hints
+    this.keys.filter( n=>n.name===part.chord.midiNotes[0].name ).forEach( n=> n.fill=Note.rootFill );
+    // set third 
+    this.keys.filter( n=>n.name===part.chord.midiNotes[1].name ).forEach( n=> n.fill=Note.thirdFill );
+    // set fifth 
+    this.keys.filter( n=>n.name===part.chord.midiNotes[2].name ).forEach( n=> n.fill=Note.fifthFill );
   }
 
   // key click events

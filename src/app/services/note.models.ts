@@ -30,16 +30,28 @@ export class Note {
     midiIndex:number;
     private _name:string;
     degree:number;
-    whiteKey:boolean = true;
+    private _whiteKey:boolean = true;
     xPos:number = 0;
+    static whiteFill:string = "#FFFFF7";
+    static blackFill:string = "#4B4B4B";
+    static rootFill:string = "#EECDC6";
+    static rootBlackFill:string = "#A44020";
+    static thirdFill:string = "#DFEEC6";
+    static thirdBlackFill:string = "#6B8C5F";
+    static fifthFill:string = "#C6D1EE";
+    static fifthBlackFill:string = "#6D7D9A";
+    static scaleFill:string = "#EEE4C6";
+    static scaleBlackFill:string = "#948E7D";
+    private _fill:string;
 
     constructor( private _index:number,octave:number = 1,midiIndex:number = -1 ){
         this._name = Notes[this._index];
         this.octave = octave;
         if( this.midiIndex < 0 )
             this.midiIndex = this.octave*12+this._index;
-        if( _index<4 && _index%2 ){  this.whiteKey = false; }
-        if( _index>5 && _index%2===0 ) { this.whiteKey = false; }
+        this._fill = Note.whiteFill;
+        if( _index<4 && _index%2 ){  this._whiteKey = false; this._fill = Note.blackFill; }
+        if( _index>5 && _index%2===0 ) { this._whiteKey = false; this._fill = Note.blackFill; }
     };
 
     set index( i:number ){
@@ -52,6 +64,28 @@ export class Note {
         this._index = Notes[nm];
         this._name = nm;
     }
+    get fill():string{ return this._fill; }
+    set fill( f:string ){ 
+        if( this._whiteKey )
+         this._fill = f; 
+        else {
+            switch( f ){
+                case Note.rootFill:
+                this._fill = Note.rootBlackFill;
+                break;
+                case Note.thirdFill:
+                this._fill = Note.thirdBlackFill;
+                break;
+                case Note.fifthFill:
+                this._fill = Note.fifthBlackFill;
+                break;
+                default:
+                this._fill = Note.scaleBlackFill;
+            }
+        }
+    }
+
+    get whiteKey():boolean{ return this._whiteKey; }
     
 
     getFullName():string {

@@ -29,20 +29,22 @@ export class PartComponent implements OnInit {
     this.piano.numOctaves = 2;
     this.piano.keyHeight = 200;
     this.piano.keyWidth = 80;
-    this.piano.redrawHints( this.part );
+    this.piano.redrawKeys( this.part );
   }
   onRootChange():void {
-    this.piano.redrawKeys(this.part.root.name);
+    this.part.chord.midiNotes = Note.createMidiNotes( this.part.root, this.part.chord.steps );
+    this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
+    this.piano.redrawKeys(this.part);
     this.emitPartChange();
   }
   onChordChange():void{
     this.part.chord.midiNotes = Note.createMidiNotes( this.part.root, this.part.chord.steps );
-    this.piano.redrawHints(this.part);
+    this.piano.redrawKeys(this.part);
     this.emitPartChange();
   }
   onScaleChange():void{
     this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
-    this.piano.redrawHints(this.part);
+    this.piano.redrawKeys(this.part);
     this.emitPartChange();
   }
   emitPartChange():void {
