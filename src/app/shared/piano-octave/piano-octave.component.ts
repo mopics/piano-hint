@@ -34,6 +34,7 @@ export class PianoOctaveComponent implements OnInit {
   keys:Note[];
   whiteKeys:Note[];
   blackKeys:Note[];
+  scaleHints:Hint[];
   viewBox:string;
   octaveWidth:number;
 
@@ -72,12 +73,41 @@ export class PianoOctaveComponent implements OnInit {
           pk = k;
         }
     });
-    // set root hints
+    // set highlicht color's
     this.keys.filter( n=>n.name===part.chord.midiNotes[0].name ).forEach( n=> n.fill=Note.rootFill );
-    // set third 
+    //this.keys.filter( n=>n.name===part.scale.midiNotes[1].name ).forEach( n=> n.fill=Note.scaleFill );
+    // set third highlicht color
     this.keys.filter( n=>n.name===part.chord.midiNotes[1].name ).forEach( n=> n.fill=Note.thirdFill );
-    // set fifth 
+    // set fourth highlicht color
+    //this.keys.filter( n=>n.name===part.scale.midiNotes[3].name ).forEach( n=> n.fill=Note.scaleFill );
+    // set fifth highlicht color
     this.keys.filter( n=>n.name===part.chord.midiNotes[2].name ).forEach( n=> n.fill=Note.fifthFill );
+    // set sixth highlicht color
+    //this.keys.filter( n=>n.name===part.scale.midiNotes[5].name ).forEach( n=> n.fill=Note.scaleFill );
+    if( part.chord.name === "Dom7" ){
+      // set seventh highlicht color
+      this.keys.filter( n=>n.name===part.chord.midiNotes[3].name ).forEach( n=> n.fill=Note.seventhFill );
+    }
+    /*else {
+      this.keys.filter( n=>n.name===part.scale.midiNotes[6].name ).forEach( n=> n.fill=Note.scaleFill );
+    }*/
+    // create scale hints as dots
+    this.scaleHints = new Array<Hint>();
+    this.keys.forEach( (k,i)=>{
+      if( part.scale.midiNotes.find( n=>n.name===k.name) ){
+        let h:Hint = new Hint();
+        h.rx = this.keyWidth*.18; h.ry = h.rx;
+        if( k.whiteKey ){
+          h.x = k.xPos + this.keyWidth/2;
+          h.y = this.keyHeight*.85;
+        } else {
+          h.x = k.xPos + this.keyWidth/4;
+          h.y = this.keyHeight*.6;
+        }
+        this.scaleHints.push(h);
+      }
+    });
+
   }
 
   // key click events

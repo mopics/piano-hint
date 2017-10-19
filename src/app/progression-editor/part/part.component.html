@@ -26,7 +26,7 @@
       <div class="column three wide">
           <sui-select class="tiny button icon" 
             placeholder="Measures" [(ngModel)]="part.measuresStr"
-            (ngModelChange)="onScaleChange()"
+            (ngModelChange)="emitPartChange()"
             >
             <!--<div class="scrolling menu">-->
             <sui-select-option value="1"></sui-select-option>
@@ -42,10 +42,10 @@
       <div class="column sixteen wide">
         <sui-select class="tiny button icon fluid" 
           placeholder="Scale" [(ngModel)]="part.scale.name"
-          (ngModelChange)="emitPartChange()"
-          >
+          (ngModelChange)="onScaleChange()"
+          #scaleSelect>
           <!--<div class="scrolling menu">-->
-          <sui-select-option *ngFor="let s of scales" value="{{s.name}}"></sui-select-option>
+          <sui-select-option *ngFor="let s of scalesFiltered" value="{{s.name}}"></sui-select-option>
           <!--</div>-->
         </sui-select>
       </div>

@@ -6,6 +6,7 @@ export const ScaleSteps:number[][] = [
     [1,0,1,0,1,1,0,1,0,1,0,1], // Ionian
     [1,0,1,1,0,1,0,1,0,1,1,0], // Dorian
     [1,1,0,1,0,1,0,1,1,0,1,0], // Phrygian
+    [1,0,1,0,1,0,1,1,0,1,0,1], // Lydian
     [1,0,1,0,1,1,0,1,0,1,1,0], // Myxolydian
     [1,0,1,1,0,1,0,1,1,0,1,0], // Aeolian
     [1,1,0,1,0,1,1,0,1,0,1,0], // Locrian
@@ -34,14 +35,16 @@ export class Note {
     xPos:number = 0;
     static whiteFill:string = "#FFFFF7";
     static blackFill:string = "#4B4B4B";
-    static rootFill:string = "#EECDC6";
+    static rootFill:string = "#dd9f9f";
     static rootBlackFill:string = "#A44020";
     static thirdFill:string = "#DFEEC6";
     static thirdBlackFill:string = "#6B8C5F";
     static fifthFill:string = "#C6D1EE";
     static fifthBlackFill:string = "#6D7D9A";
-    static scaleFill:string = "#EEE4C6";
-    static scaleBlackFill:string = "#948E7D";
+    static seventhFill:string = "#f9fca6";
+    static seventhBlackFill:string = "#dce06d";
+    static scaleFill:string = "#eae0d3";
+    static scaleBlackFill:string = "#a39889";
     private _fill:string;
 
     constructor( private _index:number,octave:number = 1,midiIndex:number = -1 ){
@@ -78,6 +81,9 @@ export class Note {
                 break;
                 case Note.fifthFill:
                 this._fill = Note.fifthBlackFill;
+                break;
+                case Note.seventhFill:
+                this._fill = Note.seventhBlackFill;
                 break;
                 default:
                 this._fill = Note.scaleBlackFill;
