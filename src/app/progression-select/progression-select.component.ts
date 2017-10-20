@@ -28,7 +28,11 @@ export class ProgressionSelectComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.progService.getProgressions().then( progressions => this.progressions = progressions );
+    this.progService.getProgressions().then( progressions => {
+      this.progressions = progressions;
+      //auto select first one
+      this.globalSelections.selectProgression( this.progressions[0] );
+    }  );
     this.globalSelections.selectedProgressionEmitter.subscribe( p => this.selectedProgression = p.name );
   }
   onSelect( name:string ){

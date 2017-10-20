@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 
 // models
 import { Note, Notes, Chord, Scale, ProgressionPart } from '../../services';
@@ -29,6 +29,7 @@ export class PianoOctaveComponent implements OnInit {
   @Input() keyHeight:number = 400;
   @Input() keyWidth:number = 80;
   @Input() hintWidth:number = 70;
+  @Output() keyClicked:EventEmitter<Note>=new EventEmitter();
 
   octaves:number[];
   keys:Note[];
@@ -112,7 +113,7 @@ export class PianoOctaveComponent implements OnInit {
 
   // key click events
   onKeyClick( name:string ):void {
-    alert( `TODO:play ${name} with webkit.midi?` );
+    this.keyClicked.emit( new Note(Notes[name]));
   }
 
 }

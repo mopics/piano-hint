@@ -2,53 +2,27 @@
     <!-- select Key root -->
     <div class="ui grid">
       <div class="column three wide">
-        <sui-select class="tiny button icon" 
-          placeholder="Select a root" [(ngModel)]="part.root.name"
-          (ngModelChange)="onRootChange()"
-          >
-            <!--<div class="scrolling menu">-->
-            <sui-select-option *ngFor="let n of notes" value="{{n.name}}"></sui-select-option>
-            <!--</div>-->
-        </sui-select>
+        <app-select [items]="notes" (select)="onRootChange($event)" [selected]="part.root"></app-select>
     </div>
       <!-- select mode/chord -->
       <div class="column five wide">
-          <sui-select class="mini button icon fluid" 
-          placeholder="Select a chord" [(ngModel)]="part.chord.name"
-          (ngModelChange)="onChordChange()"
-          >
-            <!--<div class="scrolling menu">-->
-            <sui-select-option *ngFor="let c of chords" value="{{c.name}}"></sui-select-option>
-            <!--</div>-->
-        </sui-select>
+        <app-select [items]="chords" (select)="onChordChange($event)" [selected]="part.chord"></app-select>
       </div>
       <!-- select measures -->
       <div class="column three wide">
-          <sui-select class="tiny button icon" 
-            placeholder="Measures" [(ngModel)]="part.measuresStr"
-            (ngModelChange)="emitPartChange()"
-            >
-            <!--<div class="scrolling menu">-->
-            <sui-select-option value="1"></sui-select-option>
-            <sui-select-option value="2"></sui-select-option>
-            <sui-select-option value="3"></sui-select-option>
-            <sui-select-option value="4"></sui-select-option>
-            <!--</div>-->
-          </sui-select>
+          <app-select [items]="[{label:1},{label:2},{label:3},{label:4}]" 
+          (select)="onMeasuresChange($event)" 
+          [selected]="{label:1}"></app-select>
       </div>
       <div class="right floated column">
         <i (click)="deletePart()" class="right floated remove circle big red icon"></i>
       </div>
       <div class="column sixteen wide">
-        <sui-select class="tiny button icon fluid" 
-          placeholder="Scale" [(ngModel)]="part.scale.name"
-          (ngModelChange)="onScaleChange()"
-          #scaleSelect>
-          <!--<div class="scrolling menu">-->
-          <sui-select-option *ngFor="let s of scalesFiltered" value="{{s.name}}"></sui-select-option>
-          <!--</div>-->
-        </sui-select>
+          <app-select [items]="scales" 
+          (select)="onScaleChange($event)" 
+          [selected]="part.scale"></app-select>
       </div>
+      <p class="ui small">Click on a key to select a root</p>
       <app-piano-octave #pianoOctave>
     </app-piano-octave>
     </div>

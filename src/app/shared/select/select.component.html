@@ -1,0 +1,19 @@
+<div class="select">
+  <button 
+    (click)="toggle($event)" #myButton>
+    {{selected.label}}&nbsp;&nbsp;
+    <i class="ui dropdown icon" (click)="toggle($event)" #myIcon></i>
+  </button>
+  <div 
+    [ngClass]="state.display?'display-block':'display-none'"
+    class="items" 
+    [@toggleMenu]="state.state"
+    (@toggleMenu.done)="toggleAnimateDone()" >
+
+    <div *ngFor="let item of items"
+      [ngClass]="selected.label===item.label? 'active item' : 'item'"
+      (click)="selectItem(item)"
+      >{{item.label}}
+    </div>
+  </div>
+</div>

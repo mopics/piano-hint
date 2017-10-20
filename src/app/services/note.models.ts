@@ -63,6 +63,7 @@ export class Note {
     }
     get index():number{ return this._index; }
     get name():string { return this._name; }
+    get label():string { return this._name; }
     set name( nm:string ){ 
         this._index = Notes[nm];
         this._name = nm;
@@ -168,6 +169,7 @@ export class Scale {
         this.steps = ScaleSteps[this._index];
      }
     get name():string { return this._name; }
+    get label():string { return this._name; }
     set name( s:string ){
         this._name = s;
         this._index = Scales[s];
@@ -194,6 +196,7 @@ export class Chord{
     }
     get index():number { return this._index; }
     get name():string { return this._name; }
+    get label():string { return this._name; }
     set index( i:number ) {
         this._name = Chords[i];
         this._index = i;

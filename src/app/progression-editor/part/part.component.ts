@@ -35,6 +35,7 @@ export class PartComponent implements OnInit {
     this.piano.keyWidth = 80;
     this.filterScales();
     this.piano.redrawKeys( this.part );
+    this.piano.keyClicked.subscribe( n=> this.onRootChange(n) );
   }
   filterScales():void{
     this.scalesFiltered = this.scales.filter( s=> {
@@ -48,27 +49,33 @@ export class PartComponent implements OnInit {
      });
      console.log('foo');
   }
-  onRootChange():void {
+  onRootChange( n:Note ):void {
+    this.part.root = n;
     this.part.chord.midiNotes = Note.createMidiNotes( this.part.root, this.part.chord.steps );
     this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
     this.piano.redrawKeys(this.part);
     this.emitPartChange();
   }
-  onChordChange():void {
+  onChordChange( chord:Chord ):void {
+    this.part.chord = chord;
     this.part.chord.midiNotes = Note.createMidiNotes( this.part.root, this.part.chord.steps );
     this.filterScales();
     // if current scale is not in scalesFiltered: set first scale in scalesFiltered as current scale 
     if( !this.scalesFiltered.find( s=> s.name===this.part.scale.name ) ){
-      this.part.scale = this.scalesFiltered[0];
-      this.onScaleChange();
+      this.onScaleChange(this.scalesFiltered[0]);
     } else {
       this.piano.redrawKeys(this.part);
       this.emitPartChange();
     }
   }
-  onScaleChange():void {
+  onScaleChange(scale:Scale):void {
+    this.part.scale = scale;
     this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
     this.piano.redrawKeys(this.part);
+    this.emitPartChange();
+  }
+  onMeasuresChange(m:any):void{
+    this.part.measures = m.label;
     this.emitPartChange();
   }
   emitPartChange():void {

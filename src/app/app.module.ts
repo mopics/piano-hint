@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
 import { HttpModule }    from '@angular/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // ng2-semanctic
 import {SuiModule} from 'ng2-semantic-ui';
 
@@ -26,6 +27,7 @@ import { PartComponent } from './progression-editor/part/part.component';
 import { MenuComponent } from './menu/menu.component';
 import { ProgressionSelectComponent } from './progression-select/progression-select.component';
 import { ConfirmModalComponent } from './shared/modals/modal-confirm/modal-confirm.component';
+import { SelectComponent } from './shared/select/select.component';
 
 
 @NgModule({
@@ -37,7 +39,8 @@ import { ConfirmModalComponent } from './shared/modals/modal-confirm/modal-confi
     PartComponent,
     MenuComponent,
     ProgressionSelectComponent,
-    ConfirmModalComponent
+    ConfirmModalComponent,
+    SelectComponent
   ],
   entryComponents:[
     ConfirmModalComponent // dynamicly created components also need to be added to entryComponents
@@ -48,7 +51,8 @@ import { ConfirmModalComponent } from './shared/modals/modal-confirm/modal-confi
     FormsModule,
     HttpModule,
     InMemoryWebApiModule.forRoot(InMemoryDataService),
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule
   ],
   providers: [
     ProgressionsService,
