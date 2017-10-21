@@ -11,7 +11,7 @@ export const ScaleSteps:number[][] = [
     [1,0,1,1,0,1,0,1,1,0,1,0], // Aeolian
     [1,1,0,1,0,1,1,0,1,0,1,0], // Locrian
     [1,0,1,1,0,1,0,1,1,0,0,1], // HarmonicMinor
-    [1,0,1,1,0,1,0,1,0,1,0,1],  // MelocicMinor
+    [1,0,1,1,0,1,0,1,0,1,0,1], // MelocicMinor
     [1,0,1,0,1,0,1,1,0,1,1,0], // Lydian b7
     [1,1,0,1,1,0,1,1,1,0,1,0], // Altered
     [1,1,0,1,1,0,1,1,0,1,1,0], // Symmetrical Diminished
@@ -185,7 +185,9 @@ export class Scale {
         this._index = i;
         this.steps = ScaleSteps[this._index];
     }
-    clone():Scale{ return new Scale(this._index);}
+    clone():Scale{ 
+        return new Scale(this._index);
+    }
 }
 
 export class Chord{

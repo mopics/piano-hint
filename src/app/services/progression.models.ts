@@ -18,12 +18,15 @@ export class ProgressionPart {
      set measuresStr( s:string ){ this.measures = parseInt( s ); 
     }
      clone():ProgressionPart {
-         return new ProgressionPart( 
+         let pp =  new ProgressionPart( 
              this.index,
              this.root.clone(), 
              this.chord.clone(), 
              this.scale.clone(),
              this.measures );
+        pp.chord.midiNotes = Note.createMidiNotes( pp.root, pp.chord.steps );
+        pp.scale.midiNotes = Note.createMidiNotes( pp.root, pp.scale.steps );
+        return pp;
      }
 }
 export class Progression {
