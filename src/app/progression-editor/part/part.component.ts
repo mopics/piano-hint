@@ -22,7 +22,7 @@ export class PartComponent implements OnInit {
 
   notes:Note[] = Array<Note>(12).fill(new Note(0)).map((n,i)=>new Note(i));
   chords:Chord[] = Array<Chord>(ChordSteps.length).fill(new Chord(0)).map((c,i)=> new Chord(i));
-  scales:Scale[] = Array<Scale>(ChordSteps.length).fill(new Scale(0)).map((c,i)=> new Scale(i));
+  scales:Scale[] = Array<Scale>(ScaleSteps.length).fill(new Scale(0)).map((c,i)=> new Scale(i));
   scalesFiltered:Scale[];
 
   constructor(private _ngZone: NgZone) {

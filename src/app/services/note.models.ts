@@ -1,7 +1,7 @@
 import { clone } from 'ramda/src/';
 
 export enum Notes { C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B }
-export enum Scales { Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian, HarmonicMinor, MelodicMinor };
+export enum Scales { Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian, Harmonic_Minor, Melodic_Minor, Lydian_b7, Atltered, Symmetrical_Diminished };
 export const ScaleSteps:number[][] = [
     [1,0,1,0,1,1,0,1,0,1,0,1], // Ionian
     [1,0,1,1,0,1,0,1,0,1,1,0], // Dorian
@@ -11,10 +11,14 @@ export const ScaleSteps:number[][] = [
     [1,0,1,1,0,1,0,1,1,0,1,0], // Aeolian
     [1,1,0,1,0,1,1,0,1,0,1,0], // Locrian
     [1,0,1,1,0,1,0,1,1,0,0,1], // HarmonicMinor
-    [1,0,1,1,0,1,0,1,0,1,0,1]  // MelocicMinor
+    [1,0,1,1,0,1,0,1,0,1,0,1],  // MelocicMinor
+    [1,0,1,0,1,0,1,1,0,1,1,0], // Lydian b7
+    [1,1,0,1,1,0,1,1,1,0,1,0], // Altered
+    [1,1,0,1,1,0,1,1,0,1,1,0], // Symmetrical Diminished
 ];
 export enum Chords { Major, Minor, Dom7, HalfDim, FullDim };
 export const ChordSteps:number[][] = [
+   //1,0,2,0,3,4,0,5,0,6,0,7 
     [1,0,0,0,1,0,0,1,0,0,0,0], // Major
     [1,0,0,1,0,0,0,1,0,0,0,0], // Minor
     [1,0,0,0,1,0,0,1,0,0,1,0], // Dom7
@@ -169,7 +173,7 @@ export class Scale {
         this.steps = ScaleSteps[this._index];
      }
     get name():string { return this._name; }
-    get label():string { return this._name; }
+    get label():string { return this._name.replace("_"," "); }
     set name( s:string ){
         this._name = s;
         this._index = Scales[s];
