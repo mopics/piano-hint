@@ -27,6 +27,7 @@ export class ProgressionPart {
         pp.chord.midiNotes = Note.createMidiNotes( pp.root, pp.chord.steps );
         pp.scale.midiNotes = Note.createMidiNotes( pp.root, pp.scale.steps );
         return pp;
+        
      }
 }
 export class Progression {

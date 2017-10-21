@@ -24,7 +24,7 @@ export class PianoOctaveComponent implements OnInit {
   @Input() root:string = "C";
   @Input() chord:string;
   @Input() scale:string;
-
+  @Input() startOctave:number = 2;
   @Input() numOctaves:number = 1;
   @Input() keyHeight:number = 400;
   @Input() keyWidth:number = 80;
@@ -52,7 +52,7 @@ export class PianoOctaveComponent implements OnInit {
     this.root = "C";//part.root.name;
     this.viewBox = `0 0 ${this.keyWidth*7*this.numOctaves+this.keyWidth} ${this.keyHeight}`;
     this.octaves = Array( this.numOctaves ).fill(1).map( (x,i) =>i );
-    this.keys = Note.getNotesFromRoot( Note.toFlat(this.root), this.numOctaves, true );
+    this.keys = Note.getNotesFromRoot( Note.toFlat(this.root), this.numOctaves, this.startOctave, true );
 
     this.whiteKeys = new Array<Note>();
     this.blackKeys = new Array<Note>();
@@ -112,8 +112,8 @@ export class PianoOctaveComponent implements OnInit {
   }
 
   // key click events
-  onKeyClick( name:string ):void {
-    this.keyClicked.emit( new Note(Notes[name]));
+  onKeyClick( note:Note ):void {
+    this.keyClicked.emit( note );
   }
 
 }

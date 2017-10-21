@@ -9,6 +9,7 @@
         <app-part [part]="part" 
           (change)="handlePartChange($event)"
           (delete)="handleDeleteRequest($event)"
+          (keyClicked)="handleKeyClicked($event)"
           ></app-part>
       </div>
     </div>

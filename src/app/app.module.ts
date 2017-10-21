@@ -17,6 +17,7 @@ import { InMemoryDataService }  from './services';
 import { ProgressionsService } from './services';
 import { GlobalSelectionsService } from './services';
 import { SuiModalService } from 'ng2-semantic-ui';
+import { ToneService } from './services';
 
 //components
 import { AppComponent } from './app.component';
@@ -57,7 +58,8 @@ import { SelectComponent } from './shared/select/select.component';
   providers: [
     ProgressionsService,
     GlobalSelectionsService,
-    SuiModalService
+    SuiModalService,
+    ToneService
   ],
   bootstrap: [AppComponent]
 })

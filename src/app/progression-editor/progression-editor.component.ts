@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chords, Notes, Note } from '../services';
 import { Progression, ProgressionPart } from '../services';
 // service
-import { ProgressionsService, GlobalSelectionsService } from '../services';
+import { ProgressionsService, GlobalSelectionsService, ToneService } from '../services';
 import { SuiModalService, ModalSize } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../shared/modals/modal-confirm/modal-confirm.component';
 
@@ -20,7 +20,8 @@ export class ProgressionEditorComponent implements OnInit {
   constructor(  
     private progService:ProgressionsService,
     private globalSelections:GlobalSelectionsService,
-    private modalService:SuiModalService
+    private modalService:SuiModalService,
+    private tone:ToneService
    ) {  }
 
   ngOnInit() {
@@ -32,6 +33,7 @@ export class ProgressionEditorComponent implements OnInit {
   // addin part
   handlePartChange( part:ProgressionPart ):void {
     this.progression.parts[ part.index ] = part;
+    
     // TODO send change to service
   }
   addPart():void {
@@ -51,6 +53,9 @@ export class ProgressionEditorComponent implements OnInit {
       /*.onDeny( ()=>{
 
       });*/
+  }
+  handleKeyClicked( n:Note ):void{
+    this.tone.playNote( n.getFullName(), "8n" );
   }
   removePart( part:ProgressionPart ):void {
     let pi:number = this.progression.parts.findIndex( p =>  part.index==p.index );

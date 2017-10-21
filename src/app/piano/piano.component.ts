@@ -7,7 +7,7 @@ import { PianoOctaveComponent } from '../shared/piano-octave/piano-octave.compon
 import { ProgressionPart, Progression } from '../services';
 
 // service
-import { ProgressionsService, GlobalSelectionsService } from '../services';
+import { ProgressionsService, GlobalSelectionsService, ToneService } from '../services';
 
 @Component({
   selector: 'app-piano',
@@ -22,7 +22,8 @@ export class PianoComponent implements OnInit {
 
   constructor( 
     private progService:ProgressionsService,
-    private globalSelections:GlobalSelectionsService
+    private globalSelections:GlobalSelectionsService,
+    private tone:ToneService
   ) { }
 
   ngOnInit() {
@@ -37,10 +38,12 @@ export class PianoComponent implements OnInit {
   }
   initPiano():void {
     this.piano.root = "C";
+    this.piano.startOctave = 2;
     this.piano.numOctaves = 2;
     this.piano.keyHeight = 200;
     this.piano.keyWidth = 80;
     this.piano.redrawKeys( this.progression.parts[0] );
+    this.piano.keyClicked.subscribe( n=> this.tone.playNote(n.getFullName()))
   }
 
 }

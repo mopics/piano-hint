@@ -27,7 +27,7 @@ export const ChordSteps:number[][] = [
 ];
 export enum MajorChords { I, ii, iii, IV, V, vi, viiHD };
 export enum MinorChords { i, iiHD, III, iv, V, VII, viiFD };
-export const MidiRange:number[] = [ 35, 127 ];
+export const MidiRange:number[] = [ 36, 127 ];
 
 export class Note {
     static raised2flat:Object =  { "C#":"Db", "D#":"Eb","F#":"Gb","G#":"Ab","A#":"Bb" };
@@ -106,26 +106,27 @@ export class Note {
     clone():Note{
         return new Note( this._index, this.octave, this.midiIndex );
     }
-    static getNotesFromRoot( root:string, octaves:number, addRootKeyAtEnd:boolean ):Note[] {
-        let r = new Note(Notes[root],1);
+    static getNotesFromRoot( root:string, octaves:number, startOctave:number, addRootKeyAtEnd:boolean ):Note[] {
+        let o = startOctave;
+        let r = new Note(Notes[root],o);
         let notes = new Array<Note>();
         notes.push(r);
         let i:number = r.index+1;
         while( notes.length<12 ){
-            notes.push( new Note( i, 1 ) );
+            notes.push( new Note( i, o ) );
             i++;
-            if( i===12 ){ i=0; }
+            if( i===12 ){ i=0; o++; }
         }
-        let o:number = 1;
         let nnotes = notes;
+        o = 1;
         while( o<octaves ){
+            nnotes = nnotes.concat( notes.map(n=>new Note(n.index,n.octave+o) ) );
             o++;
-            nnotes = nnotes.concat( notes.map(n=>new Note(n.index,o) ) );
         }
         if( addRootKeyAtEnd ){
             if( !r.whiteKey )
-                nnotes.push( new Note( r.index-1, o ) );
-            nnotes.push( new Note( r.index, o+1) );
+                nnotes.push( new Note( r.index-1, octaves+startOctave ) );
+            nnotes.push( new Note( r.index,  octaves+startOctave) );
         }
 
         return nnotes;
@@ -142,14 +143,13 @@ export class Note {
         // 2. loop thru midi-range and push midi-notes using _steps , TODO: use functional programming ?? yep already done sort off
         let stepIdx:number = 0;
         let noteIdx:number = root.index;
-        let octave:number = 0;
+        let i:number = MidiRange[0]+root.index;
         let note:Note = new Note(0);
-        let i:number = MidiRange[0];
-        return Array( MidiRange[1]-MidiRange[0]).fill(new Note(0)).map(
+        return Array( MidiRange[1]-MidiRange[0]+root.index).fill(new Note(0)).map(
             note => {
                 let midiNote = new Note(noteIdx);
                 if( steps[stepIdx]===1 )
-                    midiNote.octave = Math.floor(i/12)-2;
+                    midiNote.octave = Math.floor((i)/12)-2;
                 else
                     midiNote.octave = -1; // gets filtered out later on
                 
@@ -184,6 +184,9 @@ export class Scale {
         this._name = Scales[i];
         this._index = i;
         this.steps = ScaleSteps[this._index];
+    }
+    get noteCount():number{
+        return this.steps.filter( nr=> nr===1 ).length;
     }
     clone():Scale{ 
         return new Scale(this._index);

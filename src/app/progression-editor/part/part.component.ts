@@ -4,9 +4,10 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, NgZone } fro
 // import { SuiSelect } from 'ng2-semantic-ui';
 import { PianoOctaveComponent } from '../../shared/piano-octave/piano-octave.component';
 
-// models
+// models & services
 import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps } from '../../services';
-import { Progression, ProgressionPart } from '../../services';
+import { Progression, ProgressionPart, ToneService } from '../../services';
+
 
 @Component({
   selector: 'app-part',
@@ -17,6 +18,7 @@ export class PartComponent implements OnInit {
   @Input() part:ProgressionPart;
   @Output() change:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @Output() delete:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
+  @Output() keyClicked:EventEmitter<Note> = new EventEmitter();
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
   // @ViewChild('scaleSelect') scaleSelect:SuiSelect;
 
@@ -25,17 +27,21 @@ export class PartComponent implements OnInit {
   scales:Scale[] = Array<Scale>(ScaleSteps.length).fill(new Scale(0)).map((c,i)=> new Scale(i));
   scalesFiltered:Scale[];
 
-  constructor(private _ngZone: NgZone) {
+  constructor(private tone:ToneService) {
   }
 
   ngOnInit() {
     this.piano.root = this.part.root.name;
+    this.piano.startOctave = 3;
     this.piano.numOctaves = 2;
     this.piano.keyHeight = 200;
     this.piano.keyWidth = 80;
     this.filterScales();
     this.piano.redrawKeys( this.part );
-    this.piano.keyClicked.subscribe( n=> this.onRootChange(n) );
+    this.piano.keyClicked.subscribe( n=> {
+      this.onRootChange(n);
+      this.keyClicked.emit(n)
+     } );
   }
   filterScales():void{
     this.scalesFiltered = this.scales.filter( s=> {
@@ -54,23 +60,26 @@ export class PartComponent implements OnInit {
     this.part.chord.midiNotes = Note.createMidiNotes( this.part.root, this.part.chord.steps );
     this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
     this.piano.redrawKeys(this.part);
+    this.tone.playNote( n.getFullName() );
     this.emitPartChange();
   }
   onChordChange( chord:Chord ):void {
     this.part.chord = chord;
     this.part.chord.midiNotes = Note.createMidiNotes( this.part.root, this.part.chord.steps );
+    this.tone.playChord( chord );
     this.filterScales();
     // if current scale is not in scalesFiltered: set first scale in scalesFiltered as current scale 
     if( !this.scalesFiltered.find( s=> s.name===this.part.scale.name ) ){
-      this.onScaleChange(this.scalesFiltered[0]);
+      this.onScaleChange(this.scalesFiltered[0], false );
     } else {
       this.piano.redrawKeys(this.part);
       this.emitPartChange();
     }
   }
-  onScaleChange(scale:Scale):void {
+  onScaleChange(scale:Scale, play:boolean=true ):void {
     this.part.scale = scale;
     this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
+    if( play ) { this.tone.playScale( scale ); }
     this.piano.redrawKeys(this.part);
     this.emitPartChange();
   }
