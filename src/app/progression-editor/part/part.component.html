@@ -15,17 +15,23 @@
         <label>Length:</label>
         <app-select [items]="[{label:1},{label:2},{label:3},{label:4}]" 
         (select)="onMeasuresChange($event)" 
-        [selected]="{label:1}"></app-select>
+        [selected]="{label:part.measures}"></app-select>
       </div>
       <div class="right floated column">
         <i (click)="deletePart()" class="right floated remove circle big red icon"></i>
       </div>
-      <div class="column sixteen wide">
+      <div class="column eight wide">
         <label>Scale:</label>
         <app-select [items]="scalesFiltered" 
         (select)="onScaleChange($event)" 
         [selected]="part.scale"></app-select>
       </div>
+      <!--<div class="column eight wide">
+        <label>Chord Pattern:</label>
+        <app-select [items]="chordPatterns" 
+        (select)="onChordPatternChange($event)" 
+        [selected]="chordPatterns[part.chordPattern]"></app-select>
+      </div>-->
       <label class="ui tiny text">Click on a key to select a root</label>
       <app-piano-octave #pianoOctave>
     </app-piano-octave>

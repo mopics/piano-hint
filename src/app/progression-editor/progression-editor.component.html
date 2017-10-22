@@ -6,7 +6,9 @@
   <div class="ui stackable cards raised">
     <div *ngFor="let part of progression.parts" class="card">
       <div class="content">
-        <app-part [part]="part" 
+        <app-part 
+          [part]="part" 
+          [chordPatterns]="chordPatterns"
           (change)="handlePartChange($event)"
           (delete)="handleDeleteRequest($event)"
           (keyClicked)="handleKeyClicked($event)"

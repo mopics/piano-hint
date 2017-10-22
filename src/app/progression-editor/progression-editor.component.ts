@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chords, Notes, Note } from '../services';
 import { Progression, ProgressionPart } from '../services';
 // service
-import { ProgressionsService, GlobalSelectionsService, ToneService } from '../services';
+import { ProgressionsService, ChordPatternsService, ChordPattern, GlobalSelectionsService, ToneService } from '../services';
 import { SuiModalService, ModalSize } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../shared/modals/modal-confirm/modal-confirm.component';
 
@@ -16,9 +16,11 @@ import { ConfirmModal } from '../shared/modals/modal-confirm/modal-confirm.compo
 export class ProgressionEditorComponent implements OnInit {
   
   progression:Progression;
+  chordPatterns:ChordPattern[];
 
   constructor(  
     private progService:ProgressionsService,
+    private cp:ChordPatternsService,
     private globalSelections:GlobalSelectionsService,
     private modalService:SuiModalService,
     private tone:ToneService
@@ -29,7 +31,13 @@ export class ProgressionEditorComponent implements OnInit {
     this.globalSelections.selectedProgressionEmitter.subscribe( p => {
       this.progression = p;
      } );
+     this.loadChordPatterns();
   }
+  private loadChordPatterns():void{
+		this.cp.getPatterns().then( patterns =>{
+			 this.chordPatterns = patterns;
+		 } );
+	}
   // addin part
   handlePartChange( part:ProgressionPart ):void {
     this.progression.parts[ part.index ] = part;

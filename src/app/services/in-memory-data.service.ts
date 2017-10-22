@@ -1,10 +1,11 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
+import { Chords, Scales } from './';
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
     const progressions = [
         { 
             id: 0, 
-            name: "C-major(I-II-V)",
+            name: "C-minor(I-II-V)",
             parts: [
                 { 
                     index:0,
@@ -14,14 +15,15 @@ export class InMemoryDataService implements InMemoryDbService {
                         name:"C"
                     },
                     scale:{
-                        index:0,
-                        name:"Ionian"
+                        index:Scales.Aeolian,
+                        name:"Aeolian"
                     },
                     chord:{
-                        index:0,
-                        name:"Major"
+                        index:Chords.Minor,
+                        name:"Minor"
                     },
-                    measures:2 
+                    measures:1,
+                    chordPattern:1
                 },
                 { 
                     index:1,
@@ -31,14 +33,15 @@ export class InMemoryDataService implements InMemoryDbService {
                         name:"D"
                     },
                     scale:{
-                        index:1,
-                        name:"Dorian"
+                        index:Scales.Symmetrical_Diminished,
+                        name:"Symmetrical Diminished"
                     },
                     chord:{
-                        index:1,
-                        name:"Minor"
+                        index:Chords.FullDim,
+                        name:"FullDim"
                     },
-                    measures:2 
+                    measures:1 ,
+                    chordPattern:1
                 },
                 { 
                     index:2,
@@ -55,11 +58,40 @@ export class InMemoryDataService implements InMemoryDbService {
                         index:2,
                         name:"Dom7"
                     },
-                    measures:2 
+                    measures:1 ,
+                    chordPattern:1
                 }
             ]
         }
     ];
-    return {progressions};
+    const chordpatterns = [
+        {
+            index:0,
+            name : "pattern #1",
+            ticks :  	[0,1,2,3,4,5,6,7],
+            root : 	    [0,4,3,0,0,4,3,0],
+            rootVel:    [0,1,1,0,0,1,1,0],
+            third:		[3,0,0,0,0,3,0,0],
+            thirdVel:   [1,0,0,0,0,1,0,0],
+            fifth:	    [3,0,3,0,3,0,0,0],
+            fifthVel:   [1,0,1,0,1,0,0,0],
+            seventh:	[0,5,0,5,3,0,5,3],
+            seventhVel: [0,1,0,1,1,0,1,1]
+        },
+        {
+            index:1,
+            name : "pattern #2",
+            ticks :  	[0,1,2,3,4,5,6,7],
+            root : 	    [2,0,0,2,0,0,3,0],
+            rootVel:    [0,1,1,0,0,1,1,0],
+            third:		[3,0,0,0,0,3,0,0],
+            thirdVel:   [1,0,0,0,0,1,0,0],
+            fifth:	    [3,0,3,0,3,0,0,0],
+            fifthVel:   [1,0,1,0,1,0,0,0],
+            seventh:	[0,5,0,5,3,0,5,3],
+            seventhVel: [0,1,0,1,1,0,1,1]
+        }
+    ];
+    return {progressions,chordpatterns};
   }
 }

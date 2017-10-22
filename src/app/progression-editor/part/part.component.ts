@@ -6,7 +6,7 @@ import { PianoOctaveComponent } from '../../shared/piano-octave/piano-octave.com
 
 // models & services
 import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps } from '../../services';
-import { Progression, ProgressionPart, ToneService } from '../../services';
+import { Progression, ProgressionPart, ToneService, ChordPattern } from '../../services';
 
 
 @Component({
@@ -16,6 +16,7 @@ import { Progression, ProgressionPart, ToneService } from '../../services';
 })
 export class PartComponent implements OnInit {
   @Input() part:ProgressionPart;
+  @Input() chordPatterns:ChordPattern[];
   @Output() change:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @Output() delete:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @Output() keyClicked:EventEmitter<Note> = new EventEmitter();
@@ -66,7 +67,7 @@ export class PartComponent implements OnInit {
   onChordChange( chord:Chord ):void {
     this.part.chord = chord;
     this.part.chord.midiNotes = Note.createMidiNotes( this.part.root, this.part.chord.steps );
-    this.tone.playChord( chord );
+    this.tone.playChord( chord, 3, '4n' );
     this.filterScales();
     // if current scale is not in scalesFiltered: set first scale in scalesFiltered as current scale 
     if( !this.scalesFiltered.find( s=> s.name===this.part.scale.name ) ){
@@ -85,6 +86,10 @@ export class PartComponent implements OnInit {
   }
   onMeasuresChange(m:any):void{
     this.part.measures = m.label;
+    this.emitPartChange();
+  }
+  onChordPatternChange(cp:ChordPattern):void{
+    this.part.chordPattern = cp.index;
     this.emitPartChange();
   }
   emitPartChange():void {

@@ -29,7 +29,7 @@ export class ProgressionsService {
           let root = new Note( part.root.index );
           let scale = new Scale(part.scale.index);
           let chord = new Chord( part.chord.index );
-          var newPart:ProgressionPart =  new ProgressionPart( part.index, root, chord, scale, part.measures );
+          var newPart:ProgressionPart =  new ProgressionPart( part.index, root, chord, scale, part.measures, part.chordPattern );
           newPart.chord.midiNotes = Note.createMidiNotes( newPart.root, newPart.chord.steps );
           newPart.scale.midiNotes = Note.createMidiNotes( newPart.root, newPart.scale.steps );
           partsC.push( newPart );
@@ -54,7 +54,7 @@ export class ProgressionsService {
             let root = new Note( part.root.index );
             let scale = new Scale(part.scale.index);
             let chord = new Chord( part.chord.index );
-            var newPart:ProgressionPart =  new ProgressionPart( part.index, root, chord, scale, part.measures );
+            var newPart:ProgressionPart =  new ProgressionPart( part.index, root, chord, scale, part.measures, part.chordPattern );
             newPart.chord.midiNotes = Note.createMidiNotes( newPart.root, newPart.chord.steps );
             newPart.scale.midiNotes = Note.createMidiNotes( newPart.root, newPart.scale.steps );
             partsC.push( newPart )
