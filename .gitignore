@@ -23,7 +23,7 @@
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-!.vscode-upload.json
+.vscode-upload.json
 
 # misc
 /.sass-cache
