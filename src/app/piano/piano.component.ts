@@ -39,11 +39,22 @@ export class PianoComponent implements OnInit {
   initPiano():void {
     this.piano.root = "C";
     this.piano.startOctave = 2;
-    this.piano.numOctaves = 2;
-    this.piano.keyHeight = 200;
+    this.piano.numOctaves = 3;
+    this.piano.keyHeight = 300;
     this.piano.keyWidth = 80;
     this.piano.redrawKeys( this.progression.parts[0] );
-    this.piano.keyClicked.subscribe( n=> this.tone.playNote(n.getFullName()))
+    this.piano.keyClicked.subscribe( n=> this.tone.playNote(n,n.octave) );
+  }
+  playProgression():void{
+    if( this.progression ){
+      this.tone.playProgression( this.progression );
+    }
+  }
+  pauseProgression():void{
+    this.tone.pauseProgression();
+  }
+  stopProgression():void {
+    this.tone.stopProgression();
   }
 
 }

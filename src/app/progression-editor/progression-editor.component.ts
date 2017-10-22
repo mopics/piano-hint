@@ -55,7 +55,7 @@ export class ProgressionEditorComponent implements OnInit {
       });*/
   }
   handleKeyClicked( n:Note ):void{
-    this.tone.playNote( n.getFullName(), "8n" );
+    this.tone.playNote( n, 3, "8n" );
   }
   removePart( part:ProgressionPart ):void {
     let pi:number = this.progression.parts.findIndex( p =>  part.index==p.index );

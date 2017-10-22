@@ -1,5 +1,5 @@
-fixed-piano {
-    position:fixed;
+piano-big {
+    position: absolute;
     left:0;
     bottom:0;
     width:100%;

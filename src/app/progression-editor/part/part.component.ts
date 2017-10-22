@@ -60,7 +60,7 @@ export class PartComponent implements OnInit {
     this.part.chord.midiNotes = Note.createMidiNotes( this.part.root, this.part.chord.steps );
     this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
     this.piano.redrawKeys(this.part);
-    this.tone.playNote( n.getFullName() );
+    this.tone.playNote( n, 3 );
     this.emitPartChange();
   }
   onChordChange( chord:Chord ):void {

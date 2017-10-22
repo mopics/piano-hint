@@ -5,6 +5,7 @@
       <rect *ngFor="let wk of whiteKeys"
             (click)="onKeyClick(wk)"
             id="octave-{{wk.octave}}-{{wk.name}}-key" stroke="#555555" [attr.fill]="wk.fill" [attr.x]="wk.xPos" y="0" [attr.width]="keyWidth" [attr.height]="keyHeight"></rect>
+      
       <rect *ngFor="let bk of blackKeys"
             (click)="onKeyClick(bk)"
             id="octave-{{bk.octave}}-{{bk.name}}-key" stroke="#979797" [attr.fill]="bk.fill" [attr.x]="bk.xPos" y="0" [attr.width]="keyWidth*0.5" [attr.height]="keyHeight*0.75"></rect>

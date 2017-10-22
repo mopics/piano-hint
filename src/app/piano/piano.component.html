@@ -3,13 +3,13 @@
   <div class="ui centered grid">
     <div class="item five wide">
       <div class="ui icon  huge buttons">
-        <button class="ui button">
+        <button (click)="playProgression()" class="ui button">
           <i class="play white icon"></i>
         </button>
-        <button class="ui button">
+        <button (click)="pauseProgression()" class="ui button">
           <i class="pause white icon"></i>
         </button>
-        <button class="ui button">
+        <button (click)="stopProgression()" class="ui button">
           <i class="stop white icon"></i>
         </button>
       </div>
@@ -18,7 +18,6 @@
   <br><br><br>
   <div>Part {{progression.parts[0].index+1}}:&nbsp;&nbsp;{{progression.parts[0].root.name}}{{progression.parts[0].chord.name}}
     <br>
-    <div class="ui message red">TODO: make parts playable giwith webkit.midi</div>
     <br><br>
   </div>
 </div>
@@ -28,5 +27,5 @@
     <div class="ui red inverted big message">No progression selected. Please pick a progression in the topleft dropdown-menu</div>
 </div>
 
-<app-piano-octave class="ui fixed bottom" #pianoOctave>
+<app-piano-octave class="piano-big" #pianoOctave>
 </app-piano-octave>
