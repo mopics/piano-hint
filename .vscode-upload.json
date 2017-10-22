@@ -2,7 +2,7 @@
     "name":"pianohint.mopics.nl",
     "host": "",
     "port": 22,
-    "username": "",
+    "username": "root",
     "password": "",
     "remotePath": "/var/www/pianohint/html/dist/",
     "localPath": "dist/",
