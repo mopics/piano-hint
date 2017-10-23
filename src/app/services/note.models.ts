@@ -38,18 +38,16 @@ export class Note {
     private _whiteKey:boolean = true;
     xPos:number = 0;
     static whiteFill:string = "#FFFFF7";
-    static blackFill:string = "#4B4B4B";
-    static rootFill:string = "#dd9f9f";
-    static rootBlackFill:string = "#A44020";
-    static thirdFill:string = "#DFEEC6";
-    static thirdBlackFill:string = "#6B8C5F";
-    static fifthFill:string = "#C6D1EE";
-    static fifthBlackFill:string = "#6D7D9A";
-    static seventhFill:string = "#f9fca6";
-    static seventhBlackFill:string = "#dce06d";
-    static scaleFill:string = "#eae0d3";
-    static scaleBlackFill:string = "#a39889";
+    static blackFill:string = "#5B5B6B";
+    static rootFill:string = "#E05555";
+    static thirdFill:string = "#35BC75";
+    static fifthFill:string = "#5667E2";
+    static seventhFill:string = "#FFFfa1";
+    static scaleFill:string = "#4B4B4B";
+    static HI:number = 0.9;
+    static NO:number = 0.3;
     private _fill:string;
+    private _highlight:number = Note.NO;
 
     constructor( private _index:number,octave:number = 1,midiIndex:number = -1 ){
         this._name = Notes[this._index];
@@ -74,9 +72,9 @@ export class Note {
     }
     get fill():string{ return this._fill; }
     set fill( f:string ){ 
-        if( this._whiteKey )
+        //if( this._whiteKey )
          this._fill = f; 
-        else {
+        /*else {
             switch( f ){
                 case Note.rootFill:
                 this._fill = Note.rootBlackFill;
@@ -93,13 +91,15 @@ export class Note {
                 default:
                 this._fill = Note.scaleBlackFill;
             }
-        }
+        }*/
     }
+    get highlight():number { return this._highlight; }
+    set highlight( o:number ){ this._highlight = o; }
 
     get whiteKey():boolean{ return this._whiteKey; }
     
 
-    getFullName():string {
+    get fullName():string {
         return `${this._name}${this.octave}`;
     }
 

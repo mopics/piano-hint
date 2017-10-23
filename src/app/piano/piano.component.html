@@ -16,10 +16,10 @@
     </div>
   </div>
   <br><br><br>
-  <div>Part {{progression.parts[0].index+1}}:&nbsp;&nbsp;{{progression.parts[0].root.name}}{{progression.parts[0].chord.name}}
+  <h1 class="ui big centered">Part {{progression.parts[currPartIndex].index+1}}:&nbsp;&nbsp;{{progression.parts[currPartIndex].root.name}}-{{progression.parts[currPartIndex].chord.name}}
     <br>
     <br><br>
-  </div>
+  </h1>
 </div>
 
 <div *ngIf="!progression" class="ui container">
@@ -29,3 +29,4 @@
 
 <app-piano-octave class="piano-big" #pianoOctave>
 </app-piano-octave>
+<app-pianocolor-legend></app-pianocolor-legend>

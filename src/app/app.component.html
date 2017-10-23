@@ -7,6 +7,7 @@
     <sui-sidebar class="inverted vertical huge"  #sidebar>
         <a routerLink="./piano" class="item" (click)="sidebar.toggle()">Piano</a>
         <a routerLink="./progression-editor" class="item" (click)="sidebar.toggle()">Progression Editor</a>
+        <a routerLink="./pattern-editor" class="item">Chord Pattern Editor</a>
     </sui-sidebar>
     <sui-sidebar-sibling [isDimmedWhenVisible]="true">
         <div class="ui top attached menu borderless inverted " id="app-narrow-menu">
@@ -21,6 +22,7 @@
             <div class="left menu">
                 <a routerLink="./piano" class="item">Piano</a>
                 <a routerLink="./progression-editor" class="item">Progression Editor</a>
+                <a routerLink="./pattern-editor" class="item">Chord Pattern Editor</a>
                 <div class="right menu borderless"><app-progression-select></app-progression-select></div>
             </div>
         </div>

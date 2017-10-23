@@ -30,6 +30,8 @@ import { MenuComponent } from './menu/menu.component';
 import { ProgressionSelectComponent } from './progression-select/progression-select.component';
 import { ConfirmModalComponent } from './shared/modals/modal-confirm/modal-confirm.component';
 import { SelectComponent } from './shared/select/select.component';
+import { PianocolorLegendComponent } from './shared/pianocolor-legend/pianocolor-legend.component';
+import { PatternEditorComponent } from './pattern-editor/pattern-editor.component';
 
 
 @NgModule({
@@ -42,7 +44,9 @@ import { SelectComponent } from './shared/select/select.component';
     MenuComponent,
     ProgressionSelectComponent,
     ConfirmModalComponent,
-    SelectComponent
+    SelectComponent,
+    PianocolorLegendComponent,
+    PatternEditorComponent
   ],
   entryComponents:[
     ConfirmModalComponent // dynamicly created components also need to be added to entryComponents

@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, NgZone } from '@angular/core';
 
-// models
-import { Note, Notes, Chord, Scale, ProgressionPart } from '../../services';
+// models & services
+import { Note, Notes, Chord, Chords, Scale, Progression, ProgressionPart, ToneService } from '../../services';
 
 export class Hint {
   x:number = 0;
@@ -11,7 +11,6 @@ export class Hint {
   note:Note;
 
   constructor(){}
-
 }
 
 @Component({
@@ -35,18 +34,44 @@ export class PianoOctaveComponent implements OnInit {
   keys:Note[];
   whiteKeys:Note[];
   blackKeys:Note[];
+  allKeys:Object;
+  blackBgFill:string = Note.blackFill;
   scaleHints:Hint[];
   viewBox:string;
   octaveWidth:number;
+  progression:Progression;
 
   @ViewChild('piano') piano: ElementRef;
 
-  constructor() {
-    
+  constructor( private ts:ToneService, private _ngZone: NgZone ) {
   }
 
   ngOnInit() {
     this.octaveWidth = this.keyWidth*7;
+  }
+  setProgression( p:Progression ):void {
+    this.progression = p;
+    if( this.progression ){
+      this.ts.sequenceEmitter.subscribe( event=> {
+        if( event.partIndex > -1 ){ // change part
+          this.redrawKeys( this.progression.parts[ event.partIndex ] );
+        }
+        this._ngZone.run(() => {
+          event.notes.forEach( en=> {
+            let n:Note = this.allKeys[en.fullName];
+            if( n ){
+              n.highlight = Note.HI;
+            }
+            setTimeout( ()=>{
+              this._ngZone.run(() => {
+                n.highlight = Note.NO;
+            });
+            }, 1800 ); // TODO: use actual event.note.length to turn off key again
+          });
+       });
+        
+      });
+    }
   }
   redrawKeys( part:ProgressionPart ):void {
     this.root = "C";//part.root.name;
@@ -56,6 +81,8 @@ export class PianoOctaveComponent implements OnInit {
 
     this.whiteKeys = new Array<Note>();
     this.blackKeys = new Array<Note>();
+    this.allKeys = new Object();
+
     var xWhite= this.keys[0].whiteKey ? 0 : -this.keyWidth*.25;
     var xBlack = this.keys[0].whiteKey ? this.keyWidth*.75 : this.keyWidth*.5;
     var pk;
@@ -73,6 +100,7 @@ export class PianoOctaveComponent implements OnInit {
           xBlack += this.keyWidth;
           pk = k;
         }
+        this.allKeys[ k.fullName ] = k;
     });
     // set highlicht color's
     this.keys.filter( n=>n.name===part.chord.midiNotes[0].name ).forEach( n=> n.fill=Note.rootFill );
@@ -85,7 +113,7 @@ export class PianoOctaveComponent implements OnInit {
     this.keys.filter( n=>n.name===part.chord.midiNotes[2].name ).forEach( n=> n.fill=Note.fifthFill );
     // set sixth highlicht color
     //this.keys.filter( n=>n.name===part.scale.midiNotes[5].name ).forEach( n=> n.fill=Note.scaleFill );
-    if( part.chord.name === "Dom7" ){
+    if( part.chord.index >= Chords.Dom7 ){
       // set seventh highlicht color
       this.keys.filter( n=>n.name===part.chord.midiNotes[3].name ).forEach( n=> n.fill=Note.seventhFill );
     }

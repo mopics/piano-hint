@@ -7,17 +7,18 @@ import { Note, Notes, Chord, Chords, Scale, Scales, Progression, ProgressionPart
 
 
 export class SequenceEvent {
-	note:string;
-	octave:number;
-	fullName:string;
+	notes:TickNote[] = new Array<TickNote>();
+	partIndex:number = -1;
 }
 export class TickNote {
-	note:string;
+	name:string;
+	octave:number;
 	velocity:number;
 	length:string;
+	get fullName():string { return this.name+this.octave; }
 }
 export class Ticks {
-	ticks:TickNote[][] = new Array<TickNote[]>();
+	ticks:SequenceEvent[] = new Array<SequenceEvent>();
 }
 @Injectable()
 export class ToneService {
@@ -124,9 +125,10 @@ export class ToneService {
 	}
 	private initBuildScoreSequencer():void {
 		this.sequencer = new Tone.Sequence( (time, col) => {
-			this.score.ticks[col].forEach( t => {
-				this.piano.triggerAttackRelease( t.note, "4n"); // t.length );
-			})
+			this.score.ticks[col].notes.forEach( t => {
+				this.piano.triggerAttackRelease( t.fullName, "1n"); // t.length );
+			});
+			this.sequenceEmitter.emit( this.score.ticks[col] );
 
 		}, this.score.ticks.map( (v,i)=> i ), "4n");
 	}
@@ -135,13 +137,13 @@ export class ToneService {
 			// this.synth.triggerAttackRelease( note, "8n");
 			let pn:Note = note.clone();
 			pn.octave = octave;
-			this.piano.triggerAttackRelease(pn.getFullName(),length );
+			this.piano.triggerAttackRelease(pn.fullName,length );
 	}
 	playChord( chord:Chord, octave:number, length:string = "8n" ):void {
 		for( let i=0; i<3; i++ ){
 			let pn:Note = chord.midiNotes[i].clone();
 			pn.octave = octave;
-			this.piano.triggerAttackRelease( pn.getFullName(), length );
+			this.piano.triggerAttackRelease( pn.fullName, length );
 		}
 	}
 	playScale( scale:Scale, length:string = '4n' ):void {
@@ -150,7 +152,7 @@ export class ToneService {
 			var c:number = 0;
 			var id = setInterval( ()=>{
 				n.octave += 2;
-				this.piano.triggerAttackRelease( n.getFullName(), length );
+				this.piano.triggerAttackRelease( n.fullName, length );
 				n = scale.midiNotes[++c];
 				if( c===numNotes*2+1 ){
 					clearInterval(id);
@@ -167,33 +169,44 @@ export class ToneService {
 					let tickNotes:TickNote[] = new Array<TickNote>();
 					if( pattern.root[i]>0){
 						let t:TickNote = new TickNote();
-						t.note = part.chord.midiNotes[0].name+pattern.root[i];
+						t.name = part.chord.midiNotes[0].name;
+						t.octave = pattern.root[i];
 						t.length = '8n';
 						t.velocity = pattern.rootVel[i];
 						tickNotes.push( t );
 					}
 					if( pattern.third[i]>0){
 						let t:TickNote = new TickNote();
-						t.note = part.chord.midiNotes[1].name+pattern.third[i];
+						t.name = part.chord.midiNotes[1].name;
+						t.octave = pattern.third[i];
 						t.length = '8n';
 						t.velocity = pattern.thirdVel[i];
 						tickNotes.push( t );
 					}
 					if( pattern.fifth[i]>0){
 						let t:TickNote = new TickNote();
-						t.note = part.chord.midiNotes[2].name+pattern.fifth[i];
+						t.name = part.chord.midiNotes[2].name;
+						t.octave = pattern.fifth[i];
 						t.length = '8n';
 						t.velocity = pattern.fifthVel[i];
 						tickNotes.push( t );
 					}
-					if( pattern.seventh[i]>0){
+					if( part.chord.index>Chords.Dom7 && pattern.seventh[i]>0){
 						let t:TickNote = new TickNote();
-						t.note = part.chord.midiNotes[3].name+pattern.seventh[i];
+						t.name = part.chord.midiNotes[3].name;
+						t.octave = pattern.seventh[i];
 						t.length = '8n';
 						t.velocity = pattern.seventhVel[i];
 						tickNotes.push( t );
 					}
-					this.score.ticks.push( tickNotes );
+
+					let evt:SequenceEvent = new SequenceEvent();
+					// set partIndex of every first note of new part
+					if( m===0 && i===0 ){
+						evt.partIndex = part.index;
+					}
+					evt.notes = tickNotes;
+					this.score.ticks.push( evt );
 				});
 			}
 		});

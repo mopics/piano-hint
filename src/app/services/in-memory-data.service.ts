@@ -23,7 +23,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         name:"Minor"
                     },
                     measures:1,
-                    chordPattern:1
+                    chordPattern:0
                 },
                 { 
                     index:1,
@@ -41,7 +41,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         name:"FullDim"
                     },
                     measures:1 ,
-                    chordPattern:1
+                    chordPattern:0
                 },
                 { 
                     index:2,
@@ -59,6 +59,24 @@ export class InMemoryDataService implements InMemoryDbService {
                         name:"Dom7"
                     },
                     measures:1 ,
+                    chordPattern:0
+                },
+                { 
+                    index:3,
+                    root:{
+                        index:0,
+                        octave:1,
+                        name:"C"
+                    },
+                    scale:{
+                        index:Scales.Aeolian,
+                        name:"Aeolian"
+                    },
+                    chord:{
+                        index:Chords.Minor,
+                        name:"Minor"
+                    },
+                    measures:1,
                     chordPattern:1
                 }
             ]
@@ -69,6 +87,32 @@ export class InMemoryDataService implements InMemoryDbService {
             index:0,
             name : "pattern #1",
             ticks :  	[0,1,2,3,4,5,6,7],
+            root : 	    [4,0,0,0,0,0,0,0],
+            rootVel:    [1,0,0,0,0,0,0,0],
+            third:		[3,0,0,0,2,0,0,0],
+            thirdVel:   [1,0,0,0,1,0,0,0],
+            fifth:	    [4,0,0,0,0,0,0,0],
+            fifthVel:   [1,0,1,0,0,0,0,0],
+            seventh:	[4,0,0,0,0,0,0,0],
+            seventhVel: [0,1,0,0,0,0,0,0]
+        },
+        {
+            index:1,
+            name : "pattern #2",
+            ticks :  	[0,1,2,3,4,5,6,7],
+            root : 	    [3,0,0,0,2,0,0,0],
+            rootVel:    [1,0,0,0,1,0,0,0],
+            third:		[3,0,0,0,0,0,0,0],
+            thirdVel:   [1,0,0,0,1,0,0,0],
+            fifth:	    [4,0,0,0,0,0,0,0],
+            fifthVel:   [1,0,1,0,0,0,0,0],
+            seventh:	[4,0,0,0,0,0,0,0],
+            seventhVel: [0,1,0,0,0,0,0,0]
+        },
+        {
+            index:2,
+            name : "pattern #3",
+            ticks :  	[0,1,2,3,4,5,6,7],
             root : 	    [0,4,3,0,0,4,3,0],
             rootVel:    [0,1,1,0,0,1,1,0],
             third:		[3,0,0,0,0,3,0,0],
@@ -78,19 +122,6 @@ export class InMemoryDataService implements InMemoryDbService {
             seventh:	[0,5,0,5,3,0,5,3],
             seventhVel: [0,1,0,1,1,0,1,1]
         },
-        {
-            index:1,
-            name : "pattern #2",
-            ticks :  	[0,1,2,3,4,5,6,7],
-            root : 	    [2,0,0,2,0,0,3,0],
-            rootVel:    [0,1,1,0,0,1,1,0],
-            third:		[3,0,0,0,0,3,0,0],
-            thirdVel:   [1,0,0,0,0,1,0,0],
-            fifth:	    [3,0,3,0,3,0,0,0],
-            fifthVel:   [1,0,1,0,1,0,0,0],
-            seventh:	[0,5,0,5,3,0,5,3],
-            seventhVel: [0,1,0,1,1,0,1,1]
-        }
     ];
     return {progressions,chordpatterns};
   }

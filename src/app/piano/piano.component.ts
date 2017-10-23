@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 
 // components
 import { PianoOctaveComponent } from '../shared/piano-octave/piano-octave.component';
@@ -17,13 +17,15 @@ import { ProgressionsService, GlobalSelectionsService, ToneService } from '../se
 export class PianoComponent implements OnInit {
 
   progression:Progression;
+  currPartIndex:number = 0;
 
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
 
   constructor( 
     private progService:ProgressionsService,
     private globalSelections:GlobalSelectionsService,
-    private tone:ToneService
+    private ts:ToneService,
+    private ngZone:NgZone
   ) { }
 
   ngOnInit() {
@@ -39,22 +41,31 @@ export class PianoComponent implements OnInit {
   initPiano():void {
     this.piano.root = "C";
     this.piano.startOctave = 2;
-    this.piano.numOctaves = 3;
+    this.piano.numOctaves = 4;
     this.piano.keyHeight = 300;
     this.piano.keyWidth = 80;
+    this.piano.setProgression( this.progression );
     this.piano.redrawKeys( this.progression.parts[0] );
-    this.piano.keyClicked.subscribe( n=> this.tone.playNote(n,n.octave) );
+    this.piano.keyClicked.subscribe( n=> this.ts.playNote(n,n.octave) );
+
+    this.ts.sequenceEmitter.subscribe( event=> {
+      if( event.partIndex > -1 ){ // change part
+        this.ngZone.run( ()=> {
+          this.currPartIndex = event.partIndex;
+        });
+      }
+    });
   }
   playProgression():void{
     if( this.progression ){
-      this.tone.playProgression( this.progression );
+      this.ts.playProgression( this.progression );
     }
   }
   pauseProgression():void{
-    this.tone.pauseProgression();
+    this.ts.pauseProgression();
   }
   stopProgression():void {
-    this.tone.stopProgression();
+    this.ts.stopProgression();
   }
 
 }
