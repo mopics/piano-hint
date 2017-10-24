@@ -1,8 +1,8 @@
 <div *ngIf="progression" class="ui container">
   <br><br><br>
-  <div class="ui centered grid">
-    <div class="item five wide">
-      <div class="ui icon  huge buttons">
+  <div class="ui equal width left aligned padded grid">
+    <div class="five wide collumn" >
+      <div class="ui icon massive fluid buttons">
         <button (click)="playProgression()" class="ui button">
           <i class="play white icon"></i>
         </button>
@@ -13,6 +13,15 @@
           <i class="stop white icon"></i>
         </button>
       </div>
+      <br><br>
+    </div>
+    <div class="five wide collumn" >
+        <app-slider [label]="'BPM'"
+                    [value]="bpm"
+                    [min]="60"
+                    [max]="220" 
+                    (changed)="onBpmSliderChange($event)"></app-slider>
+        <br>
     </div>
   </div>
   <br><br><br>
@@ -27,6 +36,8 @@
     <div class="ui red inverted big message">No progression selected. Please pick a progression in the topleft dropdown-menu</div>
 </div>
 
-<app-piano-octave class="piano-big" #pianoOctave>
-</app-piano-octave>
-<app-pianocolor-legend></app-pianocolor-legend>
+<div class="piano-footer" #pianoFooter>
+  <app-pianocolor-legend></app-pianocolor-legend>
+  <app-piano-octave #pianoOctave>
+  </app-piano-octave>
+</div>

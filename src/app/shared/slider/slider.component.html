@@ -1,0 +1,12 @@
+
+<div class="ui small labeled input">
+    <div class="ui label">
+        {{label}}:&nbsp;&nbsp;
+    </div>
+    <input class="ui input" type="number" [(ngModel)]="value">
+</div>
+<div >
+    <input type="range" min="{{min}}" max="{{max}}" 
+    (change)="onSliderChange($event)"
+    [(ngModel)]="value">
+</div>

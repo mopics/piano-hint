@@ -18,6 +18,7 @@ export class PianoComponent implements OnInit {
 
   progression:Progression;
   currPartIndex:number = 0;
+  bpm:number = 120;
 
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
 
@@ -26,7 +27,9 @@ export class PianoComponent implements OnInit {
     private globalSelections:GlobalSelectionsService,
     private ts:ToneService,
     private ngZone:NgZone
-  ) { }
+  ) { 
+    
+  }
 
   ngOnInit() {
     this.progression = this.globalSelections.selectedProgression;
@@ -55,6 +58,7 @@ export class PianoComponent implements OnInit {
         });
       }
     });
+    this.bpm = this.ts.getBPM();
   }
   playProgression():void{
     if( this.progression ){
@@ -66,6 +70,9 @@ export class PianoComponent implements OnInit {
   }
   stopProgression():void {
     this.ts.stopProgression();
+  }
+  onBpmSliderChange( value:number ):void {
+    this.ts.setBPM( value );
   }
 
 }

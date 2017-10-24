@@ -32,6 +32,7 @@ import { ConfirmModalComponent } from './shared/modals/modal-confirm/modal-confi
 import { SelectComponent } from './shared/select/select.component';
 import { PianocolorLegendComponent } from './shared/pianocolor-legend/pianocolor-legend.component';
 import { PatternEditorComponent } from './pattern-editor/pattern-editor.component';
+import { SliderComponent } from './shared/slider/slider.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { PatternEditorComponent } from './pattern-editor/pattern-editor.componen
     ConfirmModalComponent,
     SelectComponent,
     PianocolorLegendComponent,
-    PatternEditorComponent
+    PatternEditorComponent,
+    SliderComponent
   ],
   entryComponents:[
     ConfirmModalComponent // dynamicly created components also need to be added to entryComponents

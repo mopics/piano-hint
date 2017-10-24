@@ -65,6 +65,7 @@ export class ToneService {
 	currMeasure:number;
 	sequenceEmitter:EventEmitter<SequenceEvent> = new EventEmitter();
 	score:Ticks;
+	paused:boolean = false;
 
   	constructor(private cp:ChordPatternsService ) { 
 		//create a synth and connect it to the master output (your speakers)
@@ -84,53 +85,17 @@ export class ToneService {
 			 this.chordPatterns = patterns;
 		 } );
 	}
-	private initRawPartsSequencer():void {
-		let numSamples:number = 0;
-		for( let itm in this.sampleNotes ){ numSamples++; }
-    	this.sequencer = new Tone.Sequence( (time, col) => {
-			let rootOctave = this.selectedChordPattern.root[col];
-			let chord = this.progression.parts[this.currPart].chord;
-			if (rootOctave>0){
-				let note:Note = chord.midiNotes[0];
-				this.playNote( note, rootOctave );
-			}
-			let thirdOctave = this.selectedChordPattern.third[col];
-			if (thirdOctave>0){
-				let note:Note = chord.midiNotes[1];
-				this.playNote( note, thirdOctave );
-			}
-			let fifthOctave = this.selectedChordPattern.fifth[col];
-			if (fifthOctave>0){
-				let note:Note = chord.midiNotes[2];
-				this.playNote( note, fifthOctave );
-			}
-			let seventhOctave = this.selectedChordPattern.seventh[col];
-			if (seventhOctave>0){
-				let note:Note = chord.midiNotes[3];
-				this.playNote( note, seventhOctave );
-			}
-			if( col===this.selectedChordPattern.ticks.length-1 ){
-				this.currMeasure ++;
-				if( this.currMeasure===this.progression.parts[this.currPart].measures ){
-					this.currMeasure = 0;
-					this.currPart ++;
-					if( this.currPart===this.progression.parts.length){
-						this.currPart = 0;
-					}
-					this.selectedChordPattern = this.chordPatterns[ this.progression.parts[this.currPart].chordPattern ];
-				}
-			}
-
-		}, this.selectedChordPattern.ticks, "8n");
-	}
+	
 	private initBuildScoreSequencer():void {
 		this.sequencer = new Tone.Sequence( (time, col) => {
 			this.score.ticks[col].notes.forEach( t => {
-				this.piano.triggerAttackRelease( t.fullName, "1n"); // t.length );
+				this.piano.triggerAttackRelease( t.fullName, t.length, time, t.velocity ); // t.length );
+				//this.piano.triggerAttack( t.fullName, t.length, t.velocity);
+				//this.piano.triggerRelease( t.fullName, time + duration);
 			});
 			this.sequenceEmitter.emit( this.score.ticks[col] );
 
-		}, this.score.ticks.map( (v,i)=> i ), "4n");
+		}, this.score.ticks.map( (v,i)=> i ), "16n");
 	}
 	playNote( note:Note, octave:number, length:string='4n',  ):void {
 		//play a middle 'C' for the duration of an 8th note
@@ -171,32 +136,32 @@ export class ToneService {
 						let t:TickNote = new TickNote();
 						t.name = part.chord.midiNotes[0].name;
 						t.octave = pattern.root[i];
-						t.length = '8n';
-						t.velocity = pattern.rootVel[i];
+						t.length = pattern.rootLength[i]+"n";
+						t.velocity = pattern.rootVel[i]/10;
 						tickNotes.push( t );
 					}
 					if( pattern.third[i]>0){
 						let t:TickNote = new TickNote();
 						t.name = part.chord.midiNotes[1].name;
 						t.octave = pattern.third[i];
-						t.length = '8n';
-						t.velocity = pattern.thirdVel[i];
+						t.length = pattern.thirdLength[i]+"n";
+						t.velocity = pattern.thirdVel[i]/10;
 						tickNotes.push( t );
 					}
 					if( pattern.fifth[i]>0){
 						let t:TickNote = new TickNote();
 						t.name = part.chord.midiNotes[2].name;
 						t.octave = pattern.fifth[i];
-						t.length = '8n';
-						t.velocity = pattern.fifthVel[i];
+						t.length = pattern.fifthLength[i]+"n";
+						t.velocity = pattern.fifthVel[i]/10;
 						tickNotes.push( t );
 					}
 					if( part.chord.index>Chords.Dom7 && pattern.seventh[i]>0){
 						let t:TickNote = new TickNote();
 						t.name = part.chord.midiNotes[3].name;
 						t.octave = pattern.seventh[i];
-						t.length = '8n';
-						t.velocity = pattern.seventhVel[i];
+						t.length = pattern.seventhLength[i]+"n";
+						t.velocity = pattern.seventhVel[i]/10;
 						tickNotes.push( t );
 					}
 
@@ -212,6 +177,11 @@ export class ToneService {
 		});
 	}
   	playProgression( p:Progression ):void{
+		  if( this.paused ){
+			  Tone.Transport.start();
+			  this.paused = false;
+			  return;
+		  }
 		// var tick:number = setInterval( playTick, 100 );
 		this.progression = p;
 		this.currPart = 0;
@@ -221,12 +191,23 @@ export class ToneService {
 		this.initBuildScoreSequencer();
 		Tone.Transport.start();
 		this.sequencer.start();
+		this.paused = false;
 	}
 	pauseProgression():void {
-		this.sequencer.stop();
+		Tone.Transport.pause();
+		this.paused = true;
 	}
 	stopProgression():void {
+		Tone.Transport.stop();
 		this.sequencer.stop();
+		this.paused = false;
+	}
+	setBPM( bpm:number ){ // 80 to 200
+		Tone.Transport.bpm.value = bpm;
+	}
+	getBPM():number { return Tone.Transport.bpm.value; }
+	noteLength2Ms( l:string ):any{
+		return this.piano.toSeconds( l )*1000;
 	}
 
 }

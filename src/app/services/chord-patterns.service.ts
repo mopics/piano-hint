@@ -27,12 +27,16 @@ export class ChordPatternsService {
         np.ticks = p.ticks;
         np.root = p.root;
         np.rootVel = p.rootVel;
+        np.rootLength = p.rootLength;
         np.third = p.third;
         np.thirdVel = p.third;
+        np.thirdLength = p.thirdLength;
         np.fifth = p.fifth;
         np.fifthVel = p.fifthVel;
+        np.fifthLength = p.fifthLength;
         np.seventh = p.seventh;
         np.seventhVel = p.seventhVel;
+        np.seventhLength = p.seventhLength;
         psC.push( np );
       })
       return psC;

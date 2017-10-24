@@ -66,7 +66,7 @@ export class PianoOctaveComponent implements OnInit {
               this._ngZone.run(() => {
                 n.highlight = Note.NO;
             });
-            }, 1800 ); // TODO: use actual event.note.length to turn off key again
+            }, this.ts.noteLength2Ms( en.length ) ); // TODO: use actual event.note.length to turn off key again
           });
        });
         
