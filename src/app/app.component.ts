@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
+import { GlobalSelectionsService, ToneService } from './services';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +7,30 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
-  root = "C";
+  title = 'piano-hint';
+  loading: boolean = true;
+  loadingMessage:string = 'Loading Samples...';
+  progressionsLoaded:boolean = false;
+  pianoReady:boolean = false;
+
+  constructor( private gss:GlobalSelectionsService, private ts:ToneService, private ngZone:NgZone ){}
+
+  ngOnInit() {
+    this.gss.selectedProgressionEmitter.subscribe( ()=>{
+      this.progressionsLoaded = true;
+      this.checkFullyLoaded();
+    });
+    this.ts.fullyLoaded.subscribe( ()=>{
+      this.pianoReady = true;
+      this.checkFullyLoaded();
+    });
+    this.ts.init();
+  }
+  checkFullyLoaded():void {
+    if( this.progressionsLoaded && this.pianoReady ) {
+      this.ngZone.run( ()=>{
+        this.loading = false;
+      });
+    }
+  }
 }

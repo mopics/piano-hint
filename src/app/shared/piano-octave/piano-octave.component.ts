@@ -35,6 +35,7 @@ export class PianoOctaveComponent implements OnInit {
   whiteKeys:Note[];
   blackKeys:Note[];
   allKeys:Object;
+  allKeysA:Note[];
   blackBgFill:string = Note.blackFill;
   scaleHints:Hint[];
   viewBox:string;
@@ -53,10 +54,11 @@ export class PianoOctaveComponent implements OnInit {
     this.progression = p;
     if( this.progression ){
       this.ts.sequenceEmitter.subscribe( event=> {
-        if( event.partIndex > -1 ){ // change part
-          this.redrawKeys( this.progression.parts[ event.partIndex ] );
-        }
+        
         this._ngZone.run(() => {
+          if( event.partIndex > -1 ){ // change part
+            this.updateKeys( this.progression.parts[ event.partIndex ] );
+          }
           event.notes.forEach( en=> {
             let n:Note = this.allKeys[en.fullName];
             if( n ){
@@ -72,6 +74,39 @@ export class PianoOctaveComponent implements OnInit {
         
       });
     }
+  }
+  updateKeys( part:ProgressionPart ):void {
+    let chordNotes:Note[] = part.chord.midiNotes;
+    // get keys
+    let rootKeys:Note[] = this.allKeysA.filter( n=> n.name===chordNotes[0].name );
+    let thirdKeys:Note[] = this.allKeysA.filter( n=> n.name===chordNotes[1].name );
+    let fifthKeys:Note[] = this.allKeysA.filter( n=> n.name===chordNotes[2].name );
+    let seventhKeys:Note[];
+    if( part.chord.index > Chords.Dom7 ){
+      seventhKeys = this.allKeysA.filter( n=> n.name===chordNotes[3].name );
+    }
+    // set all keys back to normal
+    this.allKeysA.forEach( n=>{
+      if( n.whiteKey )
+        n.fill = Note.whiteFill;
+      else 
+        n.fill = Note.blackFill;
+    });
+    rootKeys.forEach( n=>{
+      n.fill = Note.rootFill;
+    });
+    thirdKeys.forEach( n=>{
+      n.fill = Note.thirdFill;
+    });
+    fifthKeys.forEach( n=>{
+      n.fill = Note.fifthFill;
+    });
+    if( seventhKeys ){
+      seventhKeys.forEach( n=>{
+        n.fill = Note.seventhFill;
+      });
+    }
+
   }
   redrawKeys( part:ProgressionPart ):void {
     this.root = "C";//part.root.name;
@@ -136,6 +171,7 @@ export class PianoOctaveComponent implements OnInit {
         this.scaleHints.push(h);
       }
     });
+    this.allKeysA = this.whiteKeys.concat(this.blackKeys );
 
   }
 

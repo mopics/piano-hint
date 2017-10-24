@@ -67,7 +67,14 @@ export class ToneService {
 	score:Ticks;
 	paused:boolean = false;
 
+	patternsLoaded:boolean = false;
+	samplesLoaded:boolean = false;
+	fullyLoaded:EventEmitter<boolean> = new EventEmitter();
+
   	constructor(private cp:ChordPatternsService ) { 
+	}
+
+	public init():void {
 		//create a synth and connect it to the master output (your speakers)
 		this.synth = new Tone.Synth().toMaster();
 		this.initPiano();
@@ -77,13 +84,24 @@ export class ToneService {
 		this.piano = new Tone.Sampler(
 			this.sampleNotes, {
 			'release' : 1,
+			'onload': ()=> { 
+				this.samplesLoaded = true; 
+				this.checkFullyLoaded(); 
+			},
 			'baseUrl' : './assets/audio/salamander/'
 		}).toMaster();
 	}
 	private loadChordPatterns():void{
 		this.cp.getPatterns().then( patterns =>{
 			 this.chordPatterns = patterns;
+			 this.patternsLoaded = true;
+			 this.checkFullyLoaded();
 		 } );
+	}
+	private checkFullyLoaded():void {
+		if( this.patternsLoaded && this.samplesLoaded ){
+			this.fullyLoaded.emit( true );
+		}
 	}
 	
 	private initBuildScoreSequencer():void {
