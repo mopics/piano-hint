@@ -22,10 +22,5 @@
         padding-right:1px;
         width:30px;
         height: 11px;
-        opacity: .25;
-    }
-    .col-selected {
-        @extend .col;
-        opacity: 1;
     }
 }

@@ -14,7 +14,7 @@
       <!--<label class="ui tiny label">Scale:</label>-->
       Scale: <app-select [items]="scalesFiltered" 
       (select)="onScaleChange($event)" 
-      [selected]="part.scale"></app-select>
+      [selected]="part.scale" #scaleSelect></app-select>
     </div>
 </div>
 <table *ngIf="keys" class="pattern">

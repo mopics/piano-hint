@@ -42,9 +42,9 @@ export class Note {
     static rootFill:string = "#E05555";
     static thirdFill:string = "#35BC75";
     static fifthFill:string = "#5667E2";
-    static seventhFill:string = "#FFFF00";
+    static seventhFill:string = "#eeee00";
     static scaleFill:string = "#71f7ea";
-    static nonToneFill:string = "#eee";
+    static nonToneFill:string = "#baa";
     static HI:number = 0.9;
     static NO:number = 0.3;
     private _fill:string;

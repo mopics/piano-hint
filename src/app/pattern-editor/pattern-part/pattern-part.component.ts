@@ -3,6 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, NgZone } fro
 // components
 // import { SuiSelect } from 'ng2-semantic-ui';
 import { PianoOctaveComponent } from '../../shared/piano-octave/piano-octave.component';
+import { SelectComponent } from '../../shared/select/select.component';
 
 // models & services
 import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps, TickNote } from '../../services';
@@ -22,7 +23,7 @@ export class PatternPartComponent implements OnInit {
 
   @Output() change:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @Output() delete:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
-  // @ViewChild('scaleSelect') scaleSelect:SuiSelect;
+  @ViewChild('scaleSelect') scaleSelect:SelectComponent;
 
   notes:Note[] = Array<Note>(12).fill(new Note(0)).map((n,i)=>new Note(i));
   chords:Chord[] = Array<Chord>(ChordSteps.length).fill(new Chord(0)).map((c,i)=> new Chord(i));
@@ -47,25 +48,37 @@ export class PatternPartComponent implements OnInit {
       n.fill = Note.nonToneFill;
     });
     
-    // set highlicht color's
-    this.keys.filter( n=>n.name===this.part.scale.midiNotes[0].name ).forEach( n=> n.fill=Note.rootFill );
+    let scaleLength:number = this.part.scale.steps.filter( i=>i===1).length;
+    let sixthIndex:number = 5;
+    let fourfthIndex:number = 3;
+    if( scaleLength===8 ){
+      sixthIndex = 6;
+      fourfthIndex = 4;
+      // set eight hightlight color
+      this.keys.filter( n=>n.name===this.part.scale.midiNotes[2].name ).forEach( n=> n.fill=Note.scaleFill ); // Altered and SymetricalDiminished have 8 notes!!
+      // set third highlicht color
+      this.keys.filter( n=>n.name===this.part.chord.midiNotes[1].name ).forEach( n=> n.fill=Note.thirdFill );
+    }
+    // set root hightlight color
+    this.keys.filter( n=>n.name===this.part.chord.midiNotes[0].name ).forEach( n=> n.fill=Note.rootFill );
+    // set second hightlight color
     this.keys.filter( n=>n.name===this.part.scale.midiNotes[1].name ).forEach( n=> n.fill=Note.scaleFill );
     // set third highlicht color
-    this.keys.filter( n=>n.name===this.part.scale.midiNotes[2].name ).forEach( n=> n.fill=Note.thirdFill );
+    this.keys.filter( n=>n.name===this.part.chord.midiNotes[1].name ).forEach( n=> n.fill=Note.thirdFill );
     // set fourth highlicht color
-    this.keys.filter( n=>n.name===this.part.scale.midiNotes[3].name ).forEach( n=> n.fill=Note.scaleFill );
+    this.keys.filter( n=>n.name===this.part.scale.midiNotes[fourfthIndex].name ).forEach( n=> n.fill=Note.scaleFill );
     // set fifth highlicht color
-    this.keys.filter( n=>n.name===this.part.scale.midiNotes[4].name ).forEach( n=> n.fill=Note.fifthFill );
+    this.keys.filter( n=>n.name===this.part.chord.midiNotes[2].name ).forEach( n=> n.fill=Note.fifthFill );
     // set sixth highlicht color
-    this.keys.filter( n=>n.name===this.part.scale.midiNotes[5].name ).forEach( n=> n.fill=Note.scaleFill );
+    this.keys.filter( n=>n.name===this.part.scale.midiNotes[sixthIndex].name ).forEach( n=> n.fill=Note.scaleFill );
     // set seventh highlicht color
-    this.keys.filter( n=>n.name===this.part.scale.midiNotes[6].name ).forEach( n=> n.fill=Note.scaleFill );
-    if( this.part.scale.steps.length===8 )
-      this.keys.filter( n=>n.name===this.part.scale.midiNotes[7].name ).forEach( n=> n.fill=Note.scaleFill ); // Altered and SymetricalDiminished have 8 notes!!
-    if( this.part.chord.index > Chords.Dom7 ){
-      // set seventh highlicht color
+    if( this.part.chord.index>=Chords.Dom7 ) {
       this.keys.filter( n=>n.name===this.part.chord.midiNotes[3].name ).forEach( n=> n.fill=Note.seventhFill );
     }
+    else {
+      this.keys.filter( n=>n.name===this.part.scale.midiNotes[6].name ).forEach( n=> n.fill=Note.scaleFill );
+    }
+    
   }
   filterScales():void{
     this.scalesFiltered = this.scales.filter( s=> {
@@ -90,20 +103,24 @@ export class PatternPartComponent implements OnInit {
   onChordChange( chord:Chord ):void {
     this.part.chord = chord;
     this.part.chord.midiNotes = Note.createMidiNotes( this.part.root, this.part.chord.steps );
-    this.reColorCells();
+    
     this.tone.playChord( chord, 3, '4n' );
     // if current scale is not in scalesFiltered: set first scale in scalesFiltered as current scale 
+    this.filterScales();
     if( !this.scalesFiltered.find( s=> s.name===this.part.scale.name ) ){
       this.onScaleChange(this.scalesFiltered[0], false );
     } else {
+      this.reColorCells();
       this.emitPartChange();
     }
   }
-  onScaleChange(scale:Scale, play:boolean=true ):void {
+  onScaleChange(scale:Scale, triggeredBySelect:boolean=true ):void {
     this.part.scale = scale;
     this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
+    
+    if( triggeredBySelect ) { this.tone.playScale( scale ); }
+
     this.reColorCells();
-    if( play ) { this.tone.playScale( scale ); }
     this.emitPartChange();
   }
   // pattern listeners
@@ -134,6 +151,9 @@ export class PatternPartComponent implements OnInit {
       if( n.name+n.octave===note.fullName ){ return true;}
     } ) ) {
       return 1;
+    }
+    if( this.keys.find( n=> n.name === note.name ).fill===Note.nonToneFill ){
+      return .1;
     }
     return .25;
   }
