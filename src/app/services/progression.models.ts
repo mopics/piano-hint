@@ -36,15 +36,43 @@ export class TimeSignature {
 export class Pattern {
     time:TimeSignature;
     ticks:TickNote[][];
+    _posX:number=0;
+    _width:number=0;
+
     constructor( time:TimeSignature, ticks:TickNote[][] ){ 
         this.time = time; 
         this.ticks = ticks;
     }
     clone():Pattern {
         let t:TimeSignature = new TimeSignature( this.time.parts, this.time.ofLength );
-        let ts:TickNote[][] = this.ticks.map( t=> t.map( tt=>tt.clone() ) );
+        let ts:any = new Array<Object[]>();
+        this.ticks.forEach( a=>{
+            ts.push( new Array<TickNote>() );
+            a.forEach( t=>{
+                ts[ts.length-1].push( { name:t.name, octave:t.octave, length:t.length, velocity:t.velocity });
+            });
+        });
         return new Pattern( t, ts );
     }
+    logData():string {
+        let ticksStr:string = '[';
+        this.ticks.forEach( t=>{
+            ticksStr += '[';
+            t.forEach( n=> {
+                ticksStr += `{name:"${n.name}", octave:${n.octave}, length:"${n.length}", velocity:${n.velocity}},`;
+            });
+            ticksStr += '],';
+        });
+        ticksStr += ']';
+        return `{
+            ticks:${ticksStr},
+            time:{parts:${this.time.parts}, ofLength:${this.time.ofLength}}
+        }`;
+    }
+    get width():number { return this._width; }
+    get posX():number { return this._posX; }
+    set width( w:number ) { this._width = w; }
+    set posX( x:number ){ this._posX = x; }
 }
 export class ProgressionPart {
      index:number = 0;
@@ -75,7 +103,7 @@ export class ProgressionPart {
              this.scale.clone(),
              this.measures,
             this.chordPattern,
-            this.pattern );
+            this.pattern.clone() );
         pp.chord.midiNotes = Note.createMidiNotes( pp.root, pp.chord.steps );
         pp.scale.midiNotes = Note.createMidiNotes( pp.root, pp.scale.steps );
         return pp;
@@ -112,5 +140,29 @@ export class Progression {
     }
     static blank():Progression {
         return new Progression( 0, 'unititled' );
+    }
+    logData():string {
+
+        this.reIndexParts();
+
+        let partsStr:string= '';
+        this.parts.forEach( part=>{
+            partsStr += `{
+                index:${part.index},
+                root:${part.root.logData()},
+                scale:${part.scale.logData()},
+                chord:${part.chord.logData()},
+                measures:1,
+                chordPattern:0,
+                pattern:${part.pattern.logData()}
+            },`
+        });
+        return` {
+            id:${this.id},
+            name:"${this.name}",
+            parts:[
+                ${partsStr}
+            ]
+        }`
     }
 }

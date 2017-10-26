@@ -9,6 +9,7 @@ import { SuiModalService, ModalSize } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../shared/modals/modal-confirm/modal-confirm.component';
 // components
 import { PianoOctaveComponent } from '../shared/piano-octave/piano-octave.component';
+import { PatternPartComponent } from './pattern-part/pattern-part.component';
 
 @Component({
   selector: 'app-pattern-editor',
@@ -38,10 +39,12 @@ export class PatternEditorComponent implements OnInit {
   ngOnInit() {
     this.progression = this.globalSelections.selectedProgression;
     this.initPiano();
+    this.reIndex();
 
     this.globalSelections.selectedProgressionEmitter.subscribe( p => {
       this.progression = p;
       this.initPiano();
+      this.reIndex();
     } );
 
     this.loadChordPatterns();
@@ -79,24 +82,30 @@ export class PatternEditorComponent implements OnInit {
   handlePartChange( part:ProgressionPart ):void {
     this.progression.parts[ part.index ] = part;
     this.piano.updateKeys( part );
+    this.reIndex();
     this.partselected.emit( part );
     // TODO send change to service
   }
-  // adding part
-  addPart():void {
-    this.progression.parts.push( this.progression.duplicatePrevPart() );
-    this.progression.reIndexParts();
+  // adding part's
+  handleAddPart2End( part:ProgressionPart ):void {
+    this.progression.parts.push( part );
+    this.reIndex();
+    // TODO send add to service
+  }
+  handleAddPart2Next( part:ProgressionPart ):void {
+    this.progression.parts.push( part );
+    this.reIndex();
     // TODO send add to service
   }
   // deleting part
   handleDeleteRequest( part:ProgressionPart ):void {
     // show modal
-    this.modalService.open( new ConfirmModal( "Delete Part", 
+    /*this.modalService.open( new ConfirmModal( "Delete Part", 
       "Are you sure you want to delete this part. This action can not be undone.",
       ModalSize.Mini ))
-      .onApprove( ()=> {
+      .onApprove( ()=> { */
         this.removePart( part );
-      })
+      //})
       /*.onDeny( ()=>{
 
       });*/
@@ -107,9 +116,19 @@ export class PatternEditorComponent implements OnInit {
   removePart( part:ProgressionPart ):void {
     let pi:number = this.progression.parts.findIndex( p =>  part.index==p.index );
     this.progression.parts.splice( pi, 1 );
+    this.reIndex();
+  }
+  reIndex():void{
     // reindex
-    pi = 0;
-    this.progression.parts.map( p => { p.index = pi; pi++; return p; });
+    let pi = 0;
+    let posX = 50;
+    this.progression.parts.forEach( p => { 
+      p.index = pi; 
+      p.pattern.posX = posX;
+      p.pattern.width = p.pattern.ticks.length * PatternPartComponent.CELL_WIDTH;
+      posX += p.pattern.width;
+      pi++;
+    });
   }
 
 }

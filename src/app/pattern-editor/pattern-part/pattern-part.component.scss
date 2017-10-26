@@ -1,7 +1,7 @@
 .tonality-select {
     /*position: fixed;
     top: 125px;*/
-    height: 29px;
+    height: 28px;
     display: inline-block;
     .item {
         font-size:.8em;
@@ -9,6 +9,14 @@
     }
     z-index:100;
     background:white;
+}
+.edit-menu {
+    position: absolute;
+    right: 5px;
+    top:3px;
+    .item {
+        display: inline-block;
+    }
 }
 .pattern {
 

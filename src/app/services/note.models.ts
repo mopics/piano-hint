@@ -88,6 +88,13 @@ export class Note {
     clone():Note{
         return new Note( this._index, this.octave, this.midiIndex );
     }
+    logData():string {
+        return `{
+            index:${this.index},
+            octave:${this.octave},
+            name:"${this.name}"
+        }`;
+    }
     static getNotesFromRoot( root:string, octaves:number, startOctave:number, addRootKeyAtEnd:boolean ):Note[] {
         let o = startOctave;
         let r = new Note(Notes[root],o);
@@ -120,6 +127,9 @@ export class Note {
         return n;
     }
     static createMidiNotes( root:Note, steps:number[] ):Note[] {
+        if( !steps ){
+            console.log( 'foo' );
+        }
         // 1. Set first root in midi-range
         let mIdx:number = MidiRange[0]+root.index;
         // 2. loop thru midi-range and push midi-notes using _steps , TODO: use functional programming ?? yep already done sort off
@@ -173,6 +183,12 @@ export class Scale {
     clone():Scale{ 
         return new Scale(this._index);
     }
+    logData():string {
+        return `{
+            index:${this.index},
+            name:"${this.name}"
+        }`;
+    }
 }
 
 export class Chord{
@@ -201,6 +217,12 @@ export class Chord{
 
     clone():Chord {
         return new Chord(this._index);
+    }
+    logData():string {
+        return `{
+            index:${this.index},
+            name:"${this.name}"
+        }`;
     }
 }
 

@@ -16,14 +16,28 @@
       (select)="onScaleChange($event)" 
       [selected]="part.scale" #scaleSelect></app-select>
     </div>
+
 </div>
-<table *ngIf="keys" class="pattern">
+<div class="edit-menu">
+    <div class="item">
+        <i (click)="removeTickCollumn()" class="minus circle icon"></i>
+    </div>
+  <div class="item">
+      <i (click)="addTickCollumn()" class="add circle icon"></i>
+  </div>
+  <div class="item">
+    <app-side-menu [items]="sideMenuItems" (select)="onSideMenuSelect($event)" ></app-side-menu>
+  </div>
+</div>
+<table *ngIf="keys" class="pattern"
+  [style.width]="part.pattern.width+'px'" >
   <tr *ngFor="let note of keys" class="row" >
     <td *ngFor="let tick of part.pattern.ticks; let i = index" 
       (mousedown)="onCellAttack( note, i )" 
       (mouseup)="onCellRelease(note,i)"
       class="col"
       [style.background-color]="note.fill"
-      [style.opacity]="noteIsActive(note,i)"></td> 
+      [style.opacity]="noteIsActive(note,i)"
+      ></td> 
   </tr>
 </table>

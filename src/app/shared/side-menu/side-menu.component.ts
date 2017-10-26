@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { trigger,state,style,transition,animate,keyframes } from '@angular/animations';
+
 import { MenuState, MenuItem } from '../models';
 
 @Component({
-  selector: 'app-select',
-  templateUrl: './select.component.html',
-  styleUrls: ['./select.component.scss'],
+  selector: 'app-side-menu',
+  templateUrl: './side-menu.component.html',
+  styleUrls: ['./side-menu.component.scss'],
   animations:[
     trigger('toggleMenu',[
       state('show', style({
@@ -21,23 +22,18 @@ import { MenuState, MenuItem } from '../models';
     ]),
   ]
 })
-export class SelectComponent implements OnInit {
-
+export class SideMenuComponent implements OnInit {
   @Input() items:Array<MenuItem>;
-  @Input() selected:MenuItem;
   @Output() select:EventEmitter<MenuItem>=new EventEmitter();
   @HostListener('document:click', ['$event']) clickedOutside($event){ this.handleOutsideClick($event); }
-  @ViewChild ('myButton') myButton:ElementRef;
   @ViewChild ('myIcon') myIcon:ElementRef;
 
   state:MenuState = new MenuState( false );
   iconClicked:boolean = false;
 
-  constructor() { 
-  }
+  constructor() { }
 
   ngOnInit() {
-    
   }
 
   toggle($event):void{
@@ -56,7 +52,7 @@ export class SelectComponent implements OnInit {
   };
 
   handleOutsideClick($event):void {
-    if( $event.target===this.myButton.nativeElement || $event.target===this.myIcon.nativeElement ) {
+    if( $event.target===this.myIcon.nativeElement ) {
       if( this.iconClicked ){ this.iconClicked=false; }
       return;
     }
@@ -65,8 +61,7 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  selectItem( event:MenuItem ){
-    this.selected = event;
+  selectItem( event:MenuItem ) {
     this.select.emit( event );
   }
 

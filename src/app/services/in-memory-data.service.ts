@@ -133,6 +133,97 @@ export class InMemoryDataService implements InMemoryDbService {
                     }
                 }
             ]
+        },
+        {
+            id:0,
+            name:"Wanna be closer",
+            parts:[
+                {
+                index:0,
+                root:{
+            index:4,
+            octave:1,
+            name:"E"
+        },
+                scale:{
+            index:1,
+            name:"Dorian"
+        },
+                chord:{
+            index:1,
+            name:"Minor"
+        },
+                measures:1,
+                chordPattern:0,
+                pattern:{
+            ticks:[[{name:"E", octave:2, length:"8n", velocity:10},{name:"G", octave:3, length:"8n", velocity:10},{name:"B", octave:3, length:"8n", velocity:10},{name:"E", octave:4, length:"8n", velocity:10},],[{name:"G", octave:2, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"A", octave:2, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"B", octave:2, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"A", octave:2, length:"8n", velocity:10},],],
+            time:{parts:2, ofLength:4}
+        }
+            },{
+                index:1,
+                root:{
+            index:0,
+            octave:1,
+            name:"C"
+        },
+                scale:{
+            index:0,
+            name:"Ionian"
+        },
+                chord:{
+            index:0,
+            name:"Major"
+        },
+                measures:1,
+                chordPattern:0,
+                pattern:{
+            ticks:[[{name:"G", octave:3, length:"8n", velocity:10},{name:"C", octave:4, length:"8n", velocity:10},{name:"E", octave:4, length:"8n", velocity:10},{name:"E", octave:2, length:"8n", velocity:10},],[{name:"A", octave:2, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"B", octave:2, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"C", octave:3, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"B", octave:2, length:"8n", velocity:10},],],
+            time:{parts:2, ofLength:4}
+        }
+            },{
+                index:2,
+                root:{
+            index:9,
+            octave:1,
+            name:"A"
+        },
+                scale:{
+            index:5,
+            name:"Aeolian"
+        },
+                chord:{
+            index:1,
+            name:"Minor"
+        },
+                measures:1,
+                chordPattern:0,
+                pattern:{
+            ticks:[[{name:"G", octave:3, length:"8n", velocity:10},{name:"A", octave:3, length:"8n", velocity:10},{name:"C", octave:4, length:"8n", velocity:10},{name:"E", octave:4, length:"8n", velocity:10},{name:"E", octave:2, length:"8n", velocity:10},],[{name:"C", octave:3, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"D", octave:3, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"E", octave:3, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"D", octave:3, length:"8n", velocity:10},],],
+            time:{parts:2, ofLength:4}
+        }
+            },{
+                index:3,
+                root:{
+            index:9,
+            octave:1,
+            name:"A"
+        },
+                scale:{
+            index:11,
+            name:"Symmetrical_Diminished"
+        },
+                chord:{
+            index:4,
+            name:"FullDim"
+        },
+                measures:1,
+                chordPattern:0,
+                pattern:{
+            ticks:[[{name:"E", octave:2, length:"8n", velocity:10},{name:"C", octave:4, length:"8n", velocity:10},{name:"Eb", octave:4, length:"8n", velocity:10},{name:"A", octave:3, length:"8n", velocity:10},],[{name:"Eb", octave:3, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"C", octave:3, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"A", octave:2, length:"8n", velocity:10},],[{name:"E", octave:2, length:"8n", velocity:10},],[{name:"Gb", octave:3, length:"8n", velocity:10},{name:"Eb", octave:2, length:"8n", velocity:10},{name:"Eb", octave:3, length:"8n", velocity:10},{name:"Eb", octave:4, length:"8n", velocity:10},{name:"Eb", octave:5, length:"8n", velocity:10},],],
+            time:{parts:2, ofLength:4}
+        }
+            },
+            ]
         }
     ];
     const chordpatterns = [

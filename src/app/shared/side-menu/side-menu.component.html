@@ -1,0 +1,16 @@
+<div class="select">
+    <i (click)="toggle($event)" class="sidebar icon" (click)="toggle($event)" #myIcon></i>
+    <div 
+      [ngClass]="state.display?'display-block':'display-none'"
+      class="items" 
+      [@toggleMenu]="state.state"
+      (@toggleMenu.done)="toggleAnimateDone()" >
+  
+      <div *ngFor="let item of items"
+        class="item"
+        (click)="selectItem(item)"
+        >{{item.label}}
+      </div>
+    </div>
+  </div>
+  

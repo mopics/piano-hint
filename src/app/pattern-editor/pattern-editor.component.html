@@ -1,10 +1,12 @@
 <div class="piano-vertical"><app-piano-octave>piano-octave #pianoOctave></app-piano-octave></div>
-<div *ngFor="let part of progression.parts; let i = index" class="pattern-container" [style.left]="(i*(part.pattern.ticks.length*32))+50+'px'" >
-  <div class="pattern">
+<div *ngFor="let part of progression.parts; let i = index" class="pattern-container" [style.left]="part.pattern.posX+'px'" >
+  <div class="pattern" [style.width]="part.pattern.width+'px'">
     <app-pattern-part
         [part]="part" 
         [chordPatterns]="chordPatterns"
         (change)="handlePartChange($event)"
+        (add2end)="handleAddPart2End($event)"
+        (add2next)="handleAddPart2Next($event)"
         (delete)="handleDeleteRequest($event)"
         ></app-pattern-part>
   </div>

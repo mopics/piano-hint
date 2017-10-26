@@ -33,4 +33,7 @@ export class AppComponent {
       });
     }
   }
+  logSongData():void {
+    console.log(  this.gss.selectedProgression.logData() );
+  }
 }

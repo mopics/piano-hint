@@ -8,6 +8,7 @@ import { SelectComponent } from '../../shared/select/select.component';
 // models & services
 import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps, TickNote } from '../../services';
 import { Progression, ProgressionPart, ToneService, ChordPattern } from '../../services';
+import { MenuItem } from '../../shared/models';
 
 @Component({
   selector: 'app-pattern-part',
@@ -23,6 +24,8 @@ export class PatternPartComponent implements OnInit {
 
   @Output() change:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @Output() delete:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
+  @Output() add2next:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
+  @Output() add2end:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @ViewChild('scaleSelect') scaleSelect:SelectComponent;
 
   notes:Note[] = Array<Note>(12).fill(new Note(0)).map((n,i)=>new Note(i));
@@ -31,6 +34,16 @@ export class PatternPartComponent implements OnInit {
   scalesFiltered:Scale[];
   keys:Note[];
   pattern:string[][];
+
+  static CELL_WIDTH:number = 32;
+  static COPY_2_NEXT:string = "Copy part to next";
+  static COPY_2_END:string = "Copy part to end";
+  static DELETE_PART:string = "Delete part";
+
+  sideMenuItems:MenuItem[] = new Array( 
+    { label:PatternPartComponent.COPY_2_NEXT, icon:"" }, 
+    { label:PatternPartComponent.COPY_2_END, icon:"" }, 
+    { label:PatternPartComponent.DELETE_PART, icon:"" } );
 
   constructor(private tone:ToneService, private ngZone:NgZone ) { }
 
@@ -162,8 +175,24 @@ export class PatternPartComponent implements OnInit {
   emitPartChange():void {
     this.change.emit( this.part );
   }
-  deletePart():void {
-    this.delete.emit( this.part );
+  onSideMenuSelect( item:MenuItem ):void {
+    if( item.label===PatternPartComponent.DELETE_PART) {
+      return this.delete.emit( this.part );
+    }
+    if( item.label===PatternPartComponent.COPY_2_END) {
+      return this.add2end.emit( this.part.clone() );
+    }
+    if( item.label===PatternPartComponent.COPY_2_NEXT ) {
+      return this.add2next.emit( this.part.clone() );
+    }
+  }
+  addTickCollumn():void {
+   this.part.pattern.ticks.push( new Array<TickNote>() );
+   this.emitPartChange();
+  }
+  removeTickCollumn():void {
+    this.part.pattern.ticks.splice( this.part.pattern.ticks.length-1);
+    this.emitPartChange();
   }
   
 

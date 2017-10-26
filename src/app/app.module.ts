@@ -34,6 +34,7 @@ import { PianocolorLegendComponent } from './shared/pianocolor-legend/pianocolor
 import { PatternEditorComponent } from './pattern-editor/pattern-editor.component';
 import { SliderComponent } from './shared/slider/slider.component';
 import { PatternPartComponent } from './pattern-editor/pattern-part/pattern-part.component';
+import { SideMenuComponent } from './shared/side-menu/side-menu.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { PatternPartComponent } from './pattern-editor/pattern-part/pattern-part
     PianocolorLegendComponent,
     PatternEditorComponent,
     SliderComponent,
-    PatternPartComponent
+    PatternPartComponent,
+    SideMenuComponent
   ],
   entryComponents:[
     ConfirmModalComponent // dynamicly created components also need to be added to entryComponents
