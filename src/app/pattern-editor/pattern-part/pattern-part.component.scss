@@ -1,0 +1,31 @@
+.tonality-select {
+    /*position: fixed;
+    top: 125px;*/
+    height: 29px;
+    display: inline-block;
+    .item {
+        font-size:.8em;
+        display: inline-block;
+    }
+    z-index:100;
+    background:white;
+}
+.pattern {
+
+    position:absolute;
+    top: 49px;
+    border: none;
+    .row {
+    }
+    .col {
+        padding-bottom:1px;
+        padding-right:1px;
+        width:30px;
+        height: 11px;
+        opacity: .25;
+    }
+    .col-selected {
+        @extend .col;
+        opacity: 1;
+    }
+}

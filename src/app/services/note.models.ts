@@ -42,8 +42,9 @@ export class Note {
     static rootFill:string = "#E05555";
     static thirdFill:string = "#35BC75";
     static fifthFill:string = "#5667E2";
-    static seventhFill:string = "#FFFfa1";
-    static scaleFill:string = "#4B4B4B";
+    static seventhFill:string = "#FFFF00";
+    static scaleFill:string = "#71f7ea";
+    static nonToneFill:string = "#eee";
     static HI:number = 0.9;
     static NO:number = 0.3;
     private _fill:string;
@@ -72,26 +73,7 @@ export class Note {
     }
     get fill():string{ return this._fill; }
     set fill( f:string ){ 
-        //if( this._whiteKey )
-         this._fill = f; 
-        /*else {
-            switch( f ){
-                case Note.rootFill:
-                this._fill = Note.rootBlackFill;
-                break;
-                case Note.thirdFill:
-                this._fill = Note.thirdBlackFill;
-                break;
-                case Note.fifthFill:
-                this._fill = Note.fifthBlackFill;
-                break;
-                case Note.seventhFill:
-                this._fill = Note.seventhBlackFill;
-                break;
-                default:
-                this._fill = Note.scaleBlackFill;
-            }
-        }*/
+        this._fill = f;
     }
     get highlight():number { return this._highlight; }
     set highlight( o:number ){ this._highlight = o; }

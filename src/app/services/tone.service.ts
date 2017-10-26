@@ -3,7 +3,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 declare var require: any;
 var Tone = require("Tone");
 
-import { Note, Notes, Chord, Chords, Scale, Scales, Progression, ProgressionPart, ChordPattern, ChordPatternsService } from './';
+import { Note, Notes, Chord, Chords, Scale, Scales, Progression, ProgressionPart, Pattern, ChordPattern, ChordPatternsService } from './';
 
 
 export class SequenceEvent {
@@ -16,6 +16,14 @@ export class TickNote {
 	velocity:number;
 	length:string;
 	get fullName():string { return this.name+this.octave; }
+	clone():TickNote { 
+		let tn:TickNote = new TickNote();
+		tn.name = this.name;
+		tn.octave = this.octave;
+		tn.velocity = this.velocity;
+		tn.length = this.length;
+		return tn;
+	}
 }
 export class Ticks {
 	ticks:SequenceEvent[] = new Array<SequenceEvent>();
@@ -115,6 +123,12 @@ export class ToneService {
 
 		}, this.score.ticks.map( (v,i)=> i ), "16n");
 	}
+	triggerAttack( note:string, velocity:number = 1 ){
+		this.piano.triggerAttack( note, velocity );
+	}
+	triggerRelease( note:string ):void {
+		this.piano.triggerRelease( note );
+	}
 	playNote( note:Note, octave:number, length:string='4n',  ):void {
 		//play a middle 'C' for the duration of an 8th note
 			// this.synth.triggerAttackRelease( note, "8n");
@@ -146,46 +160,21 @@ export class ToneService {
 	buildProgression( p:Progression ):void {
 		this.score = new Ticks();
 		p.parts.forEach( part=>{
-			let pattern:ChordPattern = this.chordPatterns[part.chordPattern];
+			let pattern:Pattern = part.pattern;
 			for( let m:number=0; m<part.measures; m++ ){
-				pattern.ticks.forEach( i=>{
-					let tickNotes:TickNote[] = new Array<TickNote>();
-					if( pattern.root[i]>0){
-						let t:TickNote = new TickNote();
-						t.name = part.chord.midiNotes[0].name;
-						t.octave = pattern.root[i];
-						t.length = pattern.rootLength[i]+"n";
-						t.velocity = pattern.rootVel[i]/10;
-						tickNotes.push( t );
-					}
-					if( pattern.third[i]>0){
-						let t:TickNote = new TickNote();
-						t.name = part.chord.midiNotes[1].name;
-						t.octave = pattern.third[i];
-						t.length = pattern.thirdLength[i]+"n";
-						t.velocity = pattern.thirdVel[i]/10;
-						tickNotes.push( t );
-					}
-					if( pattern.fifth[i]>0){
-						let t:TickNote = new TickNote();
-						t.name = part.chord.midiNotes[2].name;
-						t.octave = pattern.fifth[i];
-						t.length = pattern.fifthLength[i]+"n";
-						t.velocity = pattern.fifthVel[i]/10;
-						tickNotes.push( t );
-					}
-					if( part.chord.index>Chords.Dom7 && pattern.seventh[i]>0){
-						let t:TickNote = new TickNote();
-						t.name = part.chord.midiNotes[3].name;
-						t.octave = pattern.seventh[i];
-						t.length = pattern.seventhLength[i]+"n";
-						t.velocity = pattern.seventhVel[i]/10;
-						tickNotes.push( t );
-					}
+				pattern.ticks.forEach( (tickNotes,i)=>{
 
 					let evt:SequenceEvent = new SequenceEvent();
 					// set partIndex of every first note of new part
-					if( m===0 && i===0 ){
+					tickNotes = tickNotes.map( tn=> {
+						let tnn:TickNote = new TickNote();
+						tnn.name = tn.name;
+						tnn.octave = tn.octave;
+						tnn.length = tn.length;
+						tnn.velocity = tn.velocity;
+						return tnn;
+					});
+					if( i===0 ){
 						evt.partIndex = part.index;
 					}
 					evt.notes = tickNotes;

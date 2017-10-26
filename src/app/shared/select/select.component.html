@@ -1,8 +1,8 @@
 <div class="select">
-  <button 
+  <button class="ui mini button"
     (click)="toggle($event)" #myButton>
     {{selected.label}}&nbsp;&nbsp;
-    <i class="ui dropdown icon" (click)="toggle($event)" #myIcon></i>
+    <i class="ui dropdown tiny icon" (click)="toggle($event)" #myIcon></i>
   </button>
   <div 
     [ngClass]="state.display?'display-block':'display-none'"

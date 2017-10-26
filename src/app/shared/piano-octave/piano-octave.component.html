@@ -1,22 +1,22 @@
 <svg width="100%" [attr.viewBox]="viewBox" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>Piano Keyboard</title>
-  <defs></defs>
-  <g id="piano-keyboard">
-      <rect *ngFor="let wk of whiteKeys"
-            (click)="onKeyClick(wk)"
-            id="{{wk.fullname}}" [attr.fill-opacity]="wk.highlight" stroke="#555555" stroke-opacity="0.5" [attr.fill]="wk.fill" [attr.x]="wk.xPos" y="0" [attr.width]="keyWidth" [attr.height]="keyHeight"></rect>
-      <rect *ngFor="let bk of blackKeys"
-            (click)="onKeyClick(bk)"
-            id="{{bk.fullName}}-bg" stroke="#979797" stroke-opacity="0.5" [attr.fill]="blackBgFill" [attr.x]="bk.xPos" y="0" [attr.width]="keyWidth*0.5" [attr.height]="keyHeight*0.75"></rect>
-      <rect *ngFor="let bk of blackKeys"
-            (click)="onKeyClick(bk)"
-            id="{{bk.fullName}}" [attr.fill-opacity]="bk.highlight" [attr.fill]="bk.fill" [attr.x]="bk.xPos" y="0" [attr.width]="keyWidth*0.5" [attr.height]="keyHeight*0.75"></rect>
-   </g>
-   <g id="scale-hints">
-      <ellipse *ngFor="let h of scaleHints" 
-            [attr.cx]="h.x" [attr.cy]="h.y" [attr.rx]="h.rx" [attr.ry]="h.ry" style="fill:#5DCEB8" />
-      <text *ngFor="let h of scaleHints"  
-            [attr.x]="h.x" [attr.y]="h.y" fill="white">{{h.degree}}</text>
-   </g>
+  <g id="all" [attr.transform]="transform">
+      <g id="piano-keyboard">
+            <rect *ngFor="let wk of whiteKeys"
+                  (click)="onKeyClick(wk)"
+                  id="{{wk.fullname}}" [attr.fill-opacity]="wk.highlight" stroke="#555555" stroke-opacity="0.5" [attr.fill]="wk.fill" [attr.x]="wk.xPos" y="0" [attr.width]="keyWidth" [attr.height]="keyHeight"></rect>
+            <rect *ngFor="let bk of blackKeys"
+                  (click)="onKeyClick(bk)"
+                  id="{{bk.fullName}}-bg" stroke="#979797" stroke-opacity="0.5" [attr.fill]="blackBgFill" [attr.x]="bk.xPos" y="0" [attr.width]="blackKeyWidth" [attr.height]="blackKeyHeight"></rect>
+            <rect *ngFor="let bk of blackKeys"
+                  (click)="onKeyClick(bk)"
+                  id="{{bk.fullName}}" [attr.fill-opacity]="bk.highlight" [attr.fill]="bk.fill" [attr.x]="bk.xPos" y="0" [attr.width]="blackKeyWidth" [attr.height]="blackKeyHeight"></rect>
+      </g>
+      <g id="scale-hints">
+            <ellipse *ngFor="let h of scaleHints" 
+                  [attr.cx]="h.x" [attr.cy]="h.y" [attr.rx]="h.rx" [attr.ry]="h.ry" style="fill:#5DCEB8" />
+            <text *ngFor="let h of scaleHints"  
+                  [attr.x]="h.x" [attr.y]="h.y" fill="white">{{h.degree}}</text>
+      </g>
+      </g>
 
 </svg>

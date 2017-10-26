@@ -6,7 +6,7 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { Notes, Scales, Chords, Note, Key, Chord, Scale } from './note.models';
-import { Progression, ProgressionPart } from './progression.models';
+import { Progression, ProgressionPart, Pattern } from './progression.models';
 
 @Injectable()
 export class ProgressionsService {
@@ -29,7 +29,8 @@ export class ProgressionsService {
           let root = new Note( part.root.index );
           let scale = new Scale(part.scale.index);
           let chord = new Chord( part.chord.index );
-          var newPart:ProgressionPart =  new ProgressionPart( part.index, root, chord, scale, part.measures, part.chordPattern );
+          let pattern = new Pattern( part.pattern.time, part.pattern.ticks );
+          var newPart:ProgressionPart =  new ProgressionPart( part.index, root, chord, scale, part.measures, part.chordPattern, pattern );
           newPart.chord.midiNotes = Note.createMidiNotes( newPart.root, newPart.chord.steps );
           newPart.scale.midiNotes = Note.createMidiNotes( newPart.root, newPart.scale.steps );
           partsC.push( newPart );
@@ -54,7 +55,8 @@ export class ProgressionsService {
             let root = new Note( part.root.index );
             let scale = new Scale(part.scale.index);
             let chord = new Chord( part.chord.index );
-            var newPart:ProgressionPart =  new ProgressionPart( part.index, root, chord, scale, part.measures, part.chordPattern );
+            let pattern = new Pattern( part.pattern.time, part.pattern.ticks );
+            var newPart:ProgressionPart =  new ProgressionPart( part.index, root, chord, scale, part.measures, part.chordPattern, pattern );
             newPart.chord.midiNotes = Note.createMidiNotes( newPart.root, newPart.chord.steps );
             newPart.scale.midiNotes = Note.createMidiNotes( newPart.root, newPart.scale.steps );
             partsC.push( newPart )

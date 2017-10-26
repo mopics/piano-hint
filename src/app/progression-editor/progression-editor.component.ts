@@ -38,12 +38,13 @@ export class ProgressionEditorComponent implements OnInit {
 			 this.chordPatterns = patterns;
 		 } );
 	}
-  // addin part
+  
   handlePartChange( part:ProgressionPart ):void {
     this.progression.parts[ part.index ] = part;
     
     // TODO send change to service
   }
+  // adding part
   addPart():void {
     this.progression.parts.push( this.progression.duplicatePrevPart() );
     this.progression.reIndexParts();

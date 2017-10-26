@@ -1,6 +1,7 @@
 
   <div class="item">
     <!--<div>Progression:&nbsp;&nbsp;&nbsp;</div>-->
+    <div class="proggresion-select-label">Progression&nbsp;:&nbsp;&nbsp;</div>
     <sui-select class="button icon inverted floated right" 
       placeholder="Select a progression" [(ngModel)]="selectedProgression"
       (ngModelChange)="onSelect($event)"
@@ -10,7 +11,7 @@
       <!--</div>-->
     </sui-select>
     <div style="cursor:pointer" (click)="showNewProgressionDialog()">
-        &nbsp;&nbsp;&nbsp;&nbsp;Create new <i class="add square inverted big icon"></i>
+        &nbsp;&nbsp;<div class="proggresion-select-label">&nbsp;&nbsp;Create new </div><i class="add square inverted big icon"></i>
     </div>
 
   </div>

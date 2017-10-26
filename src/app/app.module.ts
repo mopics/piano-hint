@@ -23,7 +23,7 @@ import { ToneService } from './services';
 //components
 import { AppComponent } from './app.component';
 import { ProgressionEditorComponent } from './progression-editor/progression-editor.component';
-import { PianoComponent } from './piano/piano.component';
+import { PianoComponent, EpDividerDirective } from './piano/piano.component';
 import { PianoOctaveComponent } from './shared/piano-octave/piano-octave.component';
 import { PartComponent } from './progression-editor/part/part.component';
 import { MenuComponent } from './menu/menu.component';
@@ -33,6 +33,7 @@ import { SelectComponent } from './shared/select/select.component';
 import { PianocolorLegendComponent } from './shared/pianocolor-legend/pianocolor-legend.component';
 import { PatternEditorComponent } from './pattern-editor/pattern-editor.component';
 import { SliderComponent } from './shared/slider/slider.component';
+import { PatternPartComponent } from './pattern-editor/pattern-part/pattern-part.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { SliderComponent } from './shared/slider/slider.component';
     AppComponent,
     ProgressionEditorComponent,
     PianoComponent,
+    EpDividerDirective,
     PianoOctaveComponent,
     PartComponent,
     MenuComponent,
@@ -48,7 +50,8 @@ import { SliderComponent } from './shared/slider/slider.component';
     SelectComponent,
     PianocolorLegendComponent,
     PatternEditorComponent,
-    SliderComponent
+    SliderComponent,
+    PatternPartComponent
   ],
   entryComponents:[
     ConfirmModalComponent // dynamicly created components also need to be added to entryComponents

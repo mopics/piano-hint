@@ -1,0 +1,17 @@
+.piano-vertical{
+    position: absolute;
+    left:0;
+    top: 50px;
+    width: 50px;
+}
+.pattern-container {
+    position: absolute;
+    left: 50px;
+
+    .pattern {
+        margin:5px;
+        height: 390px;
+        width:400px;
+        border-radius:3px;
+    }
+}

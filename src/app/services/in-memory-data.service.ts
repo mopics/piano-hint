@@ -23,7 +23,20 @@ export class InMemoryDataService implements InMemoryDbService {
                         name:"Minor"
                     },
                     measures:1,
-                    chordPattern:0
+                    chordPattern:0,
+                    pattern: { 
+                        ticks: [
+                            [ {name:"C", octave:3, length:"8n", velocity:5 } ], // tick 1
+                            [ ], // tick 2
+                            [ {name:"Eb", octave:4, length:"8n", velocity:5 } ], // tick 3
+                            [ ], // tick 4
+                            [ {name:"C", octave:4, length:"8n", velocity:5 } ], // tick 5
+                            [ ], // tick 6
+                            [ {name:"G", octave:3, length:"8n", velocity:5 } ], // tick 7
+                            [ ], // tick 8
+                        ],
+                        time:{ parts:2, ofLength:4 }
+                    }
                 },
                 { 
                     index:1,
@@ -41,7 +54,20 @@ export class InMemoryDataService implements InMemoryDbService {
                         name:"FullDim"
                     },
                     measures:1 ,
-                    chordPattern:0
+                    chordPattern:0,
+                    pattern: { 
+                        ticks: [
+                            [ {name:"D", octave:3, length:"8n", velocity:5 } ], // tick 1
+                            [ ], // tick 2
+                            [ {name:"F", octave:4, length:"8n", velocity:5 } ], // tick 3
+                            [ ], // tick 4
+                            [ {name:"D", octave:3, length:"8n", velocity:5 } ], // tick 5
+                            [ ], // tick 6
+                            [ {name:"Ab", octave:4, length:"8n", velocity:5 } ], // tick 7
+                            [ ], // tick 8
+                        ],
+                        time:{ parts:2, ofLength:4 }
+                    }
                 },
                 { 
                     index:2,
@@ -59,7 +85,20 @@ export class InMemoryDataService implements InMemoryDbService {
                         name:"Dom7"
                     },
                     measures:1 ,
-                    chordPattern:0
+                    chordPattern:0,
+                    pattern: { 
+                        ticks: [
+                            [ {name:"G", octave:4, length:"8n", velocity:5 } ], // tick 1
+                            [ ], // tick 2
+                            [ {name:"B", octave:3, length:"8n", velocity:5 } ], // tick 3
+                            [ ], // tick 4
+                            [ {name:"G", octave:4, length:"8n", velocity:5 } ], // tick 5
+                            [ ], // tick 6
+                            [ {name:"D", octave:3, length:"8n", velocity:5 } ], // tick 7
+                            [ ], // tick 8
+                        ],
+                        time:{ parts:2, ofLength:4 }
+                    }
                 },
                 { 
                     index:3,
@@ -77,7 +116,21 @@ export class InMemoryDataService implements InMemoryDbService {
                         name:"Minor"
                     },
                     measures:1,
-                    chordPattern:1
+                    chordPattern:1,
+                    pattern: { 
+                        ticks: [
+                            [ {name:"C", octave:3, length:"8n", velocity:5 } ], // tick 1
+                            [ ], // tick 2
+                            [ {name:"Eb", octave:4, length:"8n", velocity:5 } ], // tick 3
+                            [ ], // tick 4
+                            [ {name:"C", octave:3, length:"8n", velocity:5 } ], // tick 5
+                            [ ], // tick 6
+                            [ {name:"G", octave:4, length:"8n", velocity:5 } ], // tick 7
+                            [ ], // tick 8
+                        ]
+                        ,
+                        time:{ parts:2, ofLength:4 }
+                    }
                 }
             ]
         }

@@ -38,7 +38,7 @@ export class PartComponent implements OnInit {
     this.piano.keyHeight = 200;
     this.piano.keyWidth = 80;
     this.filterScales();
-    this.piano.redrawKeys( this.part );
+    this.piano.createKeys( this.part );
     this.piano.keyClicked.subscribe( n=> {
       this.onRootChange(n);
       this.keyClicked.emit(n)
@@ -60,7 +60,7 @@ export class PartComponent implements OnInit {
     this.part.root = n;
     this.part.chord.midiNotes = Note.createMidiNotes( this.part.root, this.part.chord.steps );
     this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
-    this.piano.redrawKeys(this.part);
+    this.piano.updateKeys(this.part);
     this.tone.playNote( n, 3 );
     this.emitPartChange();
   }
@@ -73,7 +73,7 @@ export class PartComponent implements OnInit {
     if( !this.scalesFiltered.find( s=> s.name===this.part.scale.name ) ){
       this.onScaleChange(this.scalesFiltered[0], false );
     } else {
-      this.piano.redrawKeys(this.part);
+      this.piano.updateKeys(this.part);
       this.emitPartChange();
     }
   }
@@ -81,7 +81,7 @@ export class PartComponent implements OnInit {
     this.part.scale = scale;
     this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
     if( play ) { this.tone.playScale( scale ); }
-    this.piano.redrawKeys(this.part);
+    this.piano.updateKeys(this.part);
     this.emitPartChange();
   }
   onMeasuresChange(m:any):void{

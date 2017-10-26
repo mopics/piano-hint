@@ -1,7 +1,6 @@
-<div *ngIf="progression" class="ui container">
-  <br><br><br>
-  <div class="ui center aligned grid">
-    <div class="five wide collumn" >
+<div (drop)="onDrop()">
+<div class="controls" #controls>
+    <div class="buttons" >
       <div class="ui icon massive fluid buttons">
         <button (click)="playProgression()" class="ui button">
           <i class="play white icon"></i>
@@ -13,31 +12,28 @@
           <i class="stop white icon"></i>
         </button>
       </div>
-      <br><br>
     </div>
-    <div class="five wide collumn" >
+    <div class="bpm" >
         <app-slider [label]="'BPM'"
                     [value]="bpm"
                     [min]="60"
                     [max]="220" 
                     (changed)="onBpmSliderChange($event)"></app-slider>
-        <br>
     </div>
+</div>
+
+<div class="editor" #editor>
+  <div *ngIf="progression">
+    <app-pattern-editor (partselected)="onPartSelect($event)"></app-pattern-editor>
   </div>
-  <br><br><br>
-  <h1 class="ui big centered">Part {{progression.parts[currPartIndex].index+1}}:&nbsp;&nbsp;{{progression.parts[currPartIndex].root.name}}-{{progression.parts[currPartIndex].chord.name}}
-    <br>
-    <br><br>
-  </h1>
+  <div *ngIf="!progression" >
+      <div class="ui red inverted big message">No progression selected. Please pick a progression in the topleft dropdown-menu</div>
+  </div>
 </div>
-
-<div *ngIf="!progression" class="ui container">
-    <br><br>
-    <div class="ui red inverted big message">No progression selected. Please pick a progression in the topleft dropdown-menu</div>
-</div>
-
+<div class="ep-divider" ep-divider draggable="true" [pianoDiv]="pianoFooter" [editorDiv]="editor"></div>
 <div class="piano-footer" #pianoFooter>
-  <app-pianocolor-legend></app-pianocolor-legend>
   <app-piano-octave #pianoOctave>
   </app-piano-octave>
+  <app-pianocolor-legend></app-pianocolor-legend>
+</div>
 </div>

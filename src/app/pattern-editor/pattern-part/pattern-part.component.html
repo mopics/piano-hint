@@ -1,0 +1,29 @@
+<div class="tonality-select">
+  <!-- select Root -->
+  <div class="item">
+    <!--<label class="ui tiny label">Root:</label>-->
+    Root: <app-select [items]="notes" (select)="onRootChange($event)" [selected]="part.root"></app-select>
+  </div>
+  <!-- select mode/chord -->
+  <div class="item">
+    <!--<label class="ui tiny label">Chord:</label>-->
+    Chord: <app-select [items]="chords" (select)="onChordChange($event)" [selected]="part.chord"></app-select>
+  </div>
+  <!-- select scale -->
+  <div class="item">
+      <!--<label class="ui tiny label">Scale:</label>-->
+      Scale: <app-select [items]="scalesFiltered" 
+      (select)="onScaleChange($event)" 
+      [selected]="part.scale"></app-select>
+    </div>
+</div>
+<table *ngIf="keys" class="pattern">
+  <tr *ngFor="let note of keys" class="row" >
+    <td *ngFor="let tick of part.pattern.ticks; let i = index" 
+      (mousedown)="onCellAttack( note, i )" 
+      (mouseup)="onCellRelease(note,i)"
+      class="col"
+      [style.background-color]="note.fill"
+      [style.opacity]="noteIsActive(note,i)"></td> 
+  </tr>
+</table>

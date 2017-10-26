@@ -1,0 +1,56 @@
+$editorTop : 120px;
+$initialDividerPos: 300px;
+$initialEditorBottom: 310px;
+
+.controls {
+    position:fixed;
+    left:0;
+    top:35px;
+    margin-top:20px;
+    display: inline;
+    white-space: nowrap;
+    
+    .buttons {
+        position: absolute;
+        top:0px;
+        left:1px;
+        width:110px;
+    }
+    .bpm {
+        position: absolute;
+        top:5px;
+        left:210px;
+        width:120px;
+    }
+}
+.editor{
+    position:fixed;
+    left:0;
+    top:$editorTop;
+    bottom:$initialEditorBottom;
+    width: 100vw;
+    background:white;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+.ep-divider {
+    width:100%;
+    position:fixed;
+    bottom:$initialDividerPos;
+    background:#ccc;
+    color:white;
+    height:10px;
+    z-index:10;
+    text-align: center;
+    cursor:url(../../assets/cursor-divider-horizontal.png) 16 16, auto !important;
+    
+}
+
+.piano-footer {
+    position: fixed;
+    left:0;
+    bottom:0;
+    height:$initialDividerPos;
+    background:white;
+    width:100%;
+}
