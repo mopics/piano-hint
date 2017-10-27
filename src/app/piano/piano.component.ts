@@ -25,12 +25,14 @@ export class EpDividerDirective {
       e.preventDefault();
       e.stopPropagation();
       this.update( e.pageY, e.view.innerHeight );
+      window.document.body.style.cursor = 'row-resize';
       
   };
   @HostListener('dragend', ['$event']) onDrop(e) {
     e.preventDefault();
     e.stopPropagation();
     this.update( e.pageY, e.view.innerHeight );
+    window.document.body.style.cursor = 'default';
   };
   update ( mouseY:number, pageHeight:number ):void{
     //if( mouseY< 200 ) { return; }
@@ -52,9 +54,10 @@ export class PianoComponent implements OnInit {
   progression:Progression;
   currPartIndex:number = 0;
   pianoInitiated:boolean = false;
-  bpm:number = 120;
+  playing:boolean = false;
 
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
+  @ViewChild( 'editor' ) editor:ElementRef;
 
   constructor( 
     private progService:ProgressionsService,
@@ -71,11 +74,16 @@ export class PianoComponent implements OnInit {
 
     this.globalSelections.selectedProgressionEmitter.subscribe( p => {
       this.progression = p;
+      this.currPartIndex = 0;
       this.initPiano();
     } );
   }
   initPiano():void {
-    if( this.pianoInitiated ){ return; }
+    if( this.pianoInitiated ){ 
+      this.piano.setProgression( this.progression );
+      this.piano.updateKeys( this.progression.parts[this.currPartIndex] )
+      return;
+    }
     this.piano.root = "C";
     this.piano.startOctave = 2;
     this.piano.numOctaves = 4;
@@ -92,18 +100,20 @@ export class PianoComponent implements OnInit {
         });
       }
     });
-    this.bpm = this.ts.getBPM();
     this.pianoInitiated = true;
   }
   playProgression():void{
     if( this.progression ){
+      this.playing = true;
       this.ts.playProgression( this.progression );
     }
   }
   pauseProgression():void{
+    this.playing = false;
     this.ts.pauseProgression();
   }
   stopProgression():void {
+    this.playing = false;
     this.ts.stopProgression();
   }
   onBpmSliderChange( value:number ):void {
@@ -112,6 +122,9 @@ export class PianoComponent implements OnInit {
   onPartSelect( part:ProgressionPart ):void {
     this.currPartIndex = part.index;
     this.piano.updateKeys( part );
+  }
+  onEditorScroll( event ):void {
+    this.globalSelections.editorScrolLeft = this.editor.nativeElement.scrollLeft;
   }
 
 }

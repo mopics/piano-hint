@@ -1,3 +1,6 @@
+$colWidth: 30px;
+$eigthtNoteWidth:30px;
+
 .tonality-select {
     /*position: fixed;
     top: 125px;*/
@@ -16,9 +19,16 @@
     top:3px;
     .item {
         display: inline-block;
+        .icon {
+            cursor: pointer;
+            color:grey;
+        }
+        .icon:hover {
+            color:#333;
+        }
     }
 }
-.pattern {
+.pattern-background {
 
     position:absolute;
     top: 49px;
@@ -30,5 +40,16 @@
         padding-right:1px;
         width:30px;
         height: 11px;
+        opacity: .25;
+    }
+}
+.pattern {
+    position:absolute;
+    top:49px;
+    z-index: 100;
+    .note {
+        position:absolute;
+        height: 10px;
+        width:$eigthtNoteWidth;
     }
 }

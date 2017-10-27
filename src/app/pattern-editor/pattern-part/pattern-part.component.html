@@ -29,15 +29,19 @@
     <app-side-menu [items]="sideMenuItems" (select)="onSideMenuSelect($event)" ></app-side-menu>
   </div>
 </div>
-<table *ngIf="keys" class="pattern"
+<table *ngIf="keys" class="pattern-background"
   [style.width]="part.pattern.width+'px'" >
   <tr *ngFor="let note of keys" class="row" >
     <td *ngFor="let tick of part.pattern.ticks; let i = index" 
-      (mousedown)="onCellAttack( note, i )" 
-      (mouseup)="onCellRelease(note,i)"
+      (mousedown)="onCellAttack( $event, note, i )"
       class="col"
       [style.background-color]="note.fill"
-      [style.opacity]="noteIsActive(note,i)"
       ></td> 
   </tr>
 </table>
+<div class="pattern">
+  <div *ngFor="let note of activeNotes" 
+    class="note" 
+    [ngStyle]="{left:note.posX+'px',top:note.posY+'px',width:note.width+'px'}" 
+    [style.background-color]="note.fill" [parent]="this" [tickNote]="note" pattern-note></div>
+</div>

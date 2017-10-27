@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, NgZone, Output, EventEmitter, HostListener, Input } from '@angular/core';
 
 // models
 import { Chords, Notes, Note } from '../services';
@@ -9,7 +9,8 @@ import { SuiModalService, ModalSize } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../shared/modals/modal-confirm/modal-confirm.component';
 // components
 import { PianoOctaveComponent } from '../shared/piano-octave/piano-octave.component';
-import { PatternPartComponent } from './pattern-part/pattern-part.component';
+import { PatternPartComponent, PatternNoteDirective } from './pattern-part/pattern-part.component';
+import { PianoComponent } from '../piano/piano.component';
 
 @Component({
   selector: 'app-pattern-editor',
@@ -19,13 +20,27 @@ import { PatternPartComponent } from './pattern-part/pattern-part.component';
 export class PatternEditorComponent implements OnInit {
 
   @Output() partselected:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
+  @Input() parent:PianoComponent;
 
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
+
+  @HostListener('document:mousemove', ['$event']) documenmousemove(e){ 
+    if( !this.draggingNote ){ return; }
+    window.document.body.style.cursor = "ew-resize";
+    this.draggingNote.mousemove( e );
+  };
+  @HostListener( 'document:mouseup', ['$event'] ) documentmouseup(e){
+    if( this.draggingNote ) {
+      window.document.body.style.cursor = "default";
+      this.draggingNote.mouseup( e );
+    }
+  };
 
   progression:Progression;
   currPartIndex:number = 0;
   chordPatterns:ChordPattern[];
   pianoInitiated:boolean = false;
+  draggingNote:PatternNoteDirective;
 
   constructor(
     private progService:ProgressionsService,
@@ -93,7 +108,11 @@ export class PatternEditorComponent implements OnInit {
     // TODO send add to service
   }
   handleAddPart2Next( part:ProgressionPart ):void {
-    this.progression.parts.push( part );
+    let l:number = this.progression.parts.length;
+    if( part.index===l-1 ){ return this.handleAddPart2End(part);}
+    let a = this.progression.parts.splice( 0, part.index );
+    a.push( part );
+    this.progression.parts = a.concat(this.progression.parts);
     this.reIndex();
     // TODO send add to service
   }
@@ -130,5 +149,7 @@ export class PatternEditorComponent implements OnInit {
       pi++;
     });
   }
+
+  get editorScrolLeft():number{ return this.globalSelections.editorScrolLeft; }
 
 }

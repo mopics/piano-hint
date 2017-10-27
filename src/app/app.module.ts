@@ -33,7 +33,7 @@ import { SelectComponent } from './shared/select/select.component';
 import { PianocolorLegendComponent } from './shared/pianocolor-legend/pianocolor-legend.component';
 import { PatternEditorComponent } from './pattern-editor/pattern-editor.component';
 import { SliderComponent } from './shared/slider/slider.component';
-import { PatternPartComponent } from './pattern-editor/pattern-part/pattern-part.component';
+import { PatternPartComponent, PatternNoteDirective } from './pattern-editor/pattern-part/pattern-part.component';
 import { SideMenuComponent } from './shared/side-menu/side-menu.component';
 
 
@@ -52,7 +52,7 @@ import { SideMenuComponent } from './shared/side-menu/side-menu.component';
     PianocolorLegendComponent,
     PatternEditorComponent,
     SliderComponent,
-    PatternPartComponent,
+    PatternPartComponent, PatternNoteDirective,
     SideMenuComponent
   ],
   entryComponents:[

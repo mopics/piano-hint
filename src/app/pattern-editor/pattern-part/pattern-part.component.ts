@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, NgZone, Directive, ElementRef, HostListener, Renderer } from '@angular/core';
 
 // components
 // import { SuiSelect } from 'ng2-semantic-ui';
@@ -9,6 +9,62 @@ import { SelectComponent } from '../../shared/select/select.component';
 import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps, TickNote } from '../../services';
 import { Progression, ProgressionPart, ToneService, ChordPattern } from '../../services';
 import { MenuItem } from '../../shared/models';
+// components
+import { PatternEditorComponent } from '../pattern-editor.component';
+
+@Directive({ selector: '[pattern-note]' })
+export class PatternNoteDirective {
+
+  @Input() parent:PatternPartComponent; // fsdf
+  @Input() tickNote:TickNote; //khkh
+
+  editorTop:number = 120; // should correspond with $editorTop in scss-file
+  menuHeight:number = 26; // sgeg
+
+  resizeMode:boolean = false;
+  dragging:boolean = false;
+
+  constructor(private el: ElementRef, private renderer: Renderer) {}
+
+  @HostListener('mouseenter', ['$event']) mouseenter(e){
+    this.mousemove(e);
+  };
+  @HostListener('mousemove', ['$event']) mousemove(e){
+    if( this.dragging ) { 
+      let scrollX:number = this.parent.parent.editorScrolLeft;
+      let nw:number = e.pageX + scrollX - this.tickNote.posX - this.parent.part.pattern.posX;
+      let cw:number = PatternPartComponent.CELL_WIDTH;
+      this.renderer.setElementStyle( this.el.nativeElement, "width", nw+"px");
+      this.tickNote.length = Math.round((cw/nw)*16)+"n";
+      this.tickNote.width = nw;
+    }
+    // if hovering over end of note 8px from right;
+    if( e.layerX > e.target.clientWidth-7 ){ // 
+      this.renderer.setElementStyle( this.el.nativeElement, "cursor", "ew-resize");
+      this.resizeMode = true;
+    }
+    else {
+      this.renderer.setElementStyle( this.el.nativeElement, "cursor", "move");
+      this.resizeMode = false;
+    }
+  };
+  @HostListener('mouseleave', ['$event']) mouseleave(e){
+    // this.dragging = false;
+  };
+  @HostListener('mousedown', ['$event']) mousedown(e) {
+    if( this.resizeMode ){
+      this.dragging = true;
+      this.parent.parent.draggingNote = this;
+      return;
+    }
+    this.parent.setNoteNotActive( this.tickNote, this.tickNote.col );
+  };
+  @HostListener('mouseup', ['$event']) mouseup(e) {
+    this.dragging = false;
+    this.parent.parent.draggingNote = null;
+    window.document.body.style.cursor = "default";
+  };
+}
 
 @Component({
   selector: 'app-pattern-part',
@@ -16,6 +72,7 @@ import { MenuItem } from '../../shared/models';
   styleUrls: ['./pattern-part.component.scss']
 })
 export class PatternPartComponent implements OnInit {
+  @Input() parent:PatternEditorComponent;
   @Input() part:ProgressionPart;
   @Input() chordPatterns:ChordPattern[];
 
@@ -26,7 +83,7 @@ export class PatternPartComponent implements OnInit {
   @Output() delete:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @Output() add2next:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @Output() add2end:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
-  @ViewChild('scaleSelect') scaleSelect:SelectComponent;
+
 
   notes:Note[] = Array<Note>(12).fill(new Note(0)).map((n,i)=>new Note(i));
   chords:Chord[] = Array<Chord>(ChordSteps.length).fill(new Chord(0)).map((c,i)=> new Chord(i));
@@ -34,8 +91,11 @@ export class PatternPartComponent implements OnInit {
   scalesFiltered:Scale[];
   keys:Note[];
   pattern:string[][];
+  selectedVelocity:number = 8;
+  activeNotes:TickNote[];
 
-  static CELL_WIDTH:number = 32;
+  static CELL_WIDTH:number = 32; // 16th note
+  static CELL_HEIGHT:number = 13;
   static COPY_2_NEXT:string = "Copy part to next";
   static COPY_2_END:string = "Copy part to end";
   static DELETE_PART:string = "Delete part";
@@ -52,6 +112,28 @@ export class PatternPartComponent implements OnInit {
     this.keys = Note.getNotesFromRoot( Note.toFlat("C"), this.numOctaves, this.startOctave, true );
     this.keys.reverse();
     this.reColorCells();
+    this.setActiveNotes();
+  }
+  setActiveNotes():void{
+    this.activeNotes = new Array<TickNote>();
+    this.part.pattern.ticks.forEach( (ta,i)=>{
+      ta.forEach( (tn)=>{
+        tn.col = i;
+        tn.width = this.setCellWidthFromNoteLength( tn.length )
+        tn.posX = i*PatternPartComponent.CELL_WIDTH; if( tn.posX===0 ){ tn.posX = 2; }
+        tn.posY = this.keys.findIndex( n=> {
+          if( n.fullName===tn.name+tn.octave ){
+            tn.fill = n.fill;
+            return true;
+          }
+         } )*PatternPartComponent.CELL_HEIGHT+2;
+        this.activeNotes.push( tn );
+      });
+    });
+  }
+  setCellWidthFromNoteLength( l:string ):number {
+    let n:number = parseInt( l.replace("n","") );
+    return PatternPartComponent.CELL_WIDTH / (n/16) -2;
   }
   reColorCells():void{
 
@@ -137,27 +219,33 @@ export class PatternPartComponent implements OnInit {
     this.emitPartChange();
   }
   // pattern listeners
-  onCellAttack( note:TickNote, index:number ){
-    if( this.keys.find( n=>n.name===note.name).fill===Note.nonToneFill){return;}
-    this.tone.triggerAttack( note.fullName, .8 );
-    this.emitPartChange();
-  }
-  onCellRelease( note:TickNote, index:number ){
+  onCellAttack( event, note:TickNote, index:number ){
+    this.tone.triggerAttackRelease( note.fullName, note.length, this.selectedVelocity/10 );
     if( this.noteIsActive( note, index )===1 ){
       this.setNoteNotActive( note, index );
     }
     else {
-      this.setNoteActive( note, index );
+      this.setNoteActive( note, index, event.target.offsetLeft, event.target.offsetTop );
     }
-    this.tone.triggerRelease( note.fullName );
+    // this.emitPartChange();
   }
-  setNoteActive( note:TickNote, index:number ):void{
-    note.length = "8n";
-    this.part.pattern.ticks[index].push( note );
+  onCellRelease( note:TickNote, index:number ){
+     this.tone.triggerRelease( note.fullName );
+  }
+  setNoteActive( n:TickNote, index:number, posX:number, posY:number ):void{
+    n.length = "16n";
+    n.velocity = this.selectedVelocity;
+    this.part.pattern.ticks[index].push( n );
+    n.col = index;
+    n.posX = posX;
+    n.posY = posY;
+    this.activeNotes.push( n );
   }
   setNoteNotActive( note:TickNote, index:number ):void{
     let i:number = this.part.pattern.ticks[index].findIndex( n=>n.name+n.octave===note.fullName );
     this.part.pattern.ticks[index].splice( i, 1 );
+    this.activeNotes.splice( this.activeNotes.findIndex( n=> (n.name+n.octave===note.name+note.octave&&n.col===note.col) ), 1 );
+    console.log('foo');
   }
   noteIsActive( note:TickNote, index:number ):number{
     if( this.part.pattern.ticks[index].find( (n) => {

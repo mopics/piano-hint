@@ -41,6 +41,7 @@ export class PianoOctaveComponent implements OnInit {
   blackKeys:Note[];
   allKeys:Object;
   allKeysA:Note[];
+
   blackBgFill:string = Note.blackFill;
   blackKeyWidth:number;
   blackKeyHeight:number;
@@ -83,7 +84,7 @@ export class PianoOctaveComponent implements OnInit {
                 this._ngZone.run(() => {
                   n.highlight = Note.NO;
               });
-              }, this.ts.noteLength2Ms( en.length ) ); // TODO: use actual event.note.length to turn off key again
+              }, this.ts.noteLength2Ms( en.length ) );
             });
           }
        });

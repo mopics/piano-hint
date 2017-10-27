@@ -114,12 +114,14 @@ export class Progression {
     public id:number;
     public name:string;
     public parts:ProgressionPart[];
+    public bpm:number;
 
-    constructor( id:number, name:string ){
+    constructor( id:number, name:string, bpm:number = 120 ){
         // create initial 
         this.id = id;
         this.name = name;
         this.parts = new  Array<ProgressionPart>();
+        this.bpm = bpm;
     }
     addBlankPart():void{
         const t = new Note(Notes.C,1);
@@ -160,6 +162,7 @@ export class Progression {
         return` {
             id:${this.id},
             name:"${this.name}",
+            bpm:${this.bpm},
             parts:[
                 ${partsStr}
             ]

@@ -1,4 +1,5 @@
-$width : 100%;
+$width : 70px;
+$widthSlider: 129px;
 
 
 /** Slider stuff */
@@ -10,10 +11,10 @@ input[type=range] {
     border: 1px solid white;
     
     /*required for proper track sizing in FF*/
-    width: $width;
+    width: $widthSlider;
 }
 input[type=range]::-webkit-slider-runnable-track {
-    width: $width;
+    width: $widthSlider;
     height: 5px;
     background: #ddd;
     border: none;
@@ -57,7 +58,7 @@ input[type=range]:-moz-focusring{
 }
 
 input[type=range]::-ms-track {
-    width: $width;
+    width: $widthSlider;
     height: 5px;
     
     /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
@@ -96,5 +97,5 @@ input[type=range]:focus::-ms-fill-upper {
 
 /** input number stuff*/
 input[type=number] {
-    width: 60px;
+    width: $width;
 }

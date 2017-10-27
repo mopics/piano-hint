@@ -15,6 +15,12 @@ export class TickNote {
 	octave:number;
 	velocity:number;
 	length:string;
+	posX:number = 0;
+	posY:number = 0;
+	fill:string = "#f00";
+	col:number = 0;
+	width:number = 30;
+
 	get fullName():string { return this.name+this.octave; }
 	clone():TickNote { 
 		let tn:TickNote = new TickNote();
@@ -123,6 +129,9 @@ export class ToneService {
 
 		}, this.score.ticks.map( (v,i)=> i ), "16n");
 	}
+	triggerAttackRelease( note:string, length:string, velocity:number=1 ){
+		this.piano.triggerAttackRelease( note, length, 0, velocity ); // t.length );
+	}
 	triggerAttack( note:string, velocity:number = 1 ){
 		this.piano.triggerAttack( note, velocity );
 	}
@@ -191,6 +200,7 @@ export class ToneService {
 		  }
 		// var tick:number = setInterval( playTick, 100 );
 		this.progression = p;
+		this.setBPM( p.bpm );
 		this.currPart = 0;
 		this.selectedChordPattern = this.chordPatterns[ this.progression.parts[this.currPart].chordPattern ];
 		this.currMeasure = 0;
@@ -209,8 +219,11 @@ export class ToneService {
 		this.sequencer.stop();
 		this.paused = false;
 	}
-	setBPM( bpm:number ){ // 80 to 200
+	setBPM( bpm:number ){ 
 		Tone.Transport.bpm.value = bpm;
+		if( this.progression ){
+			this.progression.bpm = bpm;
+		}
 	}
 	getBPM():number { return Tone.Transport.bpm.value; }
 	noteLength2Ms( l:string ):any{

@@ -9,6 +9,7 @@ export class GlobalSelectionsService   {
   private _selectedProgressionEmitter:EventEmitter<Progression>;
   private _selectedChordPattern:ChordPattern;
   private _selectedChordPatternEmitter:EventEmitter<ChordPattern>;
+  private _editorScrollX:number = 0;
 
 
   constructor() {
@@ -36,5 +37,7 @@ export class GlobalSelectionsService   {
   get selectedChordPatternEmitter():EventEmitter<ChordPattern> {
     return this._selectedChordPatternEmitter;
   }
+  set editorScrolLeft( n:number ){ this._editorScrollX = n; }
+  get editorScrolLeft():number { return this._editorScrollX; }
 
 }

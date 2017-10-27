@@ -2,35 +2,35 @@
 <div class="controls" #controls>
     <div class="buttons" >
       <div class="ui icon massive fluid buttons">
-        <button (click)="playProgression()" class="ui button">
+        <button (click)="playProgression()" class="ui button" [ngClass]="{disabled:playing}">
           <i class="play white icon"></i>
         </button>
-        <button (click)="pauseProgression()" class="ui button">
+        <button (click)="pauseProgression()" class="ui button" [ngClass]="{disabled:!playing}">
           <i class="pause white icon"></i>
         </button>
-        <button (click)="stopProgression()" class="ui button">
+        <button (click)="stopProgression()" class="ui button" [ngClass]="{disabled:!playing}">
           <i class="stop white icon"></i>
         </button>
       </div>
     </div>
     <div class="bpm" >
         <app-slider [label]="'BPM'"
-                    [value]="bpm"
-                    [min]="60"
+                    [value]="progression.bpm"
+                    [min]="20"
                     [max]="220" 
                     (changed)="onBpmSliderChange($event)"></app-slider>
     </div>
 </div>
 
-<div class="editor" #editor>
+<div class="editor" #editor (scroll)="onEditorScroll($event)">
   <div *ngIf="progression">
-    <app-pattern-editor (partselected)="onPartSelect($event)"></app-pattern-editor>
+    <app-pattern-editor (partselected)="onPartSelect($event)" [parent]="this"></app-pattern-editor>
   </div>
   <div *ngIf="!progression" >
       <div class="ui red inverted big message">No progression selected. Please pick a progression in the topleft dropdown-menu</div>
   </div>
 </div>
-<div class="ep-divider" ep-divider draggable="true" [pianoDiv]="pianoFooter" [editorDiv]="editor"></div>
+<div class="ep-divider" [pianoDiv]="pianoFooter" [editorDiv]="editor" ep-divider></div>
 <div class="piano-footer" #pianoFooter>
   <app-piano-octave #pianoOctave>
   </app-piano-octave>
