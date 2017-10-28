@@ -37,14 +37,7 @@ export class ProgressionSelectComponent implements OnInit {
     this.globalSelections.selectedProgressionEmitter.subscribe( p => this.selectedProgression = p.name );
   }
   onSelect( name:string ){
-    this.globalSelections.appBusyMessage = "Loadin Song...";
-    this.globalSelections.appBusy = true;
-    setTimeout( ()=>{
-      this.ngZone.run( ()=>{
-        this.globalSelections.selectProgression( this.progressions.find( p=>p.name===name ) );
-        this.globalSelections.appBusy = false;
-      });
-    },300 );
+    this.globalSelections.selectProgression( this.progressions.find( p=>p.name===name ) );
   }
   showNewProgressionDialog():void{
     alert("TODO: show new progresssion name input modal");

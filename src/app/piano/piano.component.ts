@@ -77,6 +77,7 @@ export class PianoComponent implements OnInit {
       this.progression = p;
       this.currPartIndex = 0;
       this.initPiano();
+      
     } );
   }
   initPiano():void {

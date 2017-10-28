@@ -207,7 +207,8 @@ export class ToneService {
 	}
 	stopProgression():void {
 		Tone.Transport.stop();
-		this.sequencer.stop();
+		if( this.sequencer )
+			this.sequencer.stop();
 		this.paused = false;
 	}
 	setBPM( bpm:number ){ 

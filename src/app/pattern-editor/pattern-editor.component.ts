@@ -39,6 +39,7 @@ export class PatternEditorComponent implements OnInit {
   progression:Progression;
   currPartIndex:number = 0;
   pianoInitiated:boolean = false;
+  songLoaded:boolean = false;
 
   constructor(
     private progService:ProgressionsService,
@@ -55,11 +56,23 @@ export class PatternEditorComponent implements OnInit {
     this.reIndex();
 
     this.globalSelections.selectedProgressionEmitter.subscribe( p => {
+      this.globalSelections.appBusyMessage = "Loading Song...";
+      this.globalSelections.appBusy = true;
+      
+      this.songLoaded = false;
       this.progression = p;
       this.initPiano();
       this.reIndex();
+
+      
+      setTimeout( ()=> { 
+        this.cd.markForCheck();
+        this.globalSelections.appBusy=false 
+      } ,1000 );
+      
     } );
   }
+
   initPiano():void {
     if( this.pianoInitiated ){ return; }
     this.piano.root = "C";
