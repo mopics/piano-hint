@@ -24,7 +24,7 @@
 
 <div class="editor" #editor (scroll)="onEditorScroll($event)">
   <div *ngIf="progression">
-    <app-pattern-editor (partselected)="onPartSelect($event)" [parent]="this"></app-pattern-editor>
+    <app-pattern-editor (partselected)="onPartSelect($event)" ></app-pattern-editor>
   </div>
   <div *ngIf="!progression" >
       <div class="ui red inverted big message">No progression selected. Please pick a progression in the topleft dropdown-menu</div>

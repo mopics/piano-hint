@@ -15,17 +15,14 @@ import { InMemoryDataService }  from './services';
 
 //services
 import { ProgressionsService } from './services';
-import { ChordPatternsService } from './services';
 import { GlobalSelectionsService } from './services';
 import { SuiModalService } from 'ng2-semantic-ui';
 import { ToneService } from './services';
 
 //components
 import { AppComponent } from './app.component';
-import { ProgressionEditorComponent } from './progression-editor/progression-editor.component';
 import { PianoComponent, EpDividerDirective } from './piano/piano.component';
 import { PianoOctaveComponent } from './shared/piano-octave/piano-octave.component';
-import { PartComponent } from './progression-editor/part/part.component';
 import { MenuComponent } from './menu/menu.component';
 import { ProgressionSelectComponent } from './progression-select/progression-select.component';
 import { ConfirmModalComponent } from './shared/modals/modal-confirm/modal-confirm.component';
@@ -40,11 +37,9 @@ import { SideMenuComponent } from './shared/side-menu/side-menu.component';
 @NgModule({
   declarations: [
     AppComponent,
-    ProgressionEditorComponent,
     PianoComponent,
     EpDividerDirective,
     PianoOctaveComponent,
-    PartComponent,
     MenuComponent,
     ProgressionSelectComponent,
     ConfirmModalComponent,
@@ -69,7 +64,6 @@ import { SideMenuComponent } from './shared/side-menu/side-menu.component';
   ],
   providers: [
     ProgressionsService,
-    ChordPatternsService,
     GlobalSelectionsService,
     SuiModalService,
     ToneService

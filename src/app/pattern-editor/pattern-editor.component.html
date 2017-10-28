@@ -2,9 +2,7 @@
 <div *ngFor="let part of progression.parts; let i = index" class="pattern-container" [style.left]="part.pattern.posX+'px'" >
   <div class="pattern" [style.width]="part.pattern.width+'px'">
     <app-pattern-part
-        [part]="part"
-        [parent]="this" 
-        [chordPatterns]="chordPatterns"
+        [part]="part" 
         (change)="handlePartChange($event)"
         (add2end)="handleAddPart2End($event)"
         (add2next)="handleAddPart2Next($event)"

@@ -73,6 +73,7 @@ export class PianoComponent implements OnInit {
     this.initPiano();
 
     this.globalSelections.selectedProgressionEmitter.subscribe( p => {
+      this.stopProgression();
       this.progression = p;
       this.currPartIndex = 0;
       this.initPiano();
@@ -80,7 +81,7 @@ export class PianoComponent implements OnInit {
   }
   initPiano():void {
     if( this.pianoInitiated ){ 
-      this.piano.setProgression( this.progression );
+      //this.piano.setProgression( this.progression );
       this.piano.updateKeys( this.progression.parts[this.currPartIndex] )
       return;
     }
@@ -89,16 +90,20 @@ export class PianoComponent implements OnInit {
     this.piano.numOctaves = 4;
     this.piano.keyHeight = 300;
     this.piano.keyWidth = 80;
-    this.piano.setProgression( this.progression );
+    //this.piano.setProgression( this.progression );
     this.piano.createKeys( this.progression.parts[0] );
     this.piano.keyClicked.subscribe( n=> this.ts.playNote(n,n.octave) );
 
     this.ts.sequenceEmitter.subscribe( event=> {
-      if( event.partIndex > -1 ){ // change part
-        this.ngZone.run( ()=> {
-          this.currPartIndex = event.partIndex;
-        });
-      }
+      this.ngZone.run( ()=> {
+        if( event.partIndex > -1 ){ // change part
+          
+            this.currPartIndex = event.partIndex;
+            this.piano.updateKeys( this.progression.parts[event.partIndex]);
+          
+        }
+        this.piano.highlightTickNotes( event.notes );
+      });
     });
     this.pianoInitiated = true;
   }

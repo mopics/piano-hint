@@ -1,33 +1,7 @@
 import { Notes, Scales, Chords, Note, Key, Chord, Scale } from './note.models';
 import { TickNote } from './tone.service';
 
-export class ChordPattern {
-    index:number = 0;
-	name:string = "Untitled";
-	bpm:number = 120;
-	ticks:number[] = [0,1,2,3];
-    root:number[] = [0,0,0,0];
-    rootVel:number[] = [0,0,0,0];
-    rootLength:number[] = [4,4,4,4];
-    third:number[] = [0,0,0,0];
-    thirdVel:number[] = [0,0,0,0];
-    thirdLength:number[] = [4,4,4,4];
-    fifth:number[] = [0,0,0,0];
-    fifthVel:number[] = [0,0,0,0];
-    fifthLength:number[] = [4,4,4,4];
-    seventh:number[] = [0,0,0,0];
-    seventhVel:number[] = [0,0,0,0];
-    seventhLength:number[] = [4,4,4,4];
 
-    get label():string {
-        return this.name;
-    }
-    clone():ChordPattern {
-        let p:ChordPattern = new ChordPattern();
-        // TODO
-        return p;
-    }
-}
 export class TimeSignature {
     parts:number;
     ofLength:number;

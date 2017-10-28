@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, NgZone } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, NgZone, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 // models & services
-import { Note, Notes, Chord, Chords, Scale, Progression, ProgressionPart, ToneService } from '../../services';
+import { Note, Notes, Chord, Chords, Scale, Progression, ProgressionPart, ToneService, TickNote } from '../../services';
 
 export class Hint {
   x:number = 0;
@@ -16,13 +16,12 @@ export class Hint {
 @Component({
   selector: 'app-piano-octave',
   templateUrl: './piano-octave.component.html',
-  styleUrls: ['./piano-octave.component.css']
+  styleUrls: ['./piano-octave.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PianoOctaveComponent implements OnInit {
 
   @Input() root:string = "C";
-  @Input() chord:string;
-  @Input() scale:string;
   @Input() startOctave:number = 2;
   @Input() numOctaves:number = 1;
   @Input() keyHeight:number = 400;
@@ -31,8 +30,6 @@ export class PianoOctaveComponent implements OnInit {
   @Input() reverseKeys:boolean = false;
   @Input() equalWidth:boolean = false;
   @Input() hintWidth:number = 70;
-  @Input() updatePatternNotes:boolean = true;
-  @Input() updatePartNotes:boolean = true;
   @Output() keyClicked:EventEmitter<Note>=new EventEmitter();
 
   octaves:number[];
@@ -53,7 +50,7 @@ export class PianoOctaveComponent implements OnInit {
 
   @ViewChild('piano') piano: ElementRef;
 
-  constructor( private ts:ToneService, private _ngZone: NgZone ) {
+  constructor( private ts:ToneService, private _ngZone: NgZone, private cd: ChangeDetectorRef ) {
   }
 
   ngOnInit() {
@@ -65,32 +62,21 @@ export class PianoOctaveComponent implements OnInit {
       this.blackKeyHeight = this.keyHeight*.8;
     }
   }
-  setProgression( p:Progression ):void {
-    this.progression = p;
-    if( this.progression ){
-      this.ts.sequenceEmitter.subscribe( event=> {
-        if( !this.updatePartNotes && !this.updatePatternNotes ){ return; }
-        this._ngZone.run(() => {
-          if( event.partIndex > -1 ){ // change part
-            this.updateKeys( this.progression.parts[ event.partIndex ] );
-          }
-          if( this.updatePatternNotes ) {
-            event.notes.forEach( en=> {
-              let n:Note = this.allKeys[en.fullName];
-              if( n ){
-                n.highlight = Note.HI;
-              }
-              setTimeout( ()=>{
-                this._ngZone.run(() => {
-                  n.highlight = Note.NO;
-              });
-              }, this.ts.noteLength2Ms( en.length ) );
-            });
-          }
-       });
-        
+  
+  highlightTickNotes( notes:TickNote[] ) {
+    notes.forEach( en=> {
+      let n:Note = this.allKeys[en.fullName];
+      if( n ){
+        n.highlight = Note.HI;
+      }
+      setTimeout( ()=>{
+          this._ngZone.run(() => {
+            n.highlight = Note.NO;
+            this.cd.markForCheck();
+          });
+        }, this.ts.noteLength2Ms( en.length ) );
       });
-    }
+      this.cd.markForCheck();
   }
   updateKeys( part:ProgressionPart ):void {
     let chordNotes:Note[] = part.chord.midiNotes;
@@ -124,22 +110,10 @@ export class PianoOctaveComponent implements OnInit {
         n.fill = Note.seventhFill;
       });
     }
-    // create scale hints as dots
-    this.scaleHints = new Array<Hint>();
-    this.keys.forEach( (k,i)=>{
-      if( part.scale.midiNotes.find( n=>n.name===k.name) ){
-        let h:Hint = new Hint();
-        h.rx = this.keyWidth*.18; h.ry = h.rx;
-        if( k.whiteKey ){
-          h.x = k.xPos + this.keyWidth/2;
-          h.y = this.keyHeight*.85;
-        } else {
-          h.x = k.xPos + this.keyWidth/4;
-          h.y = this.keyHeight*.6;
-        }
-        this.scaleHints.push(h);
-      }
-    });
+    
+    this.createHints( part );
+
+    this.cd.markForCheck();
   }
   createKeys( part:ProgressionPart ):void {
     this.root = "C";//part.root.name;
@@ -207,12 +181,17 @@ export class PianoOctaveComponent implements OnInit {
     }*/
     this.allKeysA = this.whiteKeys.concat(this.blackKeys );
 
+    this.createHints( part );
+
+  }
+  createHints( part:ProgressionPart ):void {
     // create scale hints as dots
     this.scaleHints = new Array<Hint>();
     this.keys.forEach( (k,i)=>{
       if( part.scale.midiNotes.find( n=>n.name===k.name) ){
         let h:Hint = new Hint();
         h.rx = this.keyWidth*.18; h.ry = h.rx;
+        h.note = k;
         if( k.whiteKey ){
           h.x = k.xPos + this.keyWidth/2;
           h.y = this.keyHeight*.85;
@@ -223,7 +202,6 @@ export class PianoOctaveComponent implements OnInit {
         this.scaleHints.push(h);
       }
     });
-
   }
 
   // key click events

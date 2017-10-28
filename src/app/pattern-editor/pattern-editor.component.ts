@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, NgZone, Output, EventEmitter, HostListener, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, NgZone, Output, EventEmitter, HostListener, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 // models
 import { Chords, Notes, Note } from '../services';
 import { Progression, ProgressionPart } from '../services';
 // service
-import { ProgressionsService, ChordPatternsService, ChordPattern, GlobalSelectionsService, ToneService } from '../services';
+import { ProgressionsService, GlobalSelectionsService, ToneService } from '../services';
 import { SuiModalService, ModalSize } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../shared/modals/modal-confirm/modal-confirm.component';
 // components
@@ -15,40 +15,38 @@ import { PianoComponent } from '../piano/piano.component';
 @Component({
   selector: 'app-pattern-editor',
   templateUrl: './pattern-editor.component.html',
-  styleUrls: ['./pattern-editor.component.scss']
+  styleUrls: ['./pattern-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PatternEditorComponent implements OnInit {
 
   @Output() partselected:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
-  @Input() parent:PianoComponent;
 
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
 
   @HostListener('document:mousemove', ['$event']) documenmousemove(e){ 
-    if( !this.draggingNote ){ return; }
+    if( !this.globalSelections.draggingNote ){ return; }
     window.document.body.style.cursor = "ew-resize";
-    this.draggingNote.mousemove( e );
+    this.globalSelections.draggingNote.mousemove( e );
   };
   @HostListener( 'document:mouseup', ['$event'] ) documentmouseup(e){
-    if( this.draggingNote ) {
+    if( this.globalSelections.draggingNote ) {
       window.document.body.style.cursor = "default";
-      this.draggingNote.mouseup( e );
+      this.globalSelections.draggingNote.mouseup( e );
     }
   };
 
   progression:Progression;
   currPartIndex:number = 0;
-  chordPatterns:ChordPattern[];
   pianoInitiated:boolean = false;
-  draggingNote:PatternNoteDirective;
 
   constructor(
     private progService:ProgressionsService,
-    private cp:ChordPatternsService,
     private globalSelections:GlobalSelectionsService,
     private modalService:SuiModalService,
     private ts:ToneService,
-    private ngZone:NgZone
+    private ngZone:NgZone,
+    private cd: ChangeDetectorRef
   ) {  }
 
   ngOnInit() {
@@ -61,13 +59,6 @@ export class PatternEditorComponent implements OnInit {
       this.initPiano();
       this.reIndex();
     } );
-
-    this.loadChordPatterns();
-  }
-  private loadChordPatterns():void{
-		this.cp.getPatterns().then( patterns =>{
-			 this.chordPatterns = patterns;
-		 } );
   }
   initPiano():void {
     if( this.pianoInitiated ){ return; }
@@ -79,8 +70,6 @@ export class PatternEditorComponent implements OnInit {
     this.piano.rotation = 90;
     this.piano.reverseKeys = true;
     this.piano.equalWidth = true;
-    this.piano.updatePatternNotes = false;
-    this.piano.setProgression( this.progression );
     this.piano.createKeys( this.progression.parts[0] );
     this.piano.keyClicked.subscribe( n=> this.ts.playNote(n,n.octave) );
 
@@ -88,6 +77,7 @@ export class PatternEditorComponent implements OnInit {
       if( event.partIndex > -1 ){ // change part
         this.ngZone.run( ()=> {
           this.currPartIndex = event.partIndex;
+          this.piano.updateKeys( this.progression.parts[ event.partIndex ] );
         });
       }
     });

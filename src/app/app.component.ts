@@ -12,6 +12,7 @@ export class AppComponent {
   loadingMessage:string = 'Loading Samples...';
   progressionsLoaded:boolean = false;
   pianoReady:boolean = false;
+  appBusy:boolean = false;
 
   constructor( private gss:GlobalSelectionsService, private ts:ToneService, private ngZone:NgZone ){}
 
@@ -20,6 +21,7 @@ export class AppComponent {
       this.progressionsLoaded = true;
       this.checkFullyLoaded();
     });
+    this.gss.appBusyEmitter.subscribe( (b)=> { this.appBusy = b; this.loadingMessage = this.gss.appBusyMessage; } );
     this.ts.fullyLoaded.subscribe( ()=>{
       this.pianoReady = true;
       this.checkFullyLoaded();

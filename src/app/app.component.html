@@ -26,7 +26,7 @@
         </div>
         
         <router-outlet *ngIf="!loading"></router-outlet>
-        <div *ngIf="loading" class="ui active dimmer">
+        <div *ngIf="loading || appBusy" class="ui active dimmer">
             <div class="ui text loader">{{loadingMessage}}</div>
         </div>
     </sui-sidebar-sibling>

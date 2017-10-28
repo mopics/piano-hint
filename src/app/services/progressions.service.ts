@@ -8,6 +8,7 @@ import 'rxjs/add/operator/toPromise';
 import { Notes, Scales, Chords, Note, Key, Chord, Scale } from './note.models';
 import { Progression, ProgressionPart, Pattern } from './progression.models';
 
+
 @Injectable()
 export class ProgressionsService {
 

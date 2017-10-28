@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, NgZone } from '@angular/core';
 
 // routing 
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -25,18 +25,26 @@ export class ProgressionSelectComponent implements OnInit {
     private globalSelections:GlobalSelectionsService,
     private route: ActivatedRoute,
     private location:Location,
+    private ngZone:NgZone
   ) { }
 
   ngOnInit() {
     this.progService.getProgressions().then( progressions => {
       this.progressions = progressions;
       //auto select first one
-      this.globalSelections.selectProgression( this.progressions[0] );
+      this.globalSelections.selectProgression( this.progressions[1] );
     }  );
     this.globalSelections.selectedProgressionEmitter.subscribe( p => this.selectedProgression = p.name );
   }
   onSelect( name:string ){
-    this.globalSelections.selectProgression( this.progressions.find( p=>p.name===name ) );
+    this.globalSelections.appBusyMessage = "Loadin Song...";
+    this.globalSelections.appBusy = true;
+    setTimeout( ()=>{
+      this.ngZone.run( ()=>{
+        this.globalSelections.selectProgression( this.progressions.find( p=>p.name===name ) );
+        this.globalSelections.appBusy = false;
+      });
+    },300 );
   }
   showNewProgressionDialog():void{
     alert("TODO: show new progresssion name input modal");

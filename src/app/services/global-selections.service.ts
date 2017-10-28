@@ -1,29 +1,26 @@
 import { Injectable, EventEmitter } from '@angular/core';
 
-import { Progression, ChordPattern } from './progression.models';
+import { Progression } from './progression.models';
+import { PatternPartComponent, PatternNoteDirective } from '../pattern-editor/pattern-part/pattern-part.component';
 
 @Injectable()
 export class GlobalSelectionsService   {
 
   private _selectedProgression:Progression;
-  private _selectedProgressionEmitter:EventEmitter<Progression>;
-  private _selectedChordPattern:ChordPattern;
-  private _selectedChordPatternEmitter:EventEmitter<ChordPattern>;
+  private _selectedProgressionEmitter:EventEmitter<Progression> = new EventEmitter();
   private _editorScrollX:number = 0;
+  private _busy:boolean = false;
+  private _busyMessage:string = "Loading Samples...";
+  private _busyEmitter:EventEmitter<boolean> = new EventEmitter();
+  private _draggingNote:PatternNoteDirective;
 
 
-  constructor() {
-    this._selectedProgressionEmitter = new EventEmitter();
-   }
+  constructor() {}
 
    // progression selection
   selectProgression( p:Progression ):void{
     this._selectedProgression = p;
     this._selectedProgressionEmitter.emit( p );
-  }
-  selectPattern( p:ChordPattern ):void {
-    this._selectedChordPattern = p;
-    this._selectedChordPatternEmitter.emit( p );
   }
   get selectedProgression():Progression {
     return this._selectedProgression;
@@ -31,13 +28,13 @@ export class GlobalSelectionsService   {
   get selectedProgressionEmitter():EventEmitter<Progression> {
     return this._selectedProgressionEmitter;
   }
-  get selectedChordPattern():ChordPattern {
-    return this._selectedChordPattern;
-  }
-  get selectedChordPatternEmitter():EventEmitter<ChordPattern> {
-    return this._selectedChordPatternEmitter;
-  }
   set editorScrolLeft( n:number ){ this._editorScrollX = n; }
   get editorScrolLeft():number { return this._editorScrollX; }
-
+  set appBusy( b:boolean ) { this._busy = b; this._busyEmitter.emit( b ); }
+  get appBusy():boolean { return this._busy; }
+  set appBusyMessage( m:string ){ this._busyMessage = m; }
+  get appBusyMessage():string { return this._busyMessage; }
+  get appBusyEmitter():EventEmitter<boolean>{ return this._busyEmitter; }
+  set draggingNote( dn:PatternNoteDirective ) { this._draggingNote = dn; }
+  get draggingNote(){ return this._draggingNote; }
 }

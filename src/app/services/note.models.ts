@@ -1,4 +1,3 @@
-import { clone } from 'ramda/src/';
 
 export enum Notes { C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B }
 export enum Scales { Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian, Harmonic_Minor, Melodic_Minor, Lydian_b7, Atltered, Symmetrical_Diminished };
@@ -30,13 +29,8 @@ export enum MinorChords { i, iiHD, III, iv, V, VII, viiFD };
 export const MidiRange:number[] = [ 36, 127 ];
 
 export class Note {
+
     static raised2flat:Object =  { "C#":"Db", "D#":"Eb","F#":"Gb","G#":"Ab","A#":"Bb" };
-    octave:number;
-    midiIndex:number;
-    private _name:string;
-    degree:number;
-    private _whiteKey:boolean = true;
-    xPos:number = 0;
     static whiteFill:string = "#FFFFF7";
     static blackFill:string = "#5B5B6B";
     static rootFill:string = "#E05555";
@@ -47,6 +41,14 @@ export class Note {
     static nonToneFill:string = "#baa";
     static HI:number = 0.9;
     static NO:number = 0.3;
+
+    octave:number;
+    midiIndex:number;
+    private _name:string;
+    degree:number;
+    private _whiteKey:boolean = true;
+    xPos:number = 0;
+    
     private _fill:string;
     private _highlight:number = Note.NO;
 

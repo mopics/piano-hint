@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, NgZone, Directive, ElementRef, HostListener, Renderer } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, NgZone, Directive, ElementRef, HostListener, Renderer, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 // components
 // import { SuiSelect } from 'ng2-semantic-ui';
@@ -6,8 +6,8 @@ import { PianoOctaveComponent } from '../../shared/piano-octave/piano-octave.com
 import { SelectComponent } from '../../shared/select/select.component';
 
 // models & services
-import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps, TickNote } from '../../services';
-import { Progression, ProgressionPart, ToneService, ChordPattern } from '../../services';
+import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps, TickNote, GlobalSelectionsService } from '../../services';
+import { Progression, ProgressionPart, ToneService } from '../../services';
 import { MenuItem } from '../../shared/models';
 // components
 import { PatternEditorComponent } from '../pattern-editor.component';
@@ -24,14 +24,14 @@ export class PatternNoteDirective {
   resizeMode:boolean = false;
   dragging:boolean = false;
 
-  constructor(private el: ElementRef, private renderer: Renderer) {}
+  constructor(private el: ElementRef, private renderer: Renderer, private gss:GlobalSelectionsService ) {}
 
   @HostListener('mouseenter', ['$event']) mouseenter(e){
     this.mousemove(e);
   };
   @HostListener('mousemove', ['$event']) mousemove(e){
     if( this.dragging ) { 
-      let scrollX:number = this.parent.parent.editorScrolLeft;
+      let scrollX:number = this.gss.editorScrolLeft;
       let nw:number = e.pageX + scrollX - this.tickNote.posX - this.parent.part.pattern.posX;
       let cw:number = PatternPartComponent.CELL_WIDTH;
       this.renderer.setElementStyle( this.el.nativeElement, "width", nw+"px");
@@ -54,14 +54,14 @@ export class PatternNoteDirective {
   @HostListener('mousedown', ['$event']) mousedown(e) {
     if( this.resizeMode ){
       this.dragging = true;
-      this.parent.parent.draggingNote = this;
+      this.gss.draggingNote = this;
       return;
     }
     this.parent.setNoteNotActive( this.tickNote, this.tickNote.col );
   };
   @HostListener('mouseup', ['$event']) mouseup(e) {
     this.dragging = false;
-    this.parent.parent.draggingNote = null;
+    this.gss.draggingNote = null;
     window.document.body.style.cursor = "default";
   };
 }
@@ -69,12 +69,11 @@ export class PatternNoteDirective {
 @Component({
   selector: 'app-pattern-part',
   templateUrl: './pattern-part.component.html',
-  styleUrls: ['./pattern-part.component.scss']
+  styleUrls: ['./pattern-part.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PatternPartComponent implements OnInit {
-  @Input() parent:PatternEditorComponent;
   @Input() part:ProgressionPart;
-  @Input() chordPatterns:ChordPattern[];
 
   @Input() numOctaves:number = 4;
   @Input() startOctave:number = 2;
@@ -94,7 +93,7 @@ export class PatternPartComponent implements OnInit {
   selectedVelocity:number = 8;
   activeNotes:TickNote[];
 
-  static CELL_WIDTH:number = 32; // 16th note
+  static CELL_WIDTH:number = 18; // 16th note
   static CELL_HEIGHT:number = 13;
   static COPY_2_NEXT:string = "Copy part to next";
   static COPY_2_END:string = "Copy part to end";
@@ -185,7 +184,6 @@ export class PatternPartComponent implements OnInit {
       });
       return notesMatch;
      });
-     console.log('foo');
   }
   onRootChange( n:Note ):void {
     this.part.root = n;
