@@ -10,41 +10,6 @@ import { ProgressionPart, Progression } from '../services';
 import { ProgressionsService, GlobalSelectionsService, ToneService } from '../services';
 
 
-@Directive({ selector: '[ep-divider]' })
-export class EpDividerDirective {
-
-  @Input() editorDiv:ElementRef; // fsdf
-  @Input() pianoDiv:ElementRef; // afsdf
-
-  editorTop:number = 120; // should correspond with $editorTop in scss-file
-  menuHeight:number = 26; // sgeg
-
-  constructor(private el: ElementRef, private renderer: Renderer) {}
-
-  @HostListener('drag', ['$event']) onDrag(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      this.update( e.pageY, e.view.innerHeight );
-      window.document.body.style.cursor = 'row-resize';
-      
-  };
-  @HostListener('dragend', ['$event']) onDrop(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.update( e.pageY, e.view.innerHeight );
-    window.document.body.style.cursor = 'default';
-  };
-  update ( mouseY:number, pageHeight:number ):void{
-    //if( mouseY< 200 ) { return; }
-    let dividerPos:number = pageHeight-mouseY;
-    this.renderer.setElementStyle( this.el.nativeElement, 'bottom',  dividerPos+"px" );
-    // update editor:
-    this.renderer.setElementStyle( this.editorDiv, "bottom", (dividerPos+10)+"px" );
-    this.renderer.setElementStyle( this.pianoDiv, "height", dividerPos+"px");
-  };
-}
-
-
 @Component({
   selector: 'app-piano',
   templateUrl: './piano.component.html',
@@ -55,9 +20,14 @@ export class PianoComponent implements OnInit {
   currPartIndex:number = 0;
   pianoInitiated:boolean = false;
   playing:boolean = false;
+  dividerBottom:number = 300;
 
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
   @ViewChild( 'editor' ) editor:ElementRef;
+
+  @HostListener( 'window:resize', ['$event'] ) windowresize(e){
+    this.setDividerBottom();
+  }
 
   constructor( 
     private progService:ProgressionsService,
@@ -71,13 +41,14 @@ export class PianoComponent implements OnInit {
   ngOnInit() {
     this.progression = this.globalSelections.selectedProgression;
     this.initPiano();
+    this.setDividerBottom();
 
     this.globalSelections.selectedProgressionEmitter.subscribe( p => {
       this.stopProgression();
       this.progression = p;
       this.currPartIndex = 0;
       this.initPiano();
-      
+      this.setDividerBottom();
     } );
   }
   initPiano():void {
@@ -89,7 +60,7 @@ export class PianoComponent implements OnInit {
     this.piano.root = "C";
     this.piano.startOctave = 2;
     this.piano.numOctaves = 4;
-    this.piano.keyHeight = 300;
+    this.piano.keyHeight = 250;
     this.piano.keyWidth = 80;
     //this.piano.setProgression( this.progression );
     this.piano.createKeys( this.progression.parts[0] );
@@ -106,6 +77,7 @@ export class PianoComponent implements OnInit {
         this.piano.highlightTickNotes( event.notes );
       });
     });
+
     this.pianoInitiated = true;
   }
   playProgression():void{
@@ -131,6 +103,11 @@ export class PianoComponent implements OnInit {
   }
   onEditorScroll( event ):void {
     this.globalSelections.editorScrolLeft = this.editor.nativeElement.scrollLeft;
+  }
+  setDividerBottom():void {
+    let pianoWidth = this.piano.totalWidth();
+    let pianoScaling = window.innerWidth / pianoWidth;
+    this.dividerBottom = this.piano.keyHeight * pianoScaling;
   }
 
 }

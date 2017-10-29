@@ -32,7 +32,7 @@ export class Note {
 
     static raised2flat:Object =  { "C#":"Db", "D#":"Eb","F#":"Gb","G#":"Ab","A#":"Bb" };
     static whiteFill:string = "#FFFFF7";
-    static blackFill:string = "#5B5B6B";
+    static blackFill:string = "#8B8B9B";
     static rootFill:string = "#E05555";
     static thirdFill:string = "#35BC75";
     static fifthFill:string = "#5667E2";

@@ -1,0 +1,25 @@
+<div *ngIf="progression" class="ui container">
+  <p></p>
+  <h1 class="ui large header">{{progression.name}}</h1>
+  <br>
+
+  <div class="ui stackable cards raised">
+    <div *ngFor="let part of progression.parts" class="card">
+      <div class="content">
+        <app-part 
+          [part]="part" 
+          (change)="handlePartChange($event)"
+          (delete)="handleDeleteRequest($event)"
+          (keyClicked)="handleKeyClicked($event)"
+          ></app-part>
+      </div>
+    </div>
+    <div class="card" (click)="addPart()"><div class="content"><i class="plus icon"></i></div></div>
+  </div>
+  <br><br>
+</div>
+<div *ngIf="!progression" class="ui container">
+  <br><br>
+  <div class="ui red inverted big message">No progression selected. Please pick a progression in the topleft dropdown-menu</div>
+</div>
+

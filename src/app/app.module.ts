@@ -21,7 +21,7 @@ import { ToneService } from './services';
 
 //components
 import { AppComponent } from './app.component';
-import { PianoComponent, EpDividerDirective } from './piano/piano.component';
+import { PianoComponent } from './piano/piano.component';
 import { PianoOctaveComponent } from './shared/piano-octave/piano-octave.component';
 import { MenuComponent } from './menu/menu.component';
 import { ProgressionSelectComponent } from './progression-select/progression-select.component';
@@ -30,6 +30,8 @@ import { SelectComponent } from './shared/select/select.component';
 import { PianocolorLegendComponent } from './shared/pianocolor-legend/pianocolor-legend.component';
 import { PatternEditorComponent } from './pattern-editor/pattern-editor.component';
 import { SliderComponent } from './shared/slider/slider.component';
+import { ProgressionEditorComponent } from './progression-editor/progression-editor.component';
+import { PartComponent} from './progression-editor/part/part.component';
 import { PatternPartComponent, PatternNoteDirective } from './pattern-editor/pattern-part/pattern-part.component';
 import { SideMenuComponent } from './shared/side-menu/side-menu.component';
 
@@ -38,13 +40,14 @@ import { SideMenuComponent } from './shared/side-menu/side-menu.component';
   declarations: [
     AppComponent,
     PianoComponent,
-    EpDividerDirective,
     PianoOctaveComponent,
     MenuComponent,
     ProgressionSelectComponent,
     ConfirmModalComponent,
     SelectComponent,
     PianocolorLegendComponent,
+    ProgressionEditorComponent,
+    PartComponent,
     PatternEditorComponent,
     SliderComponent,
     PatternPartComponent, PatternNoteDirective,

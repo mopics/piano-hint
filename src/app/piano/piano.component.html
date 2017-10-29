@@ -22,19 +22,19 @@
     </div>
 </div>
 
-<div class="editor" #editor (scroll)="onEditorScroll($event)">
+<div class="editor" #editor (scroll)="onEditorScroll($event)" [style.bottom]="dividerBottom+10+'px'">
   <div *ngIf="progression">
     <router-outlet *ngIf="!loading"></router-outlet>
-    <!--<app-pattern-editor (partselected)="onPartSelect($event)" ></app-pattern-editor>-->
   </div>
   <div *ngIf="!progression" >
       <div class="ui red inverted big message">No progression selected. Please pick a progression in the topleft dropdown-menu</div>
   </div>
 </div>
-<div class="ep-divider" [pianoDiv]="pianoFooter" [editorDiv]="editor" ep-divider></div>
-<div class="piano-footer" #pianoFooter>
+<div class="ep-divider" [style.bottom]="dividerBottom+'px'" >
+    <!--<app-pianocolor-legend></app-pianocolor-legend>-->
+</div>
+<div class="piano-footer" [style.height]="dividerBottom+'px'" #pianoFooter>
   <app-piano-octave #pianoOctave>
   </app-piano-octave>
-  <app-pianocolor-legend></app-pianocolor-legend>
 </div>
 </div>

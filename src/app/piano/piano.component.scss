@@ -27,7 +27,6 @@ $initialEditorBottom: 310px;
     position:fixed;
     left:0;
     top:$editorTop;
-    bottom:$initialEditorBottom;
     width: 100vw;
     background:white;
     overflow-y: auto;
@@ -36,7 +35,6 @@ $initialEditorBottom: 310px;
 .ep-divider {
     width:100%;
     position:fixed;
-    bottom:$initialDividerPos;
     background:#ccc;
     color:white;
     height:10px;
@@ -50,7 +48,6 @@ $initialEditorBottom: 310px;
     position: fixed;
     left:0;
     bottom:0;
-    height:$initialDividerPos;
     background:white;
     width:100%;
 }

@@ -79,6 +79,8 @@ export class PianoOctaveComponent implements OnInit {
       this.cd.markForCheck();
   }
   updateKeys( part:ProgressionPart ):void {
+    
+
     let chordNotes:Note[] = part.chord.midiNotes;
     // get keys
     let rootKeys:Note[] = this.allKeysA.filter( n=> n.name===chordNotes[0].name );
@@ -207,6 +209,13 @@ export class PianoOctaveComponent implements OnInit {
   // key click events
   onKeyClick( note:Note ):void {
     this.keyClicked.emit( note );
+  }
+
+  totalHeight():number {
+    return this.keyHeight;
+  }
+  totalWidth():number {
+    return this.keyWidth*7 * this.numOctaves;
   }
 
 }
