@@ -15,7 +15,7 @@ export class TickNote {
 	name:string;
 	octave:number;
 	velocity:number;
-	length:string;
+	length:number;
 	posX:number = 0;
 	posY:number = 0;
 	fill:string = "#f00";
@@ -113,7 +113,7 @@ export class ToneService {
 	private initBuildScoreSequencer():void {
 		this.sequencer = new Tone.Sequence( (time, col) => {
 			this.score.ticks[col].notes.forEach( t => {
-				this.piano.triggerAttackRelease( t.fullName, t.length, time, t.velocity ); // t.length );
+				this.piano.triggerAttackRelease( t.fullName, this.noteLength2Sec(t.length), time, t.velocity ); // t.length );
 				//this.piano.triggerAttack( t.fullName, t.length, t.velocity);
 				//this.piano.triggerRelease( t.fullName, time + duration);
 			});
@@ -121,8 +121,8 @@ export class ToneService {
 
 		}, this.score.ticks.map( (v,i)=> i ), "16n");
 	}
-	triggerAttackRelease( note:string, length:string, velocity:number=1 ){
-		this.piano.triggerAttackRelease( note, length, 0, velocity ); // t.length );
+	triggerAttackRelease( note:string, length:string, velocity:number=1, time:number=0 ){
+		this.piano.triggerAttackRelease( note, length, time, velocity );
 	}
 	triggerAttack( note:string, velocity:number = 1 ){
 		this.piano.triggerAttack( note, velocity );
@@ -218,9 +218,19 @@ export class ToneService {
 		}
 	}
 	getBPM():number { return Tone.Transport.bpm.value; }
-	noteLength2Ms( l:string ):any{
-		return this.piano.toSeconds( l )*1000;
+	noteLength2Ms( l:number ):number{
+		return this.noteLength2Sec(l)*1000;
 	}
+	noteLength2Sec( l:number ):number {
+		// l = num 16n 
+		l /= 4; // l = num beats
+		let bpm:number = Tone.Transport.bpm.value;
+		// bpm = beats per 60 seconds
+		let secPerBeat = 60/bpm;
+
+		return l*secPerBeat;
+	}
+	get context():any { return Tone.context; } // return AudioContext
 
 }
 

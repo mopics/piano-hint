@@ -65,7 +65,7 @@ export class PianoOctaveComponent implements OnInit {
   
   highlightTickNotes( notes:TickNote[] ) {
     notes.forEach( en=> {
-      let n:Note = this.allKeys[en.fullName];
+      let n:Note = this.allKeys[en.name+en.octave];
       if( n ){
         n.highlight = Note.HI;
       }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, NgZone, Directive, ElementRef, HostListener, Renderer, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, NgZone, Directive, ElementRef, HostListener, Renderer, ChangeDetectionStrategy, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 
 // components
 // import { SuiSelect } from 'ng2-semantic-ui';
@@ -12,7 +12,9 @@ import { MenuItem } from '../../shared/models';
 // components
 import { PatternEditorComponent } from '../pattern-editor.component';
 
-@Directive({ selector: '[pattern-note]' })
+@Directive({ 
+  selector: '[pattern-note]'
+})
 export class PatternNoteDirective {
 
   @Input() parent:PatternPartComponent; // fsdf
@@ -32,11 +34,12 @@ export class PatternNoteDirective {
   @HostListener('mousemove', ['$event']) mousemove(e){
     if( this.dragging ) { 
       let scrollX:number = this.gss.editorScrolLeft;
-      let nw:number = e.pageX + scrollX - this.tickNote.posX - this.parent.part.pattern.posX;
+      let nw:number = e.pageX + scrollX - this.tickNote.posX - this.parent.part.pattern.posX - 2;
       let cw:number = PatternPartComponent.CELL_WIDTH;
       this.renderer.setElementStyle( this.el.nativeElement, "width", nw+"px");
-      this.tickNote.length = Math.round((cw/nw)*16)+"n";
+      this.tickNote.length = nw/PatternPartComponent.CELL_WIDTH;
       this.tickNote.width = nw;
+      // console.log( `cw:${cw} nw:${nw} => ${this.tickNote.length}` );
     }
     // if hovering over end of note 8px from right;
     if( e.layerX > e.target.clientWidth-7 ){ // 
@@ -93,7 +96,7 @@ export class PatternPartComponent implements OnInit {
   selectedVelocity:number = 8;
   activeNotes:TickNote[];
 
-  static CELL_WIDTH:number = 18; // 16th note
+  static CELL_WIDTH:number = 16; // 16th note
   static CELL_HEIGHT:number = 13;
   static COPY_2_NEXT:string = "Copy part to next";
   static COPY_2_END:string = "Copy part to end";
@@ -104,7 +107,7 @@ export class PatternPartComponent implements OnInit {
     { label:PatternPartComponent.COPY_2_END, icon:"" }, 
     { label:PatternPartComponent.DELETE_PART, icon:"" } );
 
-  constructor(private tone:ToneService, private ngZone:NgZone ) { }
+  constructor(private tone:ToneService, private cd: ChangeDetectorRef ) { }
 
   ngOnInit() {
     let octaves = Array( this.numOctaves ).fill(1).map( (x,i) =>i );
@@ -113,13 +116,17 @@ export class PatternPartComponent implements OnInit {
     this.reColorCells();
     this.setActiveNotes();
   }
+  /**
+   * Pattern cells are bound to this.keys:Note[] 
+   * Pattern active notes are bound to this.activeNotes && this.pattern.ticks: TickNote
+   */
   setActiveNotes():void{
     this.activeNotes = new Array<TickNote>();
     this.part.pattern.ticks.forEach( (ta,i)=>{
       ta.forEach( (tn)=>{
         tn.col = i;
-        tn.width = this.setCellWidthFromNoteLength( tn.length )
-        tn.posX = i*PatternPartComponent.CELL_WIDTH; if( tn.posX===0 ){ tn.posX = 2; }
+        tn.width = this.setCellWidthFromNoteLength( tn.length );
+        tn.posX = i*PatternPartComponent.CELL_WIDTH; if( tn.posX===0 ){ tn.posX = 2; tn.width-=2; }
         tn.posY = this.keys.findIndex( n=> {
           if( n.fullName===tn.name+tn.octave ){
             tn.fill = n.fill;
@@ -130,9 +137,10 @@ export class PatternPartComponent implements OnInit {
       });
     });
   }
-  setCellWidthFromNoteLength( l:string ):number {
-    let n:number = parseInt( l.replace("n","") );
-    return PatternPartComponent.CELL_WIDTH / (n/16) -2;
+  setCellWidthFromNoteLength( l:number ):number {
+    // l = num 16n
+
+    return l*PatternPartComponent.CELL_WIDTH-2;
   }
   reColorCells():void{
 
@@ -217,35 +225,37 @@ export class PatternPartComponent implements OnInit {
     this.emitPartChange();
   }
   // pattern listeners
-  onCellAttack( event, note:TickNote, index:number ){
-    this.tone.triggerAttackRelease( note.fullName, note.length, this.selectedVelocity/10 );
-    if( this.noteIsActive( note, index )===1 ){
-      this.setNoteNotActive( note, index );
-    }
-    else {
-      this.setNoteActive( note, index, event.target.offsetLeft, event.target.offsetTop );
-    }
+  onCellAttack( event, note:Note, index:number ){
+    this.tone.triggerAttackRelease( note.fullName, "16n", this.selectedVelocity/10, this.tone.context.currentTime );
+    this.setNoteActive( note, index, event.target.offsetLeft, event.target.offsetTop );
+
     // this.emitPartChange();
   }
-  onCellRelease( note:TickNote, index:number ){
+  onCellRelease( note:Note, index:number ){
      this.tone.triggerRelease( note.fullName );
   }
-  setNoteActive( n:TickNote, index:number, posX:number, posY:number ):void{
-    n.length = "16n";
-    n.velocity = this.selectedVelocity;
-    this.part.pattern.ticks[index].push( n );
-    n.col = index;
-    n.posX = posX;
-    n.posY = posY;
-    this.activeNotes.push( n );
+  setNoteActive( n:Note, index:number, posX:number, posY:number ):void{
+    let tn:TickNote = new TickNote();
+    tn.name = n.name;
+    tn.octave = n.octave;
+    tn.length = 1;
+    tn.width = this.setCellWidthFromNoteLength( tn.length );
+    tn.velocity = this.selectedVelocity;
+    tn.fill = n.fill;
+    tn.col = index;
+    tn.posX = posX;
+    tn.posY = posY;
+    this.part.pattern.ticks[index].push( tn );
+    this.activeNotes.push( tn );
   }
   setNoteNotActive( note:TickNote, index:number ):void{
-    let i:number = this.part.pattern.ticks[index].findIndex( n=>n.name+n.octave===note.fullName );
+    let i:number = this.part.pattern.ticks[index].findIndex( n=>n === note );
     this.part.pattern.ticks[index].splice( i, 1 );
-    this.activeNotes.splice( this.activeNotes.findIndex( n=> (n.name+n.octave===note.name+note.octave&&n.col===note.col) ), 1 );
+    this.activeNotes.splice( this.activeNotes.findIndex( n=> n === note ), 1 );
+    
     console.log('foo');
   }
-  noteIsActive( note:TickNote, index:number ):number{
+  noteIsActive( note:Note, index:number ):number{
     if( this.part.pattern.ticks[index].find( (n) => {
       if( n.name+n.octave===note.fullName ){ return true;}
     } ) ) {
@@ -273,8 +283,8 @@ export class PatternPartComponent implements OnInit {
     }
   }
   addTickCollumn():void {
-   this.part.pattern.ticks.push( new Array<TickNote>() );
-   this.emitPartChange();
+    this.part.pattern.ticks.push( new Array<TickNote>() );
+    this.emitPartChange();
   }
   removeTickCollumn():void {
     this.part.pattern.ticks.splice( this.part.pattern.ticks.length-1);

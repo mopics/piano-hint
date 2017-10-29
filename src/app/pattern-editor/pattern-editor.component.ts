@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, NgZone, Output, EventEmitter, HostListener, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, NgZone, Output, EventEmitter, HostListener, Input, ChangeDetectionStrategy, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 
 // models
 import { Chords, Notes, Note } from '../services';
@@ -39,7 +39,6 @@ export class PatternEditorComponent implements OnInit {
   progression:Progression;
   currPartIndex:number = 0;
   pianoInitiated:boolean = false;
-  songLoaded:boolean = false;
 
   constructor(
     private progService:ProgressionsService,
@@ -55,20 +54,20 @@ export class PatternEditorComponent implements OnInit {
     this.initPiano();
     this.reIndex();
 
+    // new song select event
     this.globalSelections.selectedProgressionEmitter.subscribe( p => {
       this.globalSelections.appBusyMessage = "Loading Song...";
       this.globalSelections.appBusy = true;
       
-      this.songLoaded = false;
       this.progression = p;
       this.initPiano();
       this.reIndex();
 
-      
+      // timeout is for giving app time to go into appBusy state
       setTimeout( ()=> { 
         this.cd.markForCheck();
-        this.globalSelections.appBusy=false 
-      } ,1000 );
+        this.globalSelections.appBusy=false;
+      } ,300 );
       
     } );
   }
@@ -98,7 +97,7 @@ export class PatternEditorComponent implements OnInit {
   }
 
   handlePartChange( part:ProgressionPart ):void {
-    this.progression.parts[ part.index ] = part;
+    // this.progression.parts[ part.index ] = part;
     this.piano.updateKeys( part );
     this.reIndex();
     this.partselected.emit( part );
