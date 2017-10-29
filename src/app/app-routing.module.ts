@@ -5,9 +5,9 @@ import { PianoComponent }   from './piano/piano.component';
 import { PatternEditorComponent } from './pattern-editor/pattern-editor.component';
  
 const routes: Routes = [
-  { path: '', redirectTo: '/piano', pathMatch: 'full' },
-  { path: 'piano',  component: PianoComponent },
-  { path: 'pattern-editor', component: PatternEditorComponent }
+  { path: '', redirectTo: '/pattern', pathMatch: 'full' },
+  // { path: 'progression',  component: ProgressionEditorComponent },
+  { path: 'pattern', component: PatternEditorComponent }
 ];
 
 @NgModule({

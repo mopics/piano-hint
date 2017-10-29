@@ -37,7 +37,7 @@ export class PatternNoteDirective {
       let nw:number = e.pageX + scrollX - this.tickNote.posX - this.parent.part.pattern.posX - 2;
       let cw:number = PatternPartComponent.CELL_WIDTH;
       this.renderer.setElementStyle( this.el.nativeElement, "width", nw+"px");
-      this.tickNote.length = nw/PatternPartComponent.CELL_WIDTH;
+      this.tickNote.length = (nw+4)/PatternPartComponent.CELL_WIDTH;
       this.tickNote.width = nw;
       // console.log( `cw:${cw} nw:${nw} => ${this.tickNote.length}` );
     }

@@ -25,7 +25,7 @@
             </div>
         </div>
         
-        <router-outlet *ngIf="!loading"></router-outlet>
+        <app-piano *ngIf="!loading"></app-piano>
         <div *ngIf="loading || appBusy" class="ui active dimmer">
             <div class="ui text loader">{{loadingMessage}}</div>
         </div>
