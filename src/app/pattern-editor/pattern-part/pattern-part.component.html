@@ -1,44 +1,49 @@
-<div class="tonality-select">
-  <!-- select Root -->
-  <div class="item">
-    <!--<label class="ui tiny label">Root:</label>-->
-    Root: <app-select [items]="notes" (select)="onRootChange($event)" [selected]="part.root"></app-select>
-  </div>
-  <!-- select mode/chord -->
-  <div class="item">
-    <!--<label class="ui tiny label">Chord:</label>-->
-    Chord: <app-select [items]="chords" (select)="onChordChange($event)" [selected]="part.chord"></app-select>
-  </div>
-  <!-- select scale -->
-  <div class="item">
-      <!--<label class="ui tiny label">Scale:</label>-->
-      Scale: <app-select [items]="scalesFiltered" 
-      (select)="onScaleChange($event)" 
-      [selected]="part.scale" #scaleSelect></app-select>
-    </div>
-
-</div>
-<div class="edit-menu">
+<!-- top menu -->
+<div class="part-menu" (click)="selectPart()" *ngIf="topMenuVisible">
+  <!--<div class="tonality-select">
     <div class="item">
-        <i (click)="removeTickCollumn()" class="minus circle icon"></i>
+      Root: <app-select [items]="notes" (select)="onRootChange($event)" [selected]="part.root"></app-select>
     </div>
-  <div class="item">
-      <i (click)="addTickCollumn()" class="add circle icon"></i>
+    <div class="item">
+      Chord: <app-select [items]="chords" (select)="onChordChange($event)" [selected]="part.chord"></app-select>
+    </div>
+    <div class="item">
+        Scale: <app-select [items]="scalesFiltered" 
+        (select)="onScaleChange($event)" 
+        [selected]="part.scale" #scaleSelect></app-select>
+      </div>-->
+  <div class="tonality-select">
+      <div class="item">
+          <app-side-menu [alignRight]="true" [items]="tonalityMenuItems" [iconClasses]="tonalityMenuItemClasses" (select)="onSideMenuSelect($event)" ></app-side-menu>
+      <!--</div>
+      <div class="item">-->
+          <app-side-menu [alignRight]="true" [items]="copyMenuItems" [iconClasses]="copyMenuItemClasses" (select)="onSideMenuSelect($event)" ></app-side-menu>
+      </div>
   </div>
-  <div class="item">
-    <app-side-menu [items]="sideMenuItems" (select)="onSideMenuSelect($event)" ></app-side-menu>
+  <div class="edit-menu">
+      <div class="item">
+          <i (click)="removeTickCollumn()" class="minus circle icon"></i>
+      </div>
+    <div class="item">
+        <i (click)="addTickCollumn()" class="add circle icon"></i>
+    </div>
+    
   </div>
 </div>
-<table *ngIf="keys" class="pattern-background"
+
+<!-- pattern background cells -->
+<table *ngIf="keys" [ngClass]="patternBackgroundClasses"
   [style.width]="part.pattern.width+'px'" >
   <tr *ngFor="let note of keys" class="row" >
-    <td *ngFor="let tick of part.pattern.ticks; let i = index" 
+    <td *ngFor="let i of tickIndexes;" 
       (mousedown)="onCellAttack( $event, note, i )"
       class="col"
       [style.background-color]="note.fill"
       ></td> 
   </tr>
 </table>
+
+<!-- active notes -->
 <div class="pattern">
   <div *ngFor="let note of activeNotes" 
     class="note" 

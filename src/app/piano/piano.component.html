@@ -1,5 +1,5 @@
-<div (drop)="onDrop()">
-<div class="controls" #controls>
+<div >
+<div class="playback-controls" #controls>
     <div class="buttons" >
       <div class="ui icon massive fluid buttons">
         <button (click)="playProgression()" class="ui button" [ngClass]="{disabled:playing}">
@@ -21,6 +21,9 @@
                     (changed)="onBpmSliderChange($event)"></app-slider>
     </div>
 </div>
+<div class="view-edit-controls">
+  <app-side-menu (select)="onViewHideMenuSelect($event)" [items]="viewHideMenuItems" [iconClasses]="viewHideMenuIconClasses"></app-side-menu>
+</div>
 
 <div class="editor" #editor (scroll)="onEditorScroll($event)" [style.bottom]="dividerBottom+10+'px'">
   <div *ngIf="progression">
@@ -32,6 +35,10 @@
 </div>
 <div class="ep-divider" [style.bottom]="dividerBottom+'px'" >
     <!--<app-pianocolor-legend></app-pianocolor-legend>-->
+</div>
+<div class="tonality" [style.left]="tonalityLeft+'px'" [style.bottom]="dividerBottom-20+'px'" #tonality>
+  <i class="music icon"></i>{{progression.parts[currPartIndex].root.name}}-{{progression.parts[currPartIndex].chord.name}}&nbsp;&nbsp;&nbsp;&nbsp;
+  <i class="signal icon"></i>{{progression.parts[currPartIndex].scale.name}}
 </div>
 <div class="piano-footer" [style.height]="dividerBottom+'px'" #pianoFooter>
   <app-piano-octave #pianoOctave>

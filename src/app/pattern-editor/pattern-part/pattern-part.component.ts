@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, NgZone, Directive, ElementRef, HostListener, Renderer, ChangeDetectionStrategy, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { List } from 'immutable';
 
 // components
 // import { SuiSelect } from 'ng2-semantic-ui';
@@ -6,12 +7,20 @@ import { PianoOctaveComponent } from '../../shared/piano-octave/piano-octave.com
 import { SelectComponent } from '../../shared/select/select.component';
 
 // models & services
-import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps, TickNote, GlobalSelectionsService } from '../../services';
+import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps, TickNote, GlobalSelectionsService, VisibilityEvent } from '../../services';
 import { Progression, ProgressionPart, ToneService } from '../../services';
 import { MenuItem } from '../../shared/models';
 // components
 import { PatternEditorComponent } from '../pattern-editor.component';
 
+class MenuLabels {
+  static SELECT_ROOT:string = "Select Root";
+  static SELECT_CHORD:string = "Select Chord";
+  static SELECT_SCALE:string = "Select Scale";
+  static COPY_2_NEXT:string = "Copy part to next";
+  static COPY_2_END:string = "Copy part to end";
+  static DELETE_PART:string = "Delete part";
+}
 @Directive({ 
   selector: '[pattern-note]'
 })
@@ -91,37 +100,66 @@ export class PatternPartComponent implements OnInit {
   chords:Chord[] = Array<Chord>(ChordSteps.length).fill(new Chord(0)).map((c,i)=> new Chord(i));
   scales:Scale[] = Array<Scale>(ScaleSteps.length).fill(new Scale(0)).map((c,i)=> new Scale(i));
   scalesFiltered:Scale[];
-  keys:Note[];
+  keys:List<Note>;
   pattern:string[][];
+  tickIndexes:Array<number>;
   selectedVelocity:number = 8;
-  activeNotes:TickNote[];
+  activeNotes:List<TickNote>;
+  partActive:boolean = false;
+  patternBackgroundClasses:Array<string> = new Array<string>( "pattern-background" );
+  topMenuVisible:boolean = false;
 
   static CELL_WIDTH:number = 16; // 16th note
   static CELL_HEIGHT:number = 13;
-  static COPY_2_NEXT:string = "Copy part to next";
-  static COPY_2_END:string = "Copy part to end";
-  static DELETE_PART:string = "Delete part";
 
-  sideMenuItems:MenuItem[] = new Array( 
-    { label:PatternPartComponent.COPY_2_NEXT, icon:"" }, 
-    { label:PatternPartComponent.COPY_2_END, icon:"" }, 
-    { label:PatternPartComponent.DELETE_PART, icon:"" } );
+  tonalityMenuItemClasses:string[] = Array( "music", "icon", "pattern-top-edit-icon" );
+  tonalityMenuItems:MenuItem[] = new Array(
+    { label:MenuLabels.SELECT_ROOT, icon:"" },
+    { label:MenuLabels.SELECT_CHORD, icon:"" },
+    { label:MenuLabels.SELECT_SCALE, icon:"" },
+  )
+  copyMenuItemClasses:string[] = Array("copy", "icon", "pattern-top-edit-icon" );
+  copyMenuItems:MenuItem[] = new Array( 
+    { label:MenuLabels.COPY_2_NEXT, icon:"" }, 
+    { label:MenuLabels.COPY_2_END, icon:"" }, 
+    { label:MenuLabels.DELETE_PART, icon:"" } );
 
-  constructor(private tone:ToneService, private cd: ChangeDetectorRef ) { }
+  constructor(private tone:ToneService, private ngZone:NgZone, private cd: ChangeDetectorRef, private gss:GlobalSelectionsService ) { }
 
   ngOnInit() {
     let octaves = Array( this.numOctaves ).fill(1).map( (x,i) =>i );
-    this.keys = Note.getNotesFromRoot( Note.toFlat("C"), this.numOctaves, this.startOctave, true );
-    this.keys.reverse();
+    this.keys = List( Note.getNotesFromRoot( Note.toFlat("C"), this.numOctaves, this.startOctave, true ).reverse() );
+    this.tickIndexes = new Array( this.part.pattern.ticks.length ).fill(0);
+    this.tickIndexes = this.tickIndexes.map( ( itm, i ) => i );
     this.reColorCells();
     this.setActiveNotes();
+    this.gss.selectedPartIndexEmitter.subscribe( p=>{
+      //this.ngZone.run( ()=>{
+        if( p===this.part.index){
+          this.setPartActive();
+        }else{
+          this.setPartNonActive();
+        }
+        this.cd.markForCheck();
+      //});
+    } );
+    if( this.part.index===this.gss.selectedPartIndex ){
+      this.setPartActive();
+    }
+    this.gss.visibilityEmitter.subscribe( e=>{
+      if( e.what===VisibilityEvent.PATTERN_EDIT_MENUS ) {
+        this.topMenuVisible = e.visible;
+        this.cd.markForCheck();
+      }
+    });
+    this.topMenuVisible = this.gss.patternEditMenuVisible;
   }
   /**
    * Pattern cells are bound to this.keys:Note[] 
    * Pattern active notes are bound to this.activeNotes && this.pattern.ticks: TickNote
    */
   setActiveNotes():void{
-    this.activeNotes = new Array<TickNote>();
+    let a = new Array<TickNote>();
     this.part.pattern.ticks.forEach( (ta,i)=>{
       ta.forEach( (tn)=>{
         tn.col = i;
@@ -133,9 +171,10 @@ export class PatternPartComponent implements OnInit {
             return true;
           }
          } )*PatternPartComponent.CELL_HEIGHT+2;
-        this.activeNotes.push( tn );
+        a.push( tn );
       });
     });
+    this.activeNotes = List( a );
   }
   setCellWidthFromNoteLength( l:number ):number {
     // l = num 16n
@@ -226,6 +265,7 @@ export class PatternPartComponent implements OnInit {
   }
   // pattern listeners
   onCellAttack( event, note:Note, index:number ){
+    this.selectPart();
     this.tone.triggerAttackRelease( note.fullName, "16n", this.selectedVelocity/10, this.tone.context.currentTime );
     this.setNoteActive( note, index, event.target.offsetLeft, event.target.offsetTop );
 
@@ -246,14 +286,15 @@ export class PatternPartComponent implements OnInit {
     tn.posX = posX;
     tn.posY = posY;
     this.part.pattern.ticks[index].push( tn );
-    this.activeNotes.push( tn );
+    this.activeNotes = this.activeNotes.push( tn );
+    this.cd.markForCheck();
   }
   setNoteNotActive( note:TickNote, index:number ):void{
+    this.selectPart();
     let i:number = this.part.pattern.ticks[index].findIndex( n=>n === note );
     this.part.pattern.ticks[index].splice( i, 1 );
-    this.activeNotes.splice( this.activeNotes.findIndex( n=> n === note ), 1 );
-    
-    console.log('foo');
+    this.activeNotes = this.activeNotes.remove( this.activeNotes.findIndex( n=> n === note ) );
+    this.cd.markForCheck();
   }
   noteIsActive( note:Note, index:number ):number{
     if( this.part.pattern.ticks[index].find( (n) => {
@@ -272,23 +313,38 @@ export class PatternPartComponent implements OnInit {
     this.change.emit( this.part );
   }
   onSideMenuSelect( item:MenuItem ):void {
-    if( item.label===PatternPartComponent.DELETE_PART) {
+    if( item.label===MenuLabels.DELETE_PART) {
       return this.delete.emit( this.part );
     }
-    if( item.label===PatternPartComponent.COPY_2_END) {
+    if( item.label===MenuLabels.COPY_2_END) {
       return this.add2end.emit( this.part.clone() );
     }
-    if( item.label===PatternPartComponent.COPY_2_NEXT ) {
+    if( item.label===MenuLabels.COPY_2_NEXT ) {
       return this.add2next.emit( this.part.clone() );
     }
   }
   addTickCollumn():void {
     this.part.pattern.ticks.push( new Array<TickNote>() );
+    this.tickIndexes.push( this.tickIndexes.length );
     this.emitPartChange();
   }
   removeTickCollumn():void {
-    this.part.pattern.ticks.splice( this.part.pattern.ticks.length-1);
+    this.part.pattern.ticks.pop( );
+    this.tickIndexes.pop();
     this.emitPartChange();
+  }
+  selectPart():void {
+    if( !this.partActive ){
+      this.gss.selectedPartIndex = this.part.index;
+    }
+  }
+  setPartActive(){
+    this.partActive = true;
+    this.patternBackgroundClasses = new Array<string>( "pattern-background", "part-selected" );
+  }
+  setPartNonActive() {
+    this.partActive = false;
+    this.patternBackgroundClasses = new Array<string>( "pattern-background" );
   }
   
 

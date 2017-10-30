@@ -1,8 +1,15 @@
 import { Injectable, EventEmitter } from '@angular/core';
 
-import { Progression } from './progression.models';
+import { Progression, ProgressionPart } from './progression.models';
 import { PatternPartComponent, PatternNoteDirective } from '../pattern-editor/pattern-part/pattern-part.component';
 
+export class VisibilityEvent {
+  static PIANO:string = "piano";
+  static PATTERN_EDIT_MENUS:string = "pattern-edit-menus";
+  visible:boolean;
+  what:string;
+  constructor( v:boolean , w:string ){ this.visible =v; this.what = w;}
+}
 @Injectable()
 export class GlobalSelectionsService   {
 
@@ -13,12 +20,20 @@ export class GlobalSelectionsService   {
   private _busyMessage:string = "Loading Samples...";
   private _busyEmitter:EventEmitter<boolean> = new EventEmitter();
   private _draggingNote:PatternNoteDirective;
+  private _selectedPartIndex:number;
+  selectedPartIndexEmitter:EventEmitter<number> = new EventEmitter();
+
+  private _pianoVisible:boolean = true;
+  private _patternEditMenuVisible:boolean = true;
+  visibilityEmitter:EventEmitter<VisibilityEvent> = new EventEmitter();
 
 
   constructor() {}
 
    // progression selection
   selectProgression( p:Progression ):void{
+    this._selectedPartIndex = 0;
+    this.selectedPartIndexEmitter.emit( this._selectedPartIndex );
     this._selectedProgression = p;
     this._selectedProgressionEmitter.emit( p );
   }
@@ -37,4 +52,15 @@ export class GlobalSelectionsService   {
   get appBusyEmitter():EventEmitter<boolean>{ return this._busyEmitter; }
   set draggingNote( dn:PatternNoteDirective ) { this._draggingNote = dn; }
   get draggingNote(){ return this._draggingNote; }
+  set selectedPartIndex( p:number ) { this._selectedPartIndex=p; this.selectedPartIndexEmitter.emit(p); }
+  get selectedPartIndex() { return this._selectedPartIndex; }
+
+  // visibility selections
+  set pianoVisible( b:boolean ){ this._pianoVisible = b; this.visibilityEmitter.emit( new VisibilityEvent( b, VisibilityEvent.PIANO ) ) };
+  get pianoVisible(){ return this._pianoVisible; }
+  set patternEditMenuVisible( b:boolean ){ 
+    this._patternEditMenuVisible = b; 
+    this.visibilityEmitter.emit( new VisibilityEvent( b, VisibilityEvent.PATTERN_EDIT_MENUS ) ) 
+  };
+  get patternEditMenuVisible(){ return this._patternEditMenuVisible; }
 }

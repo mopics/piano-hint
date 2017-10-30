@@ -1,15 +1,16 @@
 <div class="sidemenu">
-    <i (click)="toggle($event)" class="sidebar icon" (click)="toggle($event)" #myIcon></i>
+    <i (click)="toggle($event)" [ngClass]="iconClasses" (click)="toggle($event)" #myIcon></i>
     <div 
-      [ngClass]="state.display?'display-block':'display-none'"
-      class="items" 
+      [ngClass]="itemsDivClasses"
+      class="items"
       [@toggleMenu]="state.state"
       (@toggleMenu.done)="toggleAnimateDone()" >
-  
+      <div class="pointer"></div>
       <div *ngFor="let item of items"
         class="item"
         (click)="selectItem(item)"
-        >{{item.label}}
+        >
+        <i *ngIf="item.icon.length>0" class="{{item.icon}} icon"></i>{{item.label}}
       </div>
     </div>
   </div>

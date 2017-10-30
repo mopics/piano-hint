@@ -4,7 +4,7 @@ import { Component, OnInit, ViewChild, NgZone, Output, EventEmitter, HostListene
 import { Chords, Notes, Note } from '../services';
 import { Progression, ProgressionPart } from '../services';
 // service
-import { ProgressionsService, GlobalSelectionsService, ToneService } from '../services';
+import { ProgressionsService, GlobalSelectionsService, ToneService, VisibilityEvent } from '../services';
 import { SuiModalService, ModalSize } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../shared/modals/modal-confirm/modal-confirm.component';
 // components
@@ -25,14 +25,14 @@ export class PatternEditorComponent implements OnInit {
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
 
   @HostListener('document:mousemove', ['$event']) documenmousemove(e){ 
-    if( !this.globalSelections.draggingNote ){ return; }
+    if( !this.gss.draggingNote ){ return; }
     window.document.body.style.cursor = "ew-resize";
-    this.globalSelections.draggingNote.mousemove( e );
+    this.gss.draggingNote.mousemove( e );
   };
   @HostListener( 'document:mouseup', ['$event'] ) documentmouseup(e){
-    if( this.globalSelections.draggingNote ) {
+    if( this.gss.draggingNote ) {
       window.document.body.style.cursor = "default";
-      this.globalSelections.draggingNote.mouseup( e );
+      this.gss.draggingNote.mouseup( e );
     }
   };
 
@@ -42,7 +42,7 @@ export class PatternEditorComponent implements OnInit {
 
   constructor(
     private progService:ProgressionsService,
-    private globalSelections:GlobalSelectionsService,
+    private gss:GlobalSelectionsService,
     private modalService:SuiModalService,
     private ts:ToneService,
     private ngZone:NgZone,
@@ -50,26 +50,31 @@ export class PatternEditorComponent implements OnInit {
   ) {  }
 
   ngOnInit() {
-    this.progression = this.globalSelections.selectedProgression;
+    this.progression = this.gss.selectedProgression;
     this.initPiano();
     this.reIndex();
 
     // new song select event
-    this.globalSelections.selectedProgressionEmitter.subscribe( p => {
-      this.globalSelections.appBusyMessage = "Loading Song...";
-      this.globalSelections.appBusy = true;
+    this.gss.selectedProgressionEmitter.subscribe( p => {
+      this.gss.appBusyMessage = "Loading Song...";
+      this.gss.appBusy = true;
       
       this.progression = p;
+      this.currPartIndex = this.gss.selectedPartIndex;
       this.initPiano();
       this.reIndex();
 
       // timeout is for giving app time to go into appBusy state
       setTimeout( ()=> { 
         this.cd.markForCheck();
-        this.globalSelections.appBusy=false;
+        this.gss.appBusy=false;
       } ,300 );
       
     } );
+    this.gss.selectedPartIndexEmitter.subscribe( i=> {
+      this.currPartIndex = i;
+    });
+    this.currPartIndex = this.gss.selectedPartIndex;
   }
 
   initPiano():void {
@@ -139,7 +144,7 @@ export class PatternEditorComponent implements OnInit {
     this.progression.parts.splice( pi, 1 );
     this.reIndex();
   }
-  reIndex():void{
+  reIndex():void {
     // reindex
     let pi = 0;
     let posX = 50;
@@ -150,8 +155,9 @@ export class PatternEditorComponent implements OnInit {
       posX += p.pattern.width;
       pi++;
     });
+    this.gss.selectedPartIndex = this.currPartIndex;
   }
 
-  get editorScrolLeft():number{ return this.globalSelections.editorScrolLeft; }
+  get editorScrolLeft():number{ return this.gss.editorScrolLeft; }
 
 }

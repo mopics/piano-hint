@@ -1,37 +1,53 @@
+@import '../../variables';
+
 $colWidth: 30px;
 $eigthtNoteWidth:30px;
 
-.tonality-select {
-    /*position: fixed;
-    top: 125px;*/
-    height: 28px;
-    display: inline-block;
-    .item {
-        font-size:.8em;
+.part-menu {
+    position: relative;
+    top:-4px;
+    background: #dededa;
+    border-radius: 5px 5px 0 0;
+    height: 22px;
+    padding: 0 2px;
+    margin-left: 2px;
+    margin-right:2px;
+    .tonality-select {
+        position: absolute;
+        left: 1px;
+        top:1px;
         display: inline-block;
-    }
-    z-index:100;
-    background:white;
-}
-.edit-menu {
-    position: absolute;
-    right: 5px;
-    top:3px;
-    .item {
-        display: inline-block;
-        .icon {
-            cursor: pointer;
-            color:grey;
-        }
-        .icon:hover {
-            color:#333;
+        white-space: nowrap;
+        
+        z-index:100;
+
+        .item {
+            display:inline-block;
         }
     }
+    .edit-menu {
+        position: absolute;
+        right: 1px;
+        top:1px;
+    
+        .item {
+            display: inline-block;
+            .icon {
+                cursor: pointer;
+                color:grey;
+                font-size: .85em;
+            }
+            .icon:hover {
+                color:#333;
+            }
+        }
+    }
 }
+
 .pattern-background {
 
     position:absolute;
-    top: 49px;
+    top:$patternTop;
     border: none;
     .row {
     }
@@ -42,13 +58,24 @@ $eigthtNoteWidth:30px;
         opacity: .25;
     }
 }
+.top-menu-hidden {
+    top:$patternMenuTop;
+}
+.top-menu-visible {
+    top:$patternTop;
+}
+.part-selected {
+    outline: 3px $part-selected-border-color solid;
+}
+
 .pattern {
     position:absolute;
-    top:49px;
+    top:$patternTop ;
     z-index: 10;
     .note {
         position:absolute;
         height: 10px;
         width:$eigthtNoteWidth;
+        border-radius: 3px;
     }
 }

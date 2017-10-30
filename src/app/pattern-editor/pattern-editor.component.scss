@@ -1,7 +1,9 @@
+@import '../variables';
+
 .piano-vertical{
     position: absolute;
     left:0;
-    top: 50px;
+    top: $patternTop;
     width: 50px;
 }
 .pattern-container {

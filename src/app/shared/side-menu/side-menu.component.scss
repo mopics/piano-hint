@@ -1,25 +1,20 @@
+@import '../../variables';
+
 .sidemenu {
-    display: block;
+    display: inline-block;
     width: 100%;
     min-width: 0;
     position:relative;
 
-    .icon {
-        cursor: pointer;
-        color:grey;
-    }
-    .icon:hover {
-        color:#333;
-    }
     .items {
         cursor: auto;
         position: absolute;
-        top:-1px;
         right:0px;
         outline: 0;
         top: 100%;
         min-width: max-content;
         margin: 0;
+        margin-top:.75em;
         padding: 0 0;
         background: #fff;
         font-size: 1em;
@@ -31,6 +26,24 @@
         transition: opacity .1s ease;
         z-index: 11;
         will-change: transform,opacity;
+
+        .pointer{
+            position:absolute;
+            right:1.5em;
+            width:1em;
+            height:1em;
+            top:-.5em;
+            background:#fff;
+            transform: rotate(45deg);
+            box-shadow: none;
+            background: #ffffff;
+            border: #e0e0e1 solid;
+            border-left-width: 1px;
+            border-right-width: 0px;
+            border-top-width: 1px;
+            border-bottom-width: 0px;
+        }
+
         .item {
             position: relative;
             cursor: pointer;
@@ -61,6 +74,13 @@
             z-index: 12;
         }
     }
+    .items-right {
+        left:-1em;
+        .pointer {
+            left: 1.2em;
+        }
+    }
     .display-none{ display:none; }
     .display-block{display:block; }
 }
+

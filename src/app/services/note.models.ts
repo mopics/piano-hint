@@ -1,6 +1,6 @@
 
 export enum Notes { C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B }
-export enum Scales { Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian, Harmonic_Minor, Melodic_Minor, Lydian_b7, Atltered, Symmetrical_Diminished };
+export enum Scales { Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian, Harmonic_Minor, Melodic_Minor, Lydian_b7, Altered, Symmetrical_Diminished };
 export const ScaleSteps:number[][] = [
     [1,0,1,0,1,1,0,1,0,1,0,1], // Ionian
     [1,0,1,1,0,1,0,1,0,1,1,0], // Dorian

@@ -1,0 +1,28 @@
+$grey-444: #494847;
+$grey-555: #595857;
+$grey-aaa:#a9a999;
+$part-selected-border-color:pink;
+$editor-background-color:white; /*  #FFFBE3; */
+$control-bar-background-color: white; /* #EEDA89; */
+$patternTop : 24px;
+$patternMenuTop: 17px;
+
+/* custom icon classes */
+.view-edit-icon {
+    cursor:pointer;
+    padding-top:35px;
+    font-size:3em;
+    color:$grey-444;
+}
+.view-edit-icon:hover {
+    color:$grey-555;
+}
+.pattern-top-edit-icon {
+    cursor:pointer;
+    font-size:0.8em;
+    color:$grey-444;
+}
+.pattern-top-edit-icon:hover {
+    font-size:0.8em;
+    color:$grey-555;
+}

@@ -2,13 +2,41 @@ import { Component, OnInit, ViewChild, ElementRef, NgZone, Directive, Renderer, 
 
 // components
 import { PianoOctaveComponent } from '../shared/piano-octave/piano-octave.component';
+import { MenuItem } from '../shared/models';
 
 // models
 import { ProgressionPart, Progression } from '../services';
 
 // service
-import { ProgressionsService, GlobalSelectionsService, ToneService } from '../services';
+import { ProgressionsService, GlobalSelectionsService, ToneService, VisibilityEvent } from '../services';
 
+class VisibilityMenuItem {
+  id:string;
+  label:string;
+  icon:string;
+  iconVisible:string;
+  iconHidden:string;
+  labelVisible:string;
+  labelHidden:string;
+  _visible:boolean;
+  constructor( id:string, l:string, i:string, iv:string, ih:string, lv:string, lh:string, v:boolean ){
+    this.id = id;
+    this.label = l; this.icon = i; this.labelVisible = lv;
+    this.iconVisible = iv; this.iconHidden = ih;
+    this.labelHidden = lh; this._visible = v;
+  }
+  set visible( b:boolean ){
+    this._visible = b;
+    if( b ){
+      this.icon = this.iconVisible;
+      this.label = this.labelVisible;
+    } else {
+      this.icon = this.iconHidden;
+      this.label = this.labelHidden;
+    }
+  }
+  get visible(){return this._visible;}
+}
 
 @Component({
   selector: 'app-piano',
@@ -21,17 +49,32 @@ export class PianoComponent implements OnInit {
   pianoInitiated:boolean = false;
   playing:boolean = false;
   dividerBottom:number = 300;
+  tonalityLeft:number;
+  pianoVisible:boolean = true;
+
+  // view hide functionality:
+  pianoViewHideItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PIANO, "Hide Piano", "hide", "hide", "unhide", "Hide Piano", "Show Piano", true );
+  patternEditMenuViewItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PATTERN_EDIT_MENUS, "Show pattern edit menu's", "setting", "setting", "setting", "Hide pattern edit menu's", "Show pattern edit menu's", true );
+  viewHideMenuIconClasses = new Array<string>( "unhide", "view-edit-icon", "icon" );
+  viewHideMenuItems:MenuItem[] = new Array(
+    this.pianoViewHideItem,
+    this.patternEditMenuViewItem
+  );
+  
+
 
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
   @ViewChild( 'editor' ) editor:ElementRef;
+  @ViewChild( 'tonality' ) tonality:ElementRef;
 
   @HostListener( 'window:resize', ['$event'] ) windowresize(e){
     this.setDividerBottom();
+    this.setTonalityLeft();
   }
 
   constructor( 
     private progService:ProgressionsService,
-    private globalSelections:GlobalSelectionsService,
+    private gss:GlobalSelectionsService,
     private ts:ToneService,
     private ngZone:NgZone
   ) { 
@@ -39,17 +82,38 @@ export class PianoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.progression = this.globalSelections.selectedProgression;
+    this.progression = this.gss.selectedProgression;
     this.initPiano();
     this.setDividerBottom();
 
-    this.globalSelections.selectedProgressionEmitter.subscribe( p => {
+    this.gss.selectedProgressionEmitter.subscribe( p => {
       this.stopProgression();
       this.progression = p;
       this.currPartIndex = 0;
       this.initPiano();
       this.setDividerBottom();
     } );
+    this.gss.selectedPartIndexEmitter.subscribe( p=>{
+      this.currPartIndex = p;
+      this.piano.updateKeys( this.progression.parts[p] );
+      this.setTonalityLeft();
+    });
+    this.gss.visibilityEmitter.subscribe( e=>{
+      switch( e.what ){
+        case VisibilityEvent.PIANO:
+        this.togglePiano( e.visible );
+        // update viewHideMenuItems
+        this.pianoViewHideItem.visible = e.visible;
+        
+        break;
+        case VisibilityEvent.PATTERN_EDIT_MENUS:
+        // toggle pattern-edit-menus
+        this.patternEditMenuViewItem.visible = e.visible;
+        break;
+      }
+    });
+    this.pianoViewHideItem.visible = this.pianoVisible;
+    this.patternEditMenuViewItem.visible = this.gss.patternEditMenuVisible;
   }
   initPiano():void {
     if( this.pianoInitiated ){ 
@@ -102,12 +166,34 @@ export class PianoComponent implements OnInit {
     this.piano.updateKeys( part );
   }
   onEditorScroll( event ):void {
-    this.globalSelections.editorScrolLeft = this.editor.nativeElement.scrollLeft;
+    this.gss.editorScrolLeft = this.editor.nativeElement.scrollLeft;
   }
   setDividerBottom():void {
-    let pianoWidth = this.piano.totalWidth();
-    let pianoScaling = window.innerWidth / pianoWidth;
-    this.dividerBottom = this.piano.keyHeight * pianoScaling;
+    if( this.pianoVisible ){
+      let pianoWidth = this.piano.totalWidth();
+      let pianoScaling = window.innerWidth / pianoWidth;
+      this.dividerBottom = this.piano.keyHeight * pianoScaling;
+    } else {
+      this.dividerBottom = 0;
+    }
+    
+  }
+  setTonalityLeft():void {
+    this.tonalityLeft = window.innerWidth/2 - this.tonality.nativeElement.clientWidth/2;
   }
 
+
+  // visibility stuff
+  onViewHideMenuSelect( itm:VisibilityMenuItem ){
+    if( itm.id===VisibilityEvent.PIANO ){
+      this.gss.pianoVisible = !itm.visible;
+    }
+    else if( itm.id===VisibilityEvent.PATTERN_EDIT_MENUS){
+      this.gss.patternEditMenuVisible = !itm.visible;
+    }
+  }
+  togglePiano( v:boolean ):void {
+    this.pianoVisible = v;
+    this.setDividerBottom();
+  }
 }
