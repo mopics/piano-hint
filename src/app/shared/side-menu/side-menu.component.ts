@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, HostListener, ViewChild
 import { trigger,state,style,transition,animate,keyframes } from '@angular/animations';
 
 import { MenuState, MenuItem } from '../models';
+import { SubMenuComponent } from './sub-menu/sub-menu.component';
 
 @Component({
   selector: 'app-side-menu',
@@ -23,31 +24,32 @@ import { MenuState, MenuItem } from '../models';
   ]
 })
 export class SideMenuComponent implements OnInit {
+  @Input() title:string = "";
   @Input() alignRight:boolean = false;
+  @Input() xAdjust:number=0;
   @Input() items:Array<MenuItem>;
   @Input() iconClasses:Array<string> = new Array("sidebar", "icon");
   @Output() select:EventEmitter<MenuItem>=new EventEmitter();
+  @Output() click:EventEmitter<SideMenuComponent> = new EventEmitter();
   @HostListener('document:click', ['$event']) clickedOutside($event){ this.handleOutsideClick($event); }
   @ViewChild ('myIcon') myIcon:ElementRef;
 
   state:MenuState = new MenuState( false );
-  iconClicked:boolean = false;
   itemsDivClasses:string[];
+  self:SideMenuComponent = this;
 
   constructor( private renderer: Renderer ) { }
   ngOnInit(){
+    this.items.forEach( itm=>{
+      itm.component = this;
+    });
     this.defineItemsDivClassed();
   }
-  toggle($event):void{
-    if( !this.iconClicked ){
-      // do toggle
-      this.state.toggle();
-      this.defineItemsDivClassed();
-    }
-    if( $event.target===this.myIcon.nativeElement){
-      // set to true so event propagated for button-element will not toggle again.
-      this.iconClicked = true;
-    }
+  toggle( event ):void{
+    this.componentClicked();
+    event.stopPropagation();
+    this.state.toggle();
+    this.defineItemsDivClassed();
   }
   toggleAnimateDone():void{
     if( !this.state.show ){
@@ -68,17 +70,34 @@ export class SideMenuComponent implements OnInit {
     }
   }
   handleOutsideClick($event):void {
-    if( $event.target===this.myIcon.nativeElement ) {
-      if( this.iconClicked ){ this.iconClicked=false; }
-      return;
-    }
     if( this.state.show ){
       this.state.show = false;
     }
   }
-
-  selectItem( event:MenuItem ) {
-    this.select.emit( event );
+  showSubItems( item:MenuItem ) {
+    this.items.forEach( i=>{
+      if( item===i && i.items.length>0 ){
+        i.items[0].component.show( { stopPropagation:()=>{} } );
+      }
+      else if( i.items.length > 0 ){
+        i.items[0].component.hide( { stopPropagation:()=>{} } );
+      }
+    });
+  }
+  selectItem( item:MenuItem ) {
+    if( item.items.length>0 ){
+      this.showSubItems( item );
+    }
+    else {
+      this.select.emit( item );
+    }
+  }
+  onSubItemSelect( item:MenuItem ) {
+    this.select.emit( item );
+  }
+  componentClicked():void {
+    window.document.body.click(); // will hide other opened side-menu's and what not. We need to do this because all click-event propagations are stopped by this component
+    this.click.emit( this );
   }
 
 }

@@ -1,0 +1,17 @@
+<div class="submenu" >
+    <i title="{{title}}" (click)="toggle($event)" [ngClass]="iconClasses" #myIcon></i>
+    <div 
+      [ngClass]="itemsDivClasses"
+      [style.right]="xAdjust+'px'"
+      class="items"
+      [@toggleMenu]="state.state"
+      (@toggleMenu.done)="toggleAnimateDone()" [alignRight]="alignRight" subitems>
+      <!-- <div class="pointer" pointer></div> -->
+
+      <div *ngFor="let item of items"
+          class="item"
+          (click)="selectItem(item)" >
+          <i *ngIf="item.icon.length>0" class="{{item.icon}} icon"></i>{{item.label}}
+      </div>
+    </div>
+  </div>

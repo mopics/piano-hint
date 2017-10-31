@@ -7,7 +7,7 @@ import { PianoOctaveComponent } from '../../shared/piano-octave/piano-octave.com
 import { SelectComponent } from '../../shared/select/select.component';
 
 // models & services
-import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps, TickNote, GlobalSelectionsService, VisibilityEvent } from '../../services';
+import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps, TickNote, GlobalSelectionsService, VisibilityEvent, NoteMenuItems } from '../../services';
 import { Progression, ProgressionPart, ToneService } from '../../services';
 import { MenuItem } from '../../shared/models';
 // components
@@ -107,6 +107,7 @@ export class PatternPartComponent implements OnInit {
   activeNotes:List<TickNote>;
   partActive:boolean = false;
   patternBackgroundClasses:Array<string> = new Array<string>( "pattern-background" );
+  patternNotesClasses:Array<string> = new Array<string>( "pattern" );
   topMenuVisible:boolean = false;
 
   static CELL_WIDTH:number = 16; // 16th note
@@ -114,15 +115,15 @@ export class PatternPartComponent implements OnInit {
 
   tonalityMenuItemClasses:string[] = Array( "music", "icon", "pattern-top-edit-icon" );
   tonalityMenuItems:MenuItem[] = new Array(
-    { label:MenuLabels.SELECT_ROOT, icon:"" },
-    { label:MenuLabels.SELECT_CHORD, icon:"" },
-    { label:MenuLabels.SELECT_SCALE, icon:"" },
+    { label:MenuLabels.SELECT_ROOT, icon:"", items:NoteMenuItems.notesAsMenuItems(), component:null, parent:null },
+    { label:MenuLabels.SELECT_CHORD, icon:"", items:NoteMenuItems.chordsAsMenuItems(), component:null, parent:null },
+    { label:MenuLabels.SELECT_SCALE, icon:"", items:NoteMenuItems.scalesAsMenuItems(), component:null, parent:null },
   )
   copyMenuItemClasses:string[] = Array("copy", "icon", "pattern-top-edit-icon" );
   copyMenuItems:MenuItem[] = new Array( 
-    { label:MenuLabels.COPY_2_NEXT, icon:"" }, 
-    { label:MenuLabels.COPY_2_END, icon:"" }, 
-    { label:MenuLabels.DELETE_PART, icon:"" } );
+    { label:MenuLabels.COPY_2_NEXT, icon:"", items:Array(), component:null, parent:null }, 
+    { label:MenuLabels.COPY_2_END, icon:"", items:Array(), component:null, parent:null }, 
+    { label:MenuLabels.DELETE_PART, icon:"", items:Array(), component:null, parent:null } );
 
   constructor(private tone:ToneService, private ngZone:NgZone, private cd: ChangeDetectorRef, private gss:GlobalSelectionsService ) { }
 
@@ -135,24 +136,20 @@ export class PatternPartComponent implements OnInit {
     this.setActiveNotes();
     this.gss.selectedPartIndexEmitter.subscribe( p=>{
       //this.ngZone.run( ()=>{
-        if( p===this.part.index){
-          this.setPartActive();
-        }else{
-          this.setPartNonActive();
-        }
+        this.updatePartClasses();
         this.cd.markForCheck();
       //});
     } );
-    if( this.part.index===this.gss.selectedPartIndex ){
-      this.setPartActive();
-    }
     this.gss.visibilityEmitter.subscribe( e=>{
       if( e.what===VisibilityEvent.PATTERN_EDIT_MENUS ) {
         this.topMenuVisible = e.visible;
+        this.updatePartClasses();
         this.cd.markForCheck();
       }
     });
     this.topMenuVisible = this.gss.patternEditMenuVisible;
+
+    this.updatePartClasses();
   }
   /**
    * Pattern cells are bound to this.keys:Note[] 
@@ -312,15 +309,26 @@ export class PatternPartComponent implements OnInit {
   emitPartChange():void {
     this.change.emit( this.part );
   }
-  onSideMenuSelect( item:MenuItem ):void {
+  onCopyMenuSelect( item:MenuItem ):void {
     if( item.label===MenuLabels.DELETE_PART) {
       return this.delete.emit( this.part );
     }
-    if( item.label===MenuLabels.COPY_2_END) {
+    else if( item.label===MenuLabels.COPY_2_END) {
       return this.add2end.emit( this.part.clone() );
     }
-    if( item.label===MenuLabels.COPY_2_NEXT ) {
+    else if( item.label===MenuLabels.COPY_2_NEXT ) {
       return this.add2next.emit( this.part.clone() );
+    }
+  }
+  onTonalityMenuSelect( item:MenuItem ):void {
+    if( item.parent.label===MenuLabels.SELECT_ROOT ){
+      this.onRootChange( new Note(Notes[item.label]) );
+    }
+    else if( item.parent.label===MenuLabels.SELECT_CHORD ){
+      this.onChordChange( new Chord( Chords[item.label]))
+    }
+    else if( item.parent.label===MenuLabels.SELECT_SCALE ){
+      this.onScaleChange( new Scale( Scales[item.label]))
     }
   }
   addTickCollumn():void {
@@ -338,6 +346,16 @@ export class PatternPartComponent implements OnInit {
       this.gss.selectedPartIndex = this.part.index;
     }
   }
+
+  // patternBackgroundClasses updaters
+  updatePartClasses(){
+    if( this.part.index===this.gss.selectedPartIndex ){
+      this.setPartActive();
+    } else {
+      this.setPartNonActive();
+    }
+    this.setPartTop();
+  }
   setPartActive(){
     this.partActive = true;
     this.patternBackgroundClasses = new Array<string>( "pattern-background", "part-selected" );
@@ -345,6 +363,15 @@ export class PatternPartComponent implements OnInit {
   setPartNonActive() {
     this.partActive = false;
     this.patternBackgroundClasses = new Array<string>( "pattern-background" );
+  }
+  setPartTop() {
+    if( this.topMenuVisible ){
+      this.patternBackgroundClasses.push( "top-menu-visible");
+      this.patternNotesClasses = Array( "pattern", "top-menu-visible" );
+    } else {
+      this.patternBackgroundClasses.push( "top-menu-hidden");
+      this.patternNotesClasses = Array( "pattern", "top-menu-hidden" );
+    }
   }
   
 

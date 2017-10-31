@@ -45,12 +45,9 @@ $eigthtNoteWidth:30px;
 }
 
 .pattern-background {
-
     position:absolute;
-    top:$patternTop;
     border: none;
-    .row {
-    }
+
     .col {
         padding-bottom:1px;
         padding-right:1px;
@@ -59,7 +56,7 @@ $eigthtNoteWidth:30px;
     }
 }
 .top-menu-hidden {
-    top:$patternMenuTop;
+    top:2px /*$patternMenuTop; */
 }
 .top-menu-visible {
     top:$patternTop;
@@ -70,7 +67,6 @@ $eigthtNoteWidth:30px;
 
 .pattern {
     position:absolute;
-    top:$patternTop ;
     z-index: 10;
     .note {
         position:absolute;

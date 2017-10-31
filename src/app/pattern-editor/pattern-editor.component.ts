@@ -155,7 +155,11 @@ export class PatternEditorComponent implements OnInit {
       posX += p.pattern.width;
       pi++;
     });
-    this.gss.selectedPartIndex = this.currPartIndex;
+    if( this.currPartIndex === this.progression.parts.length ){
+      this.gss.selectedPartIndex = this.currPartIndex-1;
+    } else {
+      this.gss.selectedPartIndex = this.currPartIndex;
+    }
   }
 
   get editorScrolLeft():number{ return this.gss.editorScrolLeft; }

@@ -1,31 +1,32 @@
 <!-- top menu -->
 <div class="part-menu" (click)="selectPart()" *ngIf="topMenuVisible">
-  <!--<div class="tonality-select">
-    <div class="item">
-      Root: <app-select [items]="notes" (select)="onRootChange($event)" [selected]="part.root"></app-select>
-    </div>
-    <div class="item">
-      Chord: <app-select [items]="chords" (select)="onChordChange($event)" [selected]="part.chord"></app-select>
-    </div>
-    <div class="item">
-        Scale: <app-select [items]="scalesFiltered" 
-        (select)="onScaleChange($event)" 
-        [selected]="part.scale" #scaleSelect></app-select>
-      </div>-->
   <div class="tonality-select">
       <div class="item">
-          <app-side-menu [alignRight]="true" [items]="tonalityMenuItems" [iconClasses]="tonalityMenuItemClasses" (select)="onSideMenuSelect($event)" ></app-side-menu>
-      <!--</div>
-      <div class="item">-->
-          <app-side-menu [alignRight]="true" [items]="copyMenuItems" [iconClasses]="copyMenuItemClasses" (select)="onSideMenuSelect($event)" ></app-side-menu>
+          <app-side-menu 
+          [title]="this.part.root.name+'-'+this.part.chord.name+'~'+this.part.scale.name" 
+          [alignRight]="true"
+          [items]="tonalityMenuItems" 
+          [iconClasses]="tonalityMenuItemClasses" 
+          (select)="onTonalityMenuSelect($event)"
+          (click)="selectPart()" ></app-side-menu>
       </div>
   </div>
   <div class="edit-menu">
       <div class="item">
-          <i (click)="removeTickCollumn()" class="minus circle icon"></i>
+          <app-side-menu 
+          [title]="'Copy or delete part'"
+          [alignRight]="false" 
+          [xAdjust]="-20"
+          [items]="copyMenuItems" 
+          [iconClasses]="copyMenuItemClasses" 
+          (select)="onCopyMenuSelect($event)"
+          (click)="selectPart()" ></app-side-menu>
+      </div>
+      <div class="item">
+          <i title="remove collumn" (click)="removeTickCollumn()" class="minus circle icon"></i>
       </div>
     <div class="item">
-        <i (click)="addTickCollumn()" class="add circle icon"></i>
+        <i title="add collumn" (click)="addTickCollumn()" class="add circle icon"></i>
     </div>
     
   </div>
@@ -44,7 +45,7 @@
 </table>
 
 <!-- active notes -->
-<div class="pattern">
+<div [ngClass]="patternNotesClasses">
   <div *ngFor="let note of activeNotes" 
     class="note" 
     [ngStyle]="{left:note.posX+'px',top:note.posY+'px',width:note.width+'px'}" 

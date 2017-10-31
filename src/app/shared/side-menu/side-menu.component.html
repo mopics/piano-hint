@@ -1,16 +1,26 @@
 <div class="sidemenu">
-    <i (click)="toggle($event)" [ngClass]="iconClasses" (click)="toggle($event)" #myIcon></i>
+    <i title="{{title}}" (click)="toggle($event)" [ngClass]="iconClasses" #myIcon></i>
     <div 
       [ngClass]="itemsDivClasses"
+      [style.right]="xAdjust+'px'"
       class="items"
       [@toggleMenu]="state.state"
       (@toggleMenu.done)="toggleAnimateDone()" >
       <div class="pointer"></div>
+
       <div *ngFor="let item of items"
-        class="item"
-        (click)="selectItem(item)"
-        >
-        <i *ngIf="item.icon.length>0" class="{{item.icon}} icon"></i>{{item.label}}
+          class="item"
+          (click)="selectItem(item)" 
+          (mouseover)="showSubItems(item)">
+          <i *ngIf="item.icon.length>0" class="{{item.icon}} icon"></i>{{item.label}}
+          <app-sub-menu 
+              (select)="onSubItemSelect($event)" 
+              [alignRight]="alignRight" 
+              *ngIf="item.items.length>0" 
+              [items]="item.items"
+              [parentItem]="item"
+              >
+          </app-sub-menu>
       </div>
     </div>
   </div>

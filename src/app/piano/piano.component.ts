@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, NgZone, Directive, Renderer, HostListener, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone, Directive, Renderer, HostListener, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 // components
 import { PianoOctaveComponent } from '../shared/piano-octave/piano-octave.component';
@@ -14,6 +14,12 @@ class VisibilityMenuItem {
   id:string;
   label:string;
   icon:string;
+  items:MenuItem[] = Array( 
+    { label:"test1", icon:"", items:Array(), component:null, parent:null },
+    { label:"test2", icon:"", items:Array(), component:null, parent:null }
+  );
+  component:any = null;
+  parent:MenuItem = null;
   iconVisible:string;
   iconHidden:string;
   labelVisible:string;
@@ -41,7 +47,8 @@ class VisibilityMenuItem {
 @Component({
   selector: 'app-piano',
   templateUrl: './piano.component.html',
-  styleUrls: ['./piano.component.scss']
+  styleUrls: ['./piano.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PianoComponent implements OnInit {
   progression:Progression;
@@ -76,7 +83,8 @@ export class PianoComponent implements OnInit {
     private progService:ProgressionsService,
     private gss:GlobalSelectionsService,
     private ts:ToneService,
-    private ngZone:NgZone
+    private ngZone:NgZone,
+    private cd:ChangeDetectorRef
   ) { 
     
   }
@@ -92,11 +100,13 @@ export class PianoComponent implements OnInit {
       this.currPartIndex = 0;
       this.initPiano();
       this.setDividerBottom();
+      this.cd.markForCheck();
     } );
     this.gss.selectedPartIndexEmitter.subscribe( p=>{
       this.currPartIndex = p;
       this.piano.updateKeys( this.progression.parts[p] );
       this.setTonalityLeft();
+      this.cd.markForCheck();
     });
     this.gss.visibilityEmitter.subscribe( e=>{
       switch( e.what ){
@@ -111,6 +121,7 @@ export class PianoComponent implements OnInit {
         this.patternEditMenuViewItem.visible = e.visible;
         break;
       }
+      this.cd.markForCheck();
     });
     this.pianoViewHideItem.visible = this.pianoVisible;
     this.patternEditMenuViewItem.visible = this.gss.patternEditMenuVisible;
@@ -131,15 +142,14 @@ export class PianoComponent implements OnInit {
     this.piano.keyClicked.subscribe( n=> this.ts.playNote(n,n.octave) );
 
     this.ts.sequenceEmitter.subscribe( event=> {
-      this.ngZone.run( ()=> {
+      //this.ngZone.run( ()=> {
         if( event.partIndex > -1 ){ // change part
           
-            this.currPartIndex = event.partIndex;
-            this.piano.updateKeys( this.progression.parts[event.partIndex]);
+            this.gss.selectedPartIndex = event.partIndex;
           
         }
         this.piano.highlightTickNotes( event.notes );
-      });
+      //});
     });
 
     this.pianoInitiated = true;

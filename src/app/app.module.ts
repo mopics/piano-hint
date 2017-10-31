@@ -34,6 +34,7 @@ import { ProgressionEditorComponent } from './progression-editor/progression-edi
 import { PartComponent} from './progression-editor/part/part.component';
 import { PatternPartComponent, PatternNoteDirective } from './pattern-editor/pattern-part/pattern-part.component';
 import { SideMenuComponent } from './shared/side-menu/side-menu.component';
+import { SubMenuComponent, SubItemsDirective } from './shared/side-menu/sub-menu/sub-menu.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { SideMenuComponent } from './shared/side-menu/side-menu.component';
     PatternEditorComponent,
     SliderComponent,
     PatternPartComponent, PatternNoteDirective,
-    SideMenuComponent
+    SideMenuComponent,
+    SubMenuComponent, SubItemsDirective
   ],
   entryComponents:[
     ConfirmModalComponent // dynamicly created components also need to be added to entryComponents

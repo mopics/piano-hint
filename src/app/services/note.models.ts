@@ -1,4 +1,6 @@
 
+import { MenuItem } from '../shared/models';
+
 export enum Notes { C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B }
 export enum Scales { Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian, Harmonic_Minor, Melodic_Minor, Lydian_b7, Altered, Symmetrical_Diminished };
 export const ScaleSteps:number[][] = [
@@ -241,4 +243,28 @@ export class Key {
         return new Key( this.tonic.clone(), this.scale.clone() );
     }
 
+}
+
+export class NoteMenuItems {
+    static notesAsMenuItems():MenuItem[] {
+        let a:MenuItem[] = Array();
+        for( let n:number=0; n < Notes.B+1; n++ ){
+            a.push( { label:Notes[n], icon:"", items:Array() } );
+        }
+        return a;
+    }
+    static chordsAsMenuItems():MenuItem[] {
+        let a:MenuItem[] = Array();
+        for( let c:number=0; c < Chords.FullDim+1; c++ ){
+            a.push( { label:Chords[c], icon:"", items:Array() } );
+        }
+        return a;
+    }
+    static scalesAsMenuItems():MenuItem[] {
+        let a:MenuItem[] = Array();
+        for( let s:number=0; s < Scales.Symmetrical_Diminished; s++ ){
+            a.push( { label:Scales[s], icon:"", items:Array() } );
+        }
+        return a;
+    }
 }

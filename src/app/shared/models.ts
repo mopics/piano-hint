@@ -1,6 +1,10 @@
+
 export interface MenuItem {
     label:string;
     icon:string;
+    items:MenuItem[];
+    component:any;
+    parent:MenuItem;
 }
   
 export class MenuState {
