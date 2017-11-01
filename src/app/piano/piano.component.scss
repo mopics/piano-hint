@@ -57,12 +57,26 @@ $initialEditorBottom: 310px;
     position:fixed;
     background:$grey-444;
     color:white;
-    border-radius: 0 0 30px 30px;
-    height:30px;
     z-index:10;
+    
+}
+.tonality-desktop {
+    height:30px;
+    border-radius: 0 0 30px 30px;
     padding: 5px 30px;
     font-size: 1.2em;
-    
+}
+.tonality-tablet {
+    height:15px;
+    border-radius: 0 0 15px 15px;
+    font-size:.8em;
+    padding:0 15px;
+}
+.tonality-mobile {
+    height:10px;
+    border-radius: 0 0 10px 10px;
+    font-size:.4em;
+    padding:0 15px;
 }
 
 .piano-footer {

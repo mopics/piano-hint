@@ -21,7 +21,7 @@ import { ToneService } from './services';
 
 //components
 import { AppComponent } from './app.component';
-import { PianoComponent } from './piano/piano.component';
+import { PianoComponent, TonalityDisplayDirective } from './piano/piano.component';
 import { PianoOctaveComponent } from './shared/piano-octave/piano-octave.component';
 import { MenuComponent } from './menu/menu.component';
 import { ProgressionSelectComponent } from './progression-select/progression-select.component';
@@ -40,7 +40,7 @@ import { SubMenuComponent, SubItemsDirective } from './shared/side-menu/sub-menu
 @NgModule({
   declarations: [
     AppComponent,
-    PianoComponent,
+    PianoComponent, TonalityDisplayDirective,
     PianoOctaveComponent,
     MenuComponent,
     ProgressionSelectComponent,

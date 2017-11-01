@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, NgZone, Directive, Renderer, HostListener, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { trigger,state,style,transition,animate } from '@angular/animations';
 
 // components
 import { PianoOctaveComponent } from '../shared/piano-octave/piano-octave.component';
@@ -45,20 +46,114 @@ class VisibilityMenuItem {
   get visible(){return this._visible;}
 }
 
+@Directive({
+  selector:'[tonality-display]'
+})
+export class TonalityDisplayDirective {
+
+  @Input() pianoActualHeight:number;
+  observer:MutationObserver;
+  @HostListener( 'window:resize', ['$event'] ) windowresize(e){
+    this.updateClassAndPos();
+  }
+
+  constructor( private el:ElementRef, private r:Renderer, private gss:GlobalSelectionsService ){
+    this.gss.visibilityEmitter.subscribe( e=>{
+      if( e.what===VisibilityEvent.PIANO ){
+        this.r.setElementStyle( this.el.nativeElement, "opacity", '0' );
+        setTimeout( ()=> {
+          this.updateClassAndPos();
+          if( e.visible )
+            this.r.setElementStyle( this.el.nativeElement, "opacity", '1' );
+         }, 500 );
+      }
+    });
+    this.gss.selectedPartIndexEmitter.subscribe( e=>{
+      setTimeout( ()=>{
+        this.updateLeft();
+      }, 500 )
+      
+    })
+  }
+  ngAfterViewInit(){
+    this.updateClassAndPos();
+    this.observer = new MutationObserver( mutations => {
+      mutations.forEach( m=> console.log( `TonalityDisplay:mutation=${m.type}` ) );
+    });
+    var config = { characterData: true };
+    this.observer.observe(this.el.nativeElement, config);
+  }
+
+  updateClassAndPos():void {
+    let borderRadius:number = 20;
+    if( window.innerWidth <= 425 ) { // mobile
+      borderRadius = 10;
+      this.r.setElementStyle( this.el.nativeElement, 'height', borderRadius+'px' );
+      this.r.setElementStyle( this.el.nativeElement, 'border-radius', `0 0 ${borderRadius}px ${borderRadius}px` );
+      this.r.setElementStyle( this.el.nativeElement, 'padding', `0 ${borderRadius}px` );
+      this.r.setElementStyle( this.el.nativeElement, 'font-size', '0.5em' );
+      this.r.setElementStyle( this.el.nativeElement, 'bottom', this.pianoActualHeight+'px' );
+    }
+    else if( window.innerWidth <= 770 ){ // tablet 
+      borderRadius = 15;
+      this.r.setElementStyle( this.el.nativeElement, 'height', borderRadius+'px' );
+      this.r.setElementStyle( this.el.nativeElement, 'border-radius', `0 0 ${borderRadius}px ${borderRadius}px` );
+      this.r.setElementStyle( this.el.nativeElement, 'padding', `0 ${borderRadius}px` );
+      this.r.setElementStyle( this.el.nativeElement, 'font-size', '0.8em' );
+      this.r.setElementStyle( this.el.nativeElement, 'bottom', this.pianoActualHeight-8+'px' );
+    } else { // desktop
+      this.r.setElementStyle( this.el.nativeElement, 'height', borderRadius+'px' );
+      this.r.setElementStyle( this.el.nativeElement, 'border-radius', `0 0 ${borderRadius}px ${borderRadius}px` );
+      this.r.setElementStyle( this.el.nativeElement, 'padding', `2px ${borderRadius}px` );
+      this.r.setElementStyle( this.el.nativeElement, 'font-size', '.95em' );
+      this.r.setElementStyle( this.el.nativeElement, 'bottom', this.pianoActualHeight-10+'px' );
+    }
+    this.updateLeft();
+    
+  }
+  updateLeft():void{
+    let left:number = window.innerWidth/2 - this.el.nativeElement.clientWidth/2;
+    this.r.setElementStyle( this.el.nativeElement, "left", left+'px' );
+  }
+};
+
 @Component({
   selector: 'app-piano',
   templateUrl: './piano.component.html',
   styleUrls: ['./piano.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations:[ // <=====add to decorator
+    // define animation triggers
+    trigger('pianoAnimation',[
+      // define animation states
+      state('hidden',style({
+        bottom: '-{{piano_height}}px',
+      }), {params:{piano_height:0}} ),
+      state('visible',style({
+        bottom: '0', // <== user interpolation to pass in variable
+      })),// <== default valus is required
+      transition('visible <=> hidden', animate('100ms ease-in'))
+    ]),
+    trigger('dividerAnimation',[
+      state('hidden',style({
+        bottom: '0',
+      }) ),
+      state('visible',style({
+        bottom: '{{piano_height}}px', // <== user interpolation to pass in variable
+      }), {params:{piano_height:0}}),// <== default valus is required
+      transition('visible <=> hidden', animate('100ms ease-in'))
+    ]),
+  ]
 })
 export class PianoComponent implements OnInit {
   progression:Progression;
   currPartIndex:number = 0;
   pianoInitiated:boolean = false;
   playing:boolean = false;
-  dividerBottom:number = 300;
-  tonalityLeft:number;
-  pianoVisible:boolean = true;
+  pianoActualHeight:number = 300;
+  editorBottom:number = 310;
+  pianoActualHeightInversed:number = -300;
+  pianoState:string = 'visible';
 
   // view hide functionality:
   pianoViewHideItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PIANO, "Hide Piano", "hide", "hide", "unhide", "Hide Piano", "Show Piano", true );
@@ -73,11 +168,9 @@ export class PianoComponent implements OnInit {
 
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
   @ViewChild( 'editor' ) editor:ElementRef;
-  @ViewChild( 'tonality' ) tonality:ElementRef;
 
   @HostListener( 'window:resize', ['$event'] ) windowresize(e){
-    this.setDividerBottom();
-    this.setTonalityLeft();
+    this.setpianoActualHeight();
   }
 
   constructor( 
@@ -93,20 +186,18 @@ export class PianoComponent implements OnInit {
   ngOnInit() {
     this.progression = this.gss.selectedProgression;
     this.initPiano();
-    this.setDividerBottom();
+    this.setpianoActualHeight();
 
     this.gss.selectedProgressionEmitter.subscribe( p => {
       this.stopProgression();
       this.progression = p;
       this.currPartIndex = 0;
       this.initPiano();
-      this.setDividerBottom();
       this.cd.markForCheck();
     } );
     this.gss.selectedPartIndexEmitter.subscribe( p=>{
       this.currPartIndex = p;
       this.piano.updateKeys( this.progression.parts[p] );
-      this.setTonalityLeft();
       this.cd.markForCheck();
     });
     this.gss.visibilityEmitter.subscribe( e=>{
@@ -124,7 +215,7 @@ export class PianoComponent implements OnInit {
       }
       this.cd.markForCheck();
     });
-    this.pianoViewHideItem.visible = this.pianoVisible;
+    this.pianoViewHideItem.visible = this.pianoState==='visible' ? true: false;
     this.patternEditMenuViewItem.visible = this.gss.patternEditMenuVisible;
   }
   initPiano():void {
@@ -179,18 +270,12 @@ export class PianoComponent implements OnInit {
   onEditorScroll( event ):void {
     this.gss.editorScrolLeft = this.editor.nativeElement.scrollLeft;
   }
-  setDividerBottom():void {
-    if( this.pianoVisible ){
-      let pianoWidth = this.piano.totalWidth();
-      let pianoScaling = window.innerWidth / pianoWidth;
-      this.dividerBottom = this.piano.keyHeight * pianoScaling;
-    } else {
-      this.dividerBottom = 0;
-    }
-    
-  }
-  setTonalityLeft():void {
-    this.tonalityLeft = window.innerWidth/2 - this.tonality.nativeElement.clientWidth/2;
+  setpianoActualHeight():void {
+    let pianoWidth = this.piano.totalWidth();
+    let pianoScaling = window.innerWidth / pianoWidth;
+    this.pianoActualHeight = this.piano.keyHeight * pianoScaling;
+    this.pianoActualHeightInversed = this.pianoActualHeight*-1;
+    this.editorBottom = this.pianoActualHeight+10;
   }
 
 
@@ -204,7 +289,12 @@ export class PianoComponent implements OnInit {
     }
   }
   togglePiano( v:boolean ):void {
-    this.pianoVisible = v;
-    this.setDividerBottom();
+    this.pianoState = v ? 'visible': 'hidden'; // triggers pianoState animation
+  }
+  onDividerAnimationStart():void{
+    if( this.pianoState==="hidden")
+      this.editorBottom = 10;
+    else 
+      this.editorBottom = this.pianoActualHeight+10;
   }
 }

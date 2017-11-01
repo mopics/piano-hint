@@ -277,7 +277,9 @@ export class PatternPartComponent implements OnInit {
   }
   // pattern listeners
   onCellAttack( event, note:Note, index:number ){
-    this.selectPart();
+    if( this.part.index!==this.gss.selectedPartIndex ) {
+      this.selectPart(); return;
+    }
     this.tone.triggerAttackRelease( note.fullName, "16n", this.selectedVelocity/10, this.tone.context.currentTime );
     this.setNoteActive( note, index, event.target.offsetLeft, event.target.offsetTop );
 

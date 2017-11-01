@@ -25,7 +25,7 @@
   <app-side-menu (select)="onViewHideMenuSelect($event)" [items]="viewHideMenuItems" [iconClasses]="viewHideMenuIconClasses"></app-side-menu>
 </div>
 
-<div class="editor" #editor (scroll)="onEditorScroll($event)" [style.bottom]="dividerBottom+10+'px'">
+<div class="editor" #editor (scroll)="onEditorScroll($event)" [style.bottom]="editorBottom+'px'">
   <div *ngIf="progression">
     <router-outlet *ngIf="!loading"></router-outlet>
   </div>
@@ -33,15 +33,25 @@
       <div class="ui red inverted big message">No progression selected. Please pick a progression in the topleft dropdown-menu</div>
   </div>
 </div>
-<div class="ep-divider" [style.bottom]="dividerBottom+'px'" >
+<div class="ep-divider" 
+  [@dividerAnimation]="{value: pianoState, params:{ piano_height: pianoActualHeight} }"
+  (@dividerAnimation.start)="onDividerAnimationStart()"
+  [style.bottom]="pianoActualHeight+'px'" >
     <!--<app-pianocolor-legend></app-pianocolor-legend>-->
 </div>
-<div class="tonality" [style.left]="tonalityLeft+'px'" [style.bottom]="dividerBottom-20+'px'" #tonality> <!--  -->
-  <i class="music icon"></i>{{progression.parts[currPartIndex].root.name}}-{{progression.parts[currPartIndex].chord.name}}&nbsp;&nbsp;&nbsp;&nbsp;
-  <i class="signal icon"></i>{{progression.parts[currPartIndex].scale.name}}
+<div class="tonality" [pianoActualHeight]="pianoActualHeight" tonality-display>
+  <div style="margin-top:-2px">
+    <i class="music icon"></i>{{progression.parts[currPartIndex].root.name}}-{{progression.parts[currPartIndex].chord.name}}&nbsp;&nbsp;&nbsp;&nbsp;
+    <i class="signal icon"></i>{{progression.parts[currPartIndex].scale.name}}
+  </div>
 </div>
-<div class="piano-footer" [style.height]="dividerBottom+'px'" #pianoFooter>
-  <app-piano-octave #pianoOctave>
+<div 
+  class="piano-footer" 
+  [@pianoAnimation]="{value: pianoState, params:{ piano_height: pianoActualHeight} }"
+  [style.height]="pianoActualHeight+'px'"
+  #pianoFooter>
+  <app-piano-octave 
+    #pianoOctave>
   </app-piano-octave>
 </div>
 </div>
