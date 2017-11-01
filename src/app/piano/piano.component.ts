@@ -158,11 +158,15 @@ export class PianoComponent implements OnInit {
 
   // view hide functionality:
   pianoViewHideItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PIANO, "Hide Piano", "hide", "hide", "unhide", "Hide Piano", "Show Piano", true );
-  patternEditMenuViewItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PATTERN_EDIT_MENUS, "Show pattern edit menu's", "setting", "setting", "setting", "Hide pattern edit menu's", "Show pattern edit menu's", true );
+  patternEditMenuViewItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PATTERN_EDIT_MENUS, "Hide pattern edit menu's", "setting", "setting", "setting", "Hide pattern edit menu's", "Show pattern edit menu's", true );
+  pianoScaleVHItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PIANO_SCALE,"Show scale on piano", "music", "music", "music","Hide scale on piano", "Show scale on piano", false );
+  pianoChordVHItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PIANO_CHORD, "Show chord on piano", "music", "music", "music","Hide chord on piano", "Show chord on piano", false );
   viewHideMenuIconClasses = new Array<string>( "unhide", "view-edit-icon", "icon" );
   viewHideMenuItems:MenuItem[] = new Array(
     this.pianoViewHideItem,
-    this.patternEditMenuViewItem
+    this.patternEditMenuViewItem,
+    this.pianoScaleVHItem,
+    this.pianoChordVHItem
   );
   
 
@@ -205,13 +209,16 @@ export class PianoComponent implements OnInit {
       switch( e.what ){
         case VisibilityEvent.PIANO:
         this.togglePiano( e.visible );
-        // update viewHideMenuItems
         this.pianoViewHideItem.visible = e.visible;
-        
         break;
         case VisibilityEvent.PATTERN_EDIT_MENUS:
-        // toggle pattern-edit-menus
         this.patternEditMenuViewItem.visible = e.visible;
+        break;
+        case VisibilityEvent.PIANO_SCALE:
+        this.pianoScaleVHItem.visible = e.visible;
+        break;
+        case VisibilityEvent.PIANO_CHORD:
+        this.pianoChordVHItem.visible = e.visible;
         break;
       }
       this.cd.markForCheck();
@@ -235,14 +242,14 @@ export class PianoComponent implements OnInit {
     this.piano.keyClicked.subscribe( n=> this.ts.playNote(n,n.octave) );
 
     this.ts.sequenceEmitter.subscribe( event=> {
-      //this.ngZone.run( ()=> {
+      this.ngZone.run( ()=> {
         if( event.partIndex > -1 ){ // change part
           
             this.gss.selectedPartIndex = event.partIndex;
           
         }
         this.piano.highlightTickNotes( event.notes );
-      //});
+      });
     });
 
     this.pianoInitiated = true;
@@ -282,11 +289,15 @@ export class PianoComponent implements OnInit {
 
   // visibility stuff
   onViewHideMenuSelect( itm:VisibilityMenuItem ){
-    if( itm.id===VisibilityEvent.PIANO ){
-      this.gss.pianoVisible = !itm.visible;
-    }
-    else if( itm.id===VisibilityEvent.PATTERN_EDIT_MENUS){
-      this.gss.patternEditMenuVisible = !itm.visible;
+    switch( itm.id ){
+      case VisibilityEvent.PIANO:
+      this.gss.pianoVisible = !itm.visible; break;
+      case VisibilityEvent.PATTERN_EDIT_MENUS:
+      this.gss.patternEditMenuVisible = !itm.visible; break;
+      case VisibilityEvent.PIANO_SCALE:
+      this.gss.pianoScaleVisible = !itm.visible; break;
+      case VisibilityEvent.PIANO_CHORD:
+      this.gss.pianoChordVisible = !itm.visible; break;
     }
   }
   togglePiano( v:boolean ):void {

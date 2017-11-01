@@ -72,7 +72,7 @@ export class PatternEditorComponent implements OnInit {
       
     } );
     this.gss.selectedPartIndexEmitter.subscribe( i=> {
-      this.currPartIndex = i;
+      //this.currPartIndex = i;
     });
     this.currPartIndex = this.gss.selectedPartIndex;
   }

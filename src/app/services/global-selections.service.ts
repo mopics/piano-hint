@@ -6,6 +6,8 @@ import { PatternPartComponent, PatternNoteDirective } from '../pattern-editor/pa
 export class VisibilityEvent {
   static PIANO:string = "piano";
   static PATTERN_EDIT_MENUS:string = "pattern-edit-menus";
+  static PIANO_SCALE:string = "piano-scale";
+  static PIANO_CHORD:string = "piano-chord";
   visible:boolean;
   what:string;
   constructor( v:boolean , w:string ){ this.visible =v; this.what = w;}
@@ -25,6 +27,8 @@ export class GlobalSelectionsService   {
 
   private _pianoVisible:boolean = true;
   private _patternEditMenuVisible:boolean = true;
+  private _pianoScaleVisible:boolean = false;
+  private _pianoChordVisible:boolean = false;
   visibilityEmitter:EventEmitter<VisibilityEvent> = new EventEmitter();
 
 
@@ -62,5 +66,13 @@ export class GlobalSelectionsService   {
     this._patternEditMenuVisible = b; 
     this.visibilityEmitter.emit( new VisibilityEvent( b, VisibilityEvent.PATTERN_EDIT_MENUS ) ) 
   };
+  set pianoScaleVisible( v:boolean ) { this._pianoScaleVisible=v;
+    this.visibilityEmitter.emit( new VisibilityEvent( v, VisibilityEvent.PIANO_SCALE ) );
+  }
+  get pianoScaleVisible(){ return this._pianoScaleVisible; }
+  set pianoChordVisible( v:boolean ) { this._pianoChordVisible=v;
+    this.visibilityEmitter.emit( new VisibilityEvent( v, VisibilityEvent.PIANO_CHORD ) );
+  }
+  get pianoChordVisible(){ return this._pianoChordVisible; }
   get patternEditMenuVisible(){ return this._patternEditMenuVisible; }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, NgZone, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 // models & services
-import { Note, Notes, Chord, Chords, Scale, Progression, ProgressionPart, ToneService, TickNote } from '../../services';
+import { Note, Notes, Chord, Chords, Scale, Progression, ProgressionPart, ToneService, TickNote, GlobalSelectionsService, VisibilityEvent } from '../../services';
 
 export class Hint {
   x:number = 0;
@@ -47,20 +47,39 @@ export class PianoOctaveComponent implements OnInit {
   transform:string;
   octaveWidth:number;
   progression:Progression;
+  //visibility flags
+  scaleVisible:boolean = true;
+  chordVisible:boolean = true;
 
   @ViewChild('piano') piano: ElementRef;
 
-  constructor( private ts:ToneService, private _ngZone: NgZone, private cd: ChangeDetectorRef ) {
+  constructor( private ts:ToneService, private _ngZone: NgZone, private cd: ChangeDetectorRef, private gss:GlobalSelectionsService ) {
   }
 
   ngOnInit() {
     this.octaveWidth = this.keyWidth*7;
     this.blackKeyWidth = this.keyWidth*.5;
-    this.blackKeyHeight = this.keyHeight*.7;
+    this.blackKeyHeight = this.keyHeight*.72;
     if( this.equalWidth ){
       this.blackKeyWidth = this.keyWidth;
       this.blackKeyHeight = this.keyHeight*.8;
     }
+    this.gss.visibilityEmitter.subscribe( e=>{
+      if( e.what===VisibilityEvent.PIANO_SCALE ){
+        this.scaleVisible = e.visible;
+        this.cd.markForCheck();
+      } else if( e.what===VisibilityEvent.PIANO_CHORD ){
+        this.chordVisible = e.visible;
+        if( !e.visible ){
+          this.updateKeysDefaultColor();
+        } else {
+          this.updateKeys( this.gss.selectedProgression.parts[this.gss.selectedPartIndex] );
+        }
+        this.cd.markForCheck();
+      }
+    });
+    this.scaleVisible = this.gss.pianoScaleVisible;
+    this.chordVisible = this.gss.pianoChordVisible;
   }
   
   highlightTickNotes( notes:TickNote[] ) {
@@ -74,12 +93,21 @@ export class PianoOctaveComponent implements OnInit {
             n.highlight = Note.NO;
             this.cd.markForCheck();
           });
-        }, this.ts.noteLength2Ms( en.length ) );
+        }, this.ts.noteLength2Ms( en.length )-50 );
       });
       this.cd.markForCheck();
   }
+  updateKeysDefaultColor():void {
+    // set all keys back to normal
+    this.allKeysA.forEach( n=>{
+      if( n.whiteKey )
+        n.fill = Note.whiteFill;
+      else 
+        n.fill = "#332";//Note.blackFill;
+    });
+  }
   updateKeys( part:ProgressionPart ):void {
-    
+    if( !this.chordVisible ){ return; }
 
     let chordNotes:Note[] = part.chord.midiNotes;
     // get keys
@@ -90,13 +118,7 @@ export class PianoOctaveComponent implements OnInit {
     if( part.chord.index >= Chords.Dom7 ){
       seventhKeys = this.allKeysA.filter( n=> n.name===chordNotes[3].name );
     }
-    // set all keys back to normal
-    this.allKeysA.forEach( n=>{
-      if( n.whiteKey )
-        n.fill = Note.whiteFill;
-      else 
-        n.fill = Note.blackFill;
-    });
+    this.updateKeysDefaultColor();
     // color keys
     rootKeys.forEach( n=>{
       n.fill = Note.rootFill;
@@ -163,27 +185,19 @@ export class PianoOctaveComponent implements OnInit {
         }
         this.allKeys[ k.fullName ] = k;
     });
-    // set highlicht color's
-    this.keys.filter( n=>n.name===part.chord.midiNotes[0].name ).forEach( n=> n.fill=Note.rootFill );
-    //this.keys.filter( n=>n.name===part.scale.midiNotes[1].name ).forEach( n=> n.fill=Note.scaleFill );
-    // set third highlicht color
-    this.keys.filter( n=>n.name===part.chord.midiNotes[1].name ).forEach( n=> n.fill=Note.thirdFill );
-    // set fourth highlicht color
-    //this.keys.filter( n=>n.name===part.scale.midiNotes[3].name ).forEach( n=> n.fill=Note.scaleFill );
-    // set fifth highlicht color
-    this.keys.filter( n=>n.name===part.chord.midiNotes[2].name ).forEach( n=> n.fill=Note.fifthFill );
-    // set sixth highlicht color
-    //this.keys.filter( n=>n.name===part.scale.midiNotes[5].name ).forEach( n=> n.fill=Note.scaleFill );
-    if( part.chord.index >= Chords.Dom7 ){
-      // set seventh highlicht color
-      this.keys.filter( n=>n.name===part.chord.midiNotes[3].name ).forEach( n=> n.fill=Note.seventhFill );
-    }
-    /*else {
-      this.keys.filter( n=>n.name===part.scale.midiNotes[6].name ).forEach( n=> n.fill=Note.scaleFill );
-    }*/
+
     this.allKeysA = this.whiteKeys.concat(this.blackKeys );
 
-    this.createHints( part );
+    if( this.gss.pianoChordVisible ){
+      this.updateKeys( part );
+    }
+    else {
+      this.updateKeysDefaultColor();
+      this.createHints( part );
+    }
+    
+
+    
 
   }
   createHints( part:ProgressionPart ):void {
