@@ -173,6 +173,18 @@ export class PatternPartComponent implements OnInit {
     });
     this.activeNotes = List( a );
   }
+  recolorActiveNotes():void{
+    this.part.pattern.ticks.forEach( (ta,i)=>{
+      ta.forEach( (tn)=>{
+        this.keys.findIndex( n=> {
+          if( n.fullName===tn.name+tn.octave ){
+            tn.fill = n.fill;
+            return true;
+          }
+         } );
+      });
+    });
+  }
   setCellWidthFromNoteLength( l:number ):number {
     // l = num 16n
 
@@ -235,6 +247,7 @@ export class PatternPartComponent implements OnInit {
     this.part.scale.midiNotes = Note.createMidiNotes( this.part.root, this.part.scale.steps );
     this.tone.playNote( n, 3 );
     this.reColorCells();
+    this.recolorActiveNotes();
     this.emitPartChange();
   }
   onChordChange( chord:Chord ):void {
@@ -248,6 +261,7 @@ export class PatternPartComponent implements OnInit {
       this.onScaleChange(this.scalesFiltered[0], false );
     } else {
       this.reColorCells();
+      this.recolorActiveNotes();
       this.emitPartChange();
     }
   }
@@ -258,6 +272,7 @@ export class PatternPartComponent implements OnInit {
     if( triggeredBySelect ) { this.tone.playScale( scale ); }
 
     this.reColorCells();
+    this.recolorActiveNotes();
     this.emitPartChange();
   }
   // pattern listeners

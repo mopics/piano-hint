@@ -249,21 +249,21 @@ export class NoteMenuItems {
     static notesAsMenuItems():MenuItem[] {
         let a:MenuItem[] = Array();
         for( let n:number=0; n < Notes.B+1; n++ ){
-            a.push( { label:Notes[n], icon:"", items:Array() } );
+            a.push( { label:Notes[n], icon:"", items:Array(), component:null, parent:null } );
         }
         return a;
     }
     static chordsAsMenuItems():MenuItem[] {
         let a:MenuItem[] = Array();
         for( let c:number=0; c < Chords.FullDim+1; c++ ){
-            a.push( { label:Chords[c], icon:"", items:Array() } );
+            a.push( { label:Chords[c], icon:"", items:Array(), component:null, parent:null } );
         }
         return a;
     }
     static scalesAsMenuItems():MenuItem[] {
         let a:MenuItem[] = Array();
         for( let s:number=0; s < Scales.Symmetrical_Diminished; s++ ){
-            a.push( { label:Scales[s], icon:"", items:Array() } );
+            a.push( { label:Scales[s], icon:"", items:Array(), component:null, parent:null } );
         }
         return a;
     }

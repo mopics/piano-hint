@@ -15,8 +15,9 @@ class VisibilityMenuItem {
   label:string;
   icon:string;
   items:MenuItem[] = Array( 
+    /* test left-sided submenu
     { label:"test1", icon:"", items:Array(), component:null, parent:null },
-    { label:"test2", icon:"", items:Array(), component:null, parent:null }
+    { label:"test2", icon:"", items:Array(), component:null, parent:null }*/
   );
   component:any = null;
   parent:MenuItem = null;
