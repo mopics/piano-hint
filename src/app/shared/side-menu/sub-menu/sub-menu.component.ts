@@ -72,6 +72,12 @@ export class SubMenuComponent implements OnInit {
     });
     this.defineItemsDivClassed();
   }
+  ngOnChanges( changes ){
+    this.items.forEach( itm=>{
+      itm.component = this;
+      itm.parent = this.parentItem; 
+    });
+  }
   show( event ):void {
     event.stopPropagation();
     if(!this.state.show){

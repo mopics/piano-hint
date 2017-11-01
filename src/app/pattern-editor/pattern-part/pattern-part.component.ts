@@ -258,6 +258,14 @@ export class PatternPartComponent implements OnInit {
       });
       return notesMatch;
      });
+     this.tonalityMenuItems[2].items = Array();
+     this.scalesFiltered.forEach( s=>{
+        let a:boolean = false;
+        if( s.name===this.part.scale.name ){ a = true; }
+        this.tonalityMenuItems[2].items.push({
+          label:s.name, icon:"", items:Array(), component:null, parent:null, active:a
+        });
+     });
   }
   onRootChange( n:Note ):void {
     this.part.root = n;
