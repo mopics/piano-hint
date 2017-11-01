@@ -14,7 +14,8 @@
           (click)="selectItem(item)" 
           (mouseover)="showSubItems(item)">
           <i *ngIf="item.icon.length>0" class="{{item.icon}} icon"></i>{{item.label}}
-          <app-sub-menu 
+          &nbsp;&nbsp;<app-sub-menu 
+              class="sub-menu"
               (select)="onSubItemSelect($event)" 
               [alignRight]="alignRight" 
               [useActiveState]="useActiveState"

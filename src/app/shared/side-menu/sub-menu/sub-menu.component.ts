@@ -17,10 +17,10 @@ export class SubItemsDirective{
     this.observer = new MutationObserver(mutations => {
       if( this.el.nativeElement.clientWidth>0 ){
         if( this.alignRight ) {
-          this.renderer.setElementStyle( this.el.nativeElement, "right", -this.el.nativeElement.clientWidth+'px' );
+          this.renderer.setElementStyle( this.el.nativeElement, "right", -this.el.nativeElement.clientWidth+5+'px' );
           //this.renderer.setElementStyle( this.pointer, "right", -this.el.nativeElement.clientWidth+'px' );
         } else {
-          this.renderer.setElementStyle( this.el.nativeElement, "left", -this.el.nativeElement.clientWidth+'px' );
+          this.renderer.setElementStyle( this.el.nativeElement, "left", -this.el.nativeElement.clientWidth+5+'px' );
         }
         this.observer.disconnect();
       }  
