@@ -26,6 +26,7 @@ import { SubMenuComponent } from './sub-menu/sub-menu.component';
 export class SideMenuComponent implements OnInit {
   @Input() title:string = "";
   @Input() alignRight:boolean = false;
+  @Input() useActiveState:boolean = false;
   @Input() xAdjust:number=0;
   @Input() items:Array<MenuItem>;
   @Input() iconClasses:Array<string> = new Array("sidebar", "icon");
@@ -89,6 +90,10 @@ export class SideMenuComponent implements OnInit {
       this.showSubItems( item );
     }
     else {
+      if( this.useActiveState ){
+        this.items.forEach( i=>{ i.active=false;});
+        item.active = true;
+      }
       this.select.emit( item );
     }
   }

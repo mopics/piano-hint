@@ -6,7 +6,7 @@ import { MenuState, MenuItem } from '../../models';
   selector: '[subitems]'
 })
 export class SubItemsDirective{
-  @Input() alignRight:boolean = false;
+  @Input() alignRight:boolean = false
   @ViewChild('pointer') pointer:ElementRef;
 
   observer:MutationObserver;
@@ -51,6 +51,7 @@ export class SubItemsDirective{
 export class SubMenuComponent implements OnInit {
   @Input() title:string = "";
   @Input() alignRight:boolean = false;
+  @Input() useActiveState:boolean = false;
   @Input() xAdjust:number=0;
   @Input() items:Array<MenuItem>;
   @Input() parentItem:MenuItem;
@@ -123,6 +124,11 @@ export class SubMenuComponent implements OnInit {
   }
 
   selectItem( event:MenuItem ) {
+    
+    if( this.useActiveState ){
+      this.items.forEach( i=>{ i.active=false;});
+      event.active = true;
+    }
     this.select.emit( event );
   }
 

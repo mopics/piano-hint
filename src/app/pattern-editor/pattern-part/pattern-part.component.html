@@ -5,6 +5,7 @@
           <app-side-menu 
           [title]="this.part.root.name+'-'+this.part.chord.name+'~'+this.part.scale.name" 
           [alignRight]="true"
+          [useActiveState]="true"
           [items]="tonalityMenuItems" 
           [iconClasses]="tonalityMenuItemClasses" 
           (select)="onTonalityMenuSelect($event)"

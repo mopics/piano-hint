@@ -115,15 +115,15 @@ export class PatternPartComponent implements OnInit {
 
   tonalityMenuItemClasses:string[] = Array( "music", "icon", "pattern-top-edit-icon" );
   tonalityMenuItems:MenuItem[] = new Array(
-    { label:MenuLabels.SELECT_ROOT, icon:"", items:NoteMenuItems.notesAsMenuItems(), component:null, parent:null },
-    { label:MenuLabels.SELECT_CHORD, icon:"", items:NoteMenuItems.chordsAsMenuItems(), component:null, parent:null },
-    { label:MenuLabels.SELECT_SCALE, icon:"", items:NoteMenuItems.scalesAsMenuItems(), component:null, parent:null },
+    { label:MenuLabels.SELECT_ROOT, icon:"", items:NoteMenuItems.notesAsMenuItems(), component:null, parent:null, active:false } as MenuItem,
+    { label:MenuLabels.SELECT_CHORD, icon:"", items:NoteMenuItems.chordsAsMenuItems(), component:null, parent:null, active:false } as MenuItem,
+    { label:MenuLabels.SELECT_SCALE, icon:"", items:NoteMenuItems.scalesAsMenuItems(), component:null, parent:null, active:false }as MenuItem,
   )
   copyMenuItemClasses:string[] = Array("copy", "icon", "pattern-top-edit-icon" );
   copyMenuItems:MenuItem[] = new Array( 
-    { label:MenuLabels.COPY_2_NEXT, icon:"", items:Array(), component:null, parent:null }, 
-    { label:MenuLabels.COPY_2_END, icon:"", items:Array(), component:null, parent:null }, 
-    { label:MenuLabels.DELETE_PART, icon:"", items:Array(), component:null, parent:null } );
+    { label:MenuLabels.COPY_2_NEXT, icon:"", items:Array(), component:null, parent:null, active:false }as MenuItem, 
+    { label:MenuLabels.COPY_2_END, icon:"", items:Array(), component:null, parent:null, active:false }as MenuItem, 
+    { label:MenuLabels.DELETE_PART, icon:"", items:Array(), component:null, parent:null, active:false }as MenuItem );
 
   constructor(private tone:ToneService, private ngZone:NgZone, private cd: ChangeDetectorRef, private gss:GlobalSelectionsService ) { }
 
@@ -150,6 +150,24 @@ export class PatternPartComponent implements OnInit {
     this.topMenuVisible = this.gss.patternEditMenuVisible;
 
     this.updatePartClasses();
+    this.setActiveTonalityItems();
+  }
+  setActiveTonalityItems():void {
+    this.tonalityMenuItems[0].items.forEach( i=>{ 
+      if(i.label===this.part.root.name){
+        i.active = true;
+      }
+    });
+    this.tonalityMenuItems[1].items.forEach( i=>{ 
+      if(i.label===this.part.chord.name){
+        i.active = true;
+      }
+    });
+    this.tonalityMenuItems[2].items.forEach( i=>{ 
+      if(i.label===this.part.scale.name){
+        i.active = true;
+      }
+    });
   }
   /**
    * Pattern cells are bound to this.keys:Note[] 

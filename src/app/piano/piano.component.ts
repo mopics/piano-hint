@@ -11,7 +11,7 @@ import { ProgressionPart, Progression } from '../services';
 // service
 import { ProgressionsService, GlobalSelectionsService, ToneService, VisibilityEvent } from '../services';
 
-class VisibilityMenuItem {
+class VisibilityMenuItem implements MenuItem {
   id:string;
   label:string;
   icon:string;
@@ -22,6 +22,7 @@ class VisibilityMenuItem {
   );
   component:any = null;
   parent:MenuItem = null;
+  active:boolean = false;
   iconVisible:string;
   iconHidden:string;
   labelVisible:string;

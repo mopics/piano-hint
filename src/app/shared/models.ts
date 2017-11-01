@@ -5,6 +5,7 @@ export interface MenuItem {
     items:MenuItem[];
     component:any;
     parent:MenuItem;
+    active:boolean;
 }
   
 export class MenuState {
