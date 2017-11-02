@@ -132,6 +132,7 @@ export class PatternPartComponent implements OnInit {
     this.keys = List( Note.getNotesFromRoot( Note.toFlat("C"), this.numOctaves, this.startOctave, true ).reverse() );
     this.tickIndexes = new Array( this.part.pattern.ticks.length ).fill(0);
     this.tickIndexes = this.tickIndexes.map( ( itm, i ) => i );
+    this.filterScales();
     this.reColorCells();
     this.setActiveNotes();
     this.gss.selectedPartIndexEmitter.subscribe( p=>{
@@ -209,42 +210,32 @@ export class PatternPartComponent implements OnInit {
     return l*PatternPartComponent.CELL_WIDTH-2;
   }
   reColorCells():void{
-
-    this.filterScales();
-
+    // set scale colors and non-tone colors
+    let allScaleNotes:Note[] = this.part.scale.midiNotes.slice( 0, 9 );
     this.keys.forEach( n=>{
-      n.fill = Note.nonToneFill;
+      if( allScaleNotes.find( sn=>sn.name===n.name ) ){
+        n.fill = Note.scaleFill;
+      } else{
+        n.fill = Note.nonToneFill;
+      }
     });
     
-    let scaleLength:number = this.part.scale.steps.filter( i=>i===1).length;
-    let sixthIndex:number = 5;
-    let fourfthIndex:number = 3;
-    if( scaleLength===8 ){
-      sixthIndex = 6;
-      fourfthIndex = 4;
-      // set eight hightlight color
-      this.keys.filter( n=>n.name===this.part.scale.midiNotes[2].name ).forEach( n=> n.fill=Note.scaleFill ); // Altered and SymetricalDiminished have 8 notes!!
-      // set third highlicht color
-      this.keys.filter( n=>n.name===this.part.chord.midiNotes[1].name ).forEach( n=> n.fill=Note.thirdFill );
-    }
-    // set root hightlight color
-    this.keys.filter( n=>n.name===this.part.chord.midiNotes[0].name ).forEach( n=> n.fill=Note.rootFill );
-    // set second hightlight color
-    this.keys.filter( n=>n.name===this.part.scale.midiNotes[1].name ).forEach( n=> n.fill=Note.scaleFill );
+    
     // set third highlicht color
     this.keys.filter( n=>n.name===this.part.chord.midiNotes[1].name ).forEach( n=> n.fill=Note.thirdFill );
-    // set fourth highlicht color
-    this.keys.filter( n=>n.name===this.part.scale.midiNotes[fourfthIndex].name ).forEach( n=> n.fill=Note.scaleFill );
+    
+    // set root hightlight color
+    this.keys.filter( n=>n.name===this.part.chord.midiNotes[0].name ).forEach( n=> n.fill=Note.rootFill );
+    
+    // set third highlicht color
+    this.keys.filter( n=>n.name===this.part.chord.midiNotes[1].name ).forEach( n=> n.fill=Note.thirdFill );
+    
     // set fifth highlicht color
     this.keys.filter( n=>n.name===this.part.chord.midiNotes[2].name ).forEach( n=> n.fill=Note.fifthFill );
-    // set sixth highlicht color
-    this.keys.filter( n=>n.name===this.part.scale.midiNotes[sixthIndex].name ).forEach( n=> n.fill=Note.scaleFill );
+    
     // set seventh highlicht color
     if( this.part.chord.index>=Chords.Dom7 ) {
       this.keys.filter( n=>n.name===this.part.chord.midiNotes[3].name ).forEach( n=> n.fill=Note.seventhFill );
-    }
-    else {
-      this.keys.filter( n=>n.name===this.part.scale.midiNotes[6].name ).forEach( n=> n.fill=Note.scaleFill );
     }
     
   }
@@ -368,11 +359,12 @@ export class PatternPartComponent implements OnInit {
       this.onRootChange( new Note(Notes[item.label]) );
     }
     else if( item.parent.label===MenuLabels.SELECT_CHORD ){
-      this.onChordChange( new Chord( Chords[item.label]))
+      this.onChordChange( new Chord( Chords[item.label]));
     }
     else if( item.parent.label===MenuLabels.SELECT_SCALE ){
-      this.onScaleChange( new Scale( Scales[item.label]))
+      this.onScaleChange( new Scale( Scales[item.label]));
     }
+    this.cd.markForCheck();
   }
   addTickCollumn():void {
     this.part.pattern.ticks.push( new Array<TickNote>() );

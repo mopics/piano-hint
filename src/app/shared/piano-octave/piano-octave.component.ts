@@ -107,7 +107,11 @@ export class PianoOctaveComponent implements OnInit {
     });
   }
   updateKeys( part:ProgressionPart ):void {
-    if( !this.chordVisible ){ return; }
+    if( !this.chordVisible ){ 
+      this.createHints( part );
+      this.cd.markForCheck();
+      return; 
+    }
 
     let chordNotes:Note[] = part.chord.midiNotes;
     // get keys
