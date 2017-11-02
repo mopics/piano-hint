@@ -36,7 +36,7 @@ export class ProgressionsService {
           newPart.scale.midiNotes = Note.createMidiNotes( newPart.root, newPart.scale.steps );
           partsC.push( newPart );
         } );
-        let progC = new Progression( prog.id, prog.name, prog.bpm );
+        let progC = new Progression( prog.id, prog.name, prog.bpm, prog.startOctave, prog.numOctaves );
         progC.parts = partsC;
         psC.push( progC );
       })
@@ -62,7 +62,7 @@ export class ProgressionsService {
             newPart.scale.midiNotes = Note.createMidiNotes( newPart.root, newPart.scale.steps );
             partsC.push( newPart )
           } );
-          let progC = new Progression( prog.id, prog.name, prog.bpm );
+          let progC = new Progression( prog.id, prog.name, prog.bpm, prog.startOctave, prog.numOctaves );
           progC.parts = partsC;
           return progC;
          } )

@@ -7,6 +7,8 @@ export class InMemoryDataService implements InMemoryDbService {
                 id: 0,
                 name: "C-minor(I-II-V)",
                 bpm: 120,
+                startOctave:2,
+                numOctaves:4,
                 parts: [
                     {
                         index: 0,
@@ -139,6 +141,8 @@ export class InMemoryDataService implements InMemoryDbService {
                 id: 0,
                 name: "Moonlight Sonata",
                 bpm: 41,
+                startOctave:1,
+                numOctaves:5,
                 parts: [
                     {
                         index: 0,

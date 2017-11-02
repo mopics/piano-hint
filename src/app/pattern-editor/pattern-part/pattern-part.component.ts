@@ -88,7 +88,7 @@ export class PatternPartComponent implements OnInit {
   @Input() part:ProgressionPart;
 
   @Input() numOctaves:number = 4;
-  @Input() startOctave:number = 2;
+  @Input() startOctave:number = 1;
 
   @Output() change:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @Output() delete:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();

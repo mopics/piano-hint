@@ -3,6 +3,8 @@
   <div class="pattern" [style.width]="part.pattern.width+'px'">
     <app-pattern-part
         [part]="part" 
+        [startOctave]="progression.startOctave"
+        [numOctaves]="progression.numOctaves"
         (change)="handlePartChange($event)"
         (add2end)="handleAddPart2End($event)"
         (add2next)="handleAddPart2Next($event)"

@@ -80,8 +80,8 @@ export class PatternEditorComponent implements OnInit {
   initPiano():void {
     if( this.pianoInitiated ){ return; }
     this.piano.root = "C";
-    this.piano.startOctave = 2;
-    this.piano.numOctaves = 4;
+    this.piano.startOctave = this.progression.startOctave;
+    this.piano.numOctaves = this.progression.numOctaves;
     this.piano.keyHeight = 154;
     this.piano.keyWidth = 40;
     this.piano.rotation = 90;

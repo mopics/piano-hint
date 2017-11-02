@@ -89,13 +89,17 @@ export class Progression {
     public name:string;
     public parts:ProgressionPart[];
     public bpm:number;
+    public startOctave:number;
+    public numOctaves:number;
 
-    constructor( id:number, name:string, bpm:number = 120 ){
+    constructor( id:number, name:string, bpm:number = 120, startOctave:number=2, numOctaves:number = 3 ){
         // create initial 
         this.id = id;
         this.name = name;
         this.parts = new  Array<ProgressionPart>();
         this.bpm = bpm;
+        this.startOctave = startOctave;
+        this.numOctaves = numOctaves;
     }
     addBlankPart():void{
         const t = new Note(Notes.C,1);

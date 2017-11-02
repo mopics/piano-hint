@@ -6,7 +6,7 @@ import { PianoOctaveComponent } from '../shared/piano-octave/piano-octave.compon
 import { MenuItem } from '../shared/models';
 
 // models
-import { ProgressionPart, Progression } from '../services';
+import { ProgressionPart, Progression, Pattern } from '../services';
 
 // service
 import { ProgressionsService, GlobalSelectionsService, ToneService, VisibilityEvent } from '../services';
@@ -233,8 +233,8 @@ export class PianoComponent implements OnInit {
       return;
     }
     this.piano.root = "C";
-    this.piano.startOctave = 2;
-    this.piano.numOctaves = 4;
+    this.piano.startOctave = this.progression.startOctave;
+    this.piano.numOctaves = this.progression.numOctaves;
     this.piano.keyHeight = 250;
     this.piano.keyWidth = 80;
     //this.piano.setProgression( this.progression );
@@ -246,6 +246,41 @@ export class PianoComponent implements OnInit {
         if( event.partIndex > -1 ){ // change part
           
             this.gss.selectedPartIndex = event.partIndex;
+            // check if part is almost offscreen
+            let pattern:Pattern = this.progression.parts[event.partIndex].pattern;
+            let scrollLeft:number = this.editor.nativeElement.scrollLeft;
+            let el = this.editor.nativeElement;
+            let win = window;
+
+            if( pattern.posX > scrollLeft+win.innerWidth*.5 ){
+              // animate scroll
+              let targetScroll:number = pattern.posX - 20;
+              let step:number = ( targetScroll - scrollLeft ) / 10;
+              let i:number = 0;
+              // requesAnimationKeyframe way:
+              let frame = (timestamp) => {
+                el.scrollLeft += step;
+                i++;
+                if( i<10 ){
+                  win.requestAnimationFrame(frame);
+                }
+              }
+              win.requestAnimationFrame(frame);
+            }
+            else if( pattern.posX < scrollLeft ){
+               // animate scroll
+               let step:number = ( scrollLeft ) / 10;
+               let i:number = 0;
+               // requesAnimationKeyframe way:
+               let frame = (timestamp) => {
+                  el.scrollLeft -= step;
+                  i++;
+                  if( i<10 ){
+                    win.requestAnimationFrame(frame);
+                  }
+                }
+                win.requestAnimationFrame(frame);
+            }
           
         }
         this.piano.highlightTickNotes( event.notes );
