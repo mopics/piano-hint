@@ -75,7 +75,10 @@ export class TickNoteChange {
                 // set new col & start(time)
                 this.tickNote.posX = newPos.x; this.tickNote.posY = newPos.y;
                 this.tickNote.col = Math.floor( newPos.x / cw );
-                this.tickNote.start = this.parent.getNoteLengthFromWidth( (newPos.x - this.tickNote.col*cw) );
+                if( newPos.x < 2 )
+                    this.tickNote.start = this.parent.getNoteLengthFromWidth( (newPos.x - this.tickNote.col*cw) );
+                else 
+                    this.tickNote.start = 0;
                 // set new note
                 let note:Note = this.parent.getNoteByPos( newPos.y );
                 this.tickNote.name = note.name;
