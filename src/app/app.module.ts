@@ -18,6 +18,7 @@ import { ProgressionsService } from './services';
 import { GlobalSelectionsService } from './services';
 import { SuiModalService } from 'ng2-semantic-ui';
 import { ToneService } from './services';
+import { KeyboardService } from './services';
 
 //components
 import { AppComponent } from './app.component';
@@ -32,7 +33,7 @@ import { PatternEditorComponent } from './pattern-editor/pattern-editor.componen
 import { SliderComponent } from './shared/slider/slider.component';
 import { ProgressionEditorComponent } from './progression-editor/progression-editor.component';
 import { PartComponent} from './progression-editor/part/part.component';
-import { PatternPartComponent, PatternNoteDirective } from './pattern-editor/pattern-part/pattern-part.component';
+import { PatternPartComponent, PatternNoteDirective, PatternBackgroundDirective } from './pattern-editor/pattern-part/';
 import { SideMenuComponent } from './shared/side-menu/side-menu.component';
 import { SubMenuComponent, SubItemsDirective } from './shared/side-menu/sub-menu/sub-menu.component';
 
@@ -53,7 +54,7 @@ import { SubMenuComponent, SubItemsDirective } from './shared/side-menu/sub-menu
     SliderComponent,
     PatternPartComponent, PatternNoteDirective,
     SideMenuComponent,
-    SubMenuComponent, SubItemsDirective
+    SubMenuComponent, SubItemsDirective, PatternBackgroundDirective
   ],
   entryComponents:[
     ConfirmModalComponent // dynamicly created components also need to be added to entryComponents
@@ -71,7 +72,8 @@ import { SubMenuComponent, SubItemsDirective } from './shared/side-menu/sub-menu
     ProgressionsService,
     GlobalSelectionsService,
     SuiModalService,
-    ToneService
+    ToneService,
+    KeyboardService
   ],
   bootstrap: [AppComponent]
 })

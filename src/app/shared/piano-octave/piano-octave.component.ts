@@ -86,16 +86,37 @@ export class PianoOctaveComponent implements OnInit {
     notes.forEach( en=> {
       let n:Note = this.allKeys[en.name+en.octave];
       if( n ){
-        n.highlight = Note.HI;
-      }
-      setTimeout( ()=>{
-          this._ngZone.run(() => {
-            n.highlight = Note.NO;
-            this.cd.markForCheck();
-          });
-        }, this.ts.noteLength2Ms( en.length )-50 );
+        // turn note on
+        if( en.start>0 ){
+          setTimeout( ()=>{
+            this._ngZone.run( ()=>{
+              n.highlight = Note.HI;
+              this.cd.markForCheck();
+              // turn note off
+              setTimeout( ()=>{
+                  this._ngZone.run(() => {
+                    n.highlight = Note.NO;
+                    this.cd.markForCheck();
+                  });
+                }, this.ts.noteLength2Ms( en.length ) );
+              });
+            }, this.ts.noteLength2Ms(en.start));
+        }
+        else {
+          // turn note on
+          n.highlight = Note.HI;
+          this.cd.markForCheck();
+          // turn note off
+          setTimeout( ()=>{
+              this._ngZone.run(() => {
+                n.highlight = Note.NO;
+                this.cd.markForCheck();
+              });
+            }, this.ts.noteLength2Ms( en.length ) );
+          }
+        }
+        
       });
-      this.cd.markForCheck();
   }
   updateKeysDefaultColor():void {
     // set all keys back to normal

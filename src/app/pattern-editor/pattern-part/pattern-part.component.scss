@@ -54,7 +54,15 @@ $eigthtNoteWidth:30px;
         height: 11px;
         opacity: .25;
     }
+    
 }
+.selection-rect {
+    overflow: hidden;
+    display: none;
+    position: fixed;
+    outline: 1px #E259FD solid;
+}
+
 .top-menu-hidden {
     top:2px /*$patternMenuTop; */
 }
@@ -73,5 +81,10 @@ $eigthtNoteWidth:30px;
         height: 10px;
         width:$eigthtNoteWidth;
         border-radius: 3px;
+        opacity: .7;
+    }
+    .selected {
+        opacity: 1;
+        outline: 2px #04FF19 solid;
     }
 }

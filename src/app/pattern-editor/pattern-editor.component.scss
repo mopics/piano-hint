@@ -6,6 +6,10 @@
     top: $patternTop;
     width: 50px;
 }
+.piano-vertical-menuhidden {
+    @extend .piano-vertical;
+    top: 3px;
+}
 .pattern-container {
     position: absolute;
     left: 50px;

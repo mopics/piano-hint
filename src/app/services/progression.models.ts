@@ -33,7 +33,7 @@ export class Pattern {
         this.ticks.forEach( t=>{
             ticksStr += '[';
             t.forEach( n=> {
-                ticksStr += `{name:"${n.name}", octave:${n.octave}, length:"${n.length}", velocity:${n.velocity}},`;
+                ticksStr += `{name:"${n.name}", octave:${n.octave}, length:${n.length}, velocity:${n.velocity}},`;
             });
             ticksStr += '],';
         });
@@ -141,6 +141,8 @@ export class Progression {
             id:${this.id},
             name:"${this.name}",
             bpm:${this.bpm},
+            startOctave:${this.startOctave},
+            numOctaves:${this.numOctaves},
             parts:[
                 ${partsStr}
             ]

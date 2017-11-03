@@ -312,6 +312,7 @@ export class PianoComponent implements OnInit {
   }
   onEditorScroll( event ):void {
     this.gss.editorScrolLeft = this.editor.nativeElement.scrollLeft;
+    this.gss.editorScrolTop = this.editor.nativeElement.scrollTop;
   }
   setpianoActualHeight():void {
     let pianoWidth = this.piano.totalWidth();

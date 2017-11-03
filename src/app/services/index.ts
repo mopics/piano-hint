@@ -5,3 +5,4 @@ export * from './progressions.service';
 export * from './in-memory-data.service';
 export * from './global-selections.service';
 export * from './tone.service';
+export * from './keyboard.service';

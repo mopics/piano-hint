@@ -15,22 +15,24 @@ export class TickNote {
 	name:string;
 	octave:number;
 	velocity:number;
-	length:number;
+	length:number = 1;
 	posX:number = 0;
 	posY:number = 0;
 	fill:string = "#f00";
 	col:number = 0;
+	start:number = 0;
 	width:number = 30;
+	selected:boolean = false;
 
-	get fullName():string { return this.name+this.octave; }
-	clone():TickNote { 
+	// get fullName():string { return this.name+this.octave; }
+	/*clone():TickNote { 
 		let tn:TickNote = new TickNote();
 		tn.name = this.name;
 		tn.octave = this.octave;
 		tn.velocity = this.velocity;
 		tn.length = this.length;
 		return tn;
-	}
+	}*/
 }
 export class Ticks {
 	ticks:SequenceEvent[] = new Array<SequenceEvent>();
@@ -113,9 +115,11 @@ export class ToneService {
 	private initBuildScoreSequencer():void {
 		this.sequencer = new Tone.Sequence( (time, col) => {
 			this.score.ticks[col].notes.forEach( t => {
-				this.piano.triggerAttackRelease( t.fullName, this.noteLength2Sec(t.length), time, t.velocity ); // t.length );
-				//this.piano.triggerAttack( t.fullName, t.length, t.velocity);
-				//this.piano.triggerRelease( t.fullName, time + duration);
+				this.piano.triggerAttackRelease( 
+					t.name+t.octave, 
+					this.noteLength2Sec(t.length), 
+					time+this.noteLength2Sec(t.start), 
+					t.velocity );
 			});
 			this.sequenceEmitter.emit( this.score.ticks[col] );
 
@@ -172,6 +176,9 @@ export class ToneService {
 						tnn.name = tn.name;
 						tnn.octave = tn.octave;
 						tnn.length = tn.length;
+						if( tn.start ){
+							tnn.start = tn.start;
+						}
 						tnn.velocity = tn.velocity;
 						return tnn;
 					});

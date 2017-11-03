@@ -3,13 +3,14 @@ import { Component, OnInit, ViewChild, NgZone, Output, EventEmitter, HostListene
 // models
 import { Chords, Notes, Note } from '../services';
 import { Progression, ProgressionPart } from '../services';
+import { SassVars } from '../sass.vars';
 // service
 import { ProgressionsService, GlobalSelectionsService, ToneService, VisibilityEvent } from '../services';
 import { SuiModalService, ModalSize } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../shared/modals/modal-confirm/modal-confirm.component';
 // components
 import { PianoOctaveComponent } from '../shared/piano-octave/piano-octave.component';
-import { PatternPartComponent, PatternNoteDirective } from './pattern-part/pattern-part.component';
+import { PatternPartComponent, PatternNoteDirective } from './pattern-part/';
 import { PianoComponent } from '../piano/piano.component';
 
 @Component({
@@ -24,12 +25,16 @@ export class PatternEditorComponent implements OnInit {
 
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
 
-  @HostListener('document:mousemove', ['$event']) documenmousemove(e){ 
+  @HostListener('window:mousemove', ['$event']) documenmousemove(e){ 
     if( !this.gss.draggingNote ){ return; }
-    window.document.body.style.cursor = "ew-resize";
-    this.gss.draggingNote.mousemove( e );
+    if( this.gss.draggingNote.resizeMode ){
+      window.document.body.style.cursor = "ew-resize";
+    } else {
+      window.document.body.style.cursor = "move";
+    }
+    this.gss.draggingNote.mousemove( e, true );
   };
-  @HostListener( 'document:mouseup', ['$event'] ) documentmouseup(e){
+  @HostListener( 'window:mouseup', ['$event'] ) documentmouseup(e){
     if( this.gss.draggingNote ) {
       window.document.body.style.cursor = "default";
       this.gss.draggingNote.mouseup( e );

@@ -34,11 +34,13 @@
 </div>
 
 <!-- pattern background cells -->
-<table *ngIf="keys" [ngClass]="patternBackgroundClasses"
-  [style.width]="part.pattern.width+'px'" >
+
+<table *ngIf="keys" [ngClass]="patternBackgroundClasses" [parent]="this" [selectionRect]="selectionRect"
+  [style.width]="part.pattern.width+'px'" appPatternBackground>
   <tr *ngFor="let note of keys" class="row" >
     <td *ngFor="let i of tickIndexes;" 
-      (mousedown)="onCellAttack( $event, note, i )"
+      (mousedown)="onCellMouseDown($event)"
+      (mouseup)="onCellMouseUp( $event, note, i )"
       class="col"
       [style.background-color]="note.fill"
       ></td> 
@@ -49,6 +51,9 @@
 <div [ngClass]="patternNotesClasses">
   <div *ngFor="let note of activeNotes" 
     class="note" 
+    [ngClass]="{selected:note.selected}"
     [ngStyle]="{left:note.posX+'px',top:note.posY+'px',width:note.width+'px'}" 
-    [style.background-color]="note.fill" [parent]="this" [tickNote]="note" pattern-note></div>
+    [style.background-color]="note.fill" [parent]="this" [tickNote]="note" draggable="false" pattern-note></div>
 </div>
+
+<div class="selection-rect" #selectionRect></div> <!-- used by PatternBackgroundDirective to visualize note selection -->

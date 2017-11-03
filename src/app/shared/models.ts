@@ -26,3 +26,21 @@ export class MenuState {
         return 'hide';
     }
 }
+
+export class Rectangle {
+    x:number;
+    y:number;
+    width:number;
+    height:number;
+    constructor( x:number, y:number, w:number, h:number ){
+        this.x = x;
+        this.y = y;
+        this.width = w;
+        this.height = h;
+    }
+}
+export class Vector2 {
+    x:number;
+    y:number;
+    constructor( x:number, y:number ){ this.x = x; this.y = y; }
+}

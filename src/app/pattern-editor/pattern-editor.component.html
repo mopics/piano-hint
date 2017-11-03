@@ -1,4 +1,4 @@
-<div class="piano-vertical"><app-piano-octave>piano-octave #pianoOctave></app-piano-octave></div>
+<div [ngClass]="gss.patternEditMenuVisible? 'piano-vertical' : 'piano-vertical-menuhidden'" ><app-piano-octave>piano-octave #pianoOctave></app-piano-octave></div>
 <div *ngFor="let part of progression.parts; let i = index" class="pattern-container" [style.left]="part.pattern.posX+'px'" >
   <div class="pattern" [style.width]="part.pattern.width+'px'">
     <app-pattern-part
