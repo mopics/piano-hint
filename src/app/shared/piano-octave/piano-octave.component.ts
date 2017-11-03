@@ -220,10 +220,7 @@ export class PianoOctaveComponent implements OnInit {
       this.updateKeysDefaultColor();
       this.createHints( part );
     }
-    
-
-    
-
+    this.cd.markForCheck();
   }
   createHints( part:ProgressionPart ):void {
     // create scale hints as dots

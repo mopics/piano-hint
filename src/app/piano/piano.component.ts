@@ -198,6 +198,7 @@ export class PianoComponent implements OnInit {
       this.progression = p;
       this.currPartIndex = 0;
       this.initPiano();
+      this.setpianoActualHeight();
       this.cd.markForCheck();
     } );
     this.gss.selectedPartIndexEmitter.subscribe( p=>{
@@ -228,8 +229,13 @@ export class PianoComponent implements OnInit {
   }
   initPiano():void {
     if( this.pianoInitiated ){ 
+      this.piano.root = "C";
+      this.piano.startOctave = this.progression.startOctave;
+      this.piano.numOctaves = this.progression.numOctaves;
+      this.piano.keyHeight = 250;
+      this.piano.keyWidth = 80;
       //this.piano.setProgression( this.progression );
-      this.piano.updateKeys( this.progression.parts[this.currPartIndex] )
+      this.piano.createKeys( this.progression.parts[0] );
       return;
     }
     this.piano.root = "C";

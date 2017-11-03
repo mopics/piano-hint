@@ -8,7 +8,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 name: "C-minor(I-II-V)",
                 bpm: 120,
                 startOctave:2,
-                numOctaves:4,
+                numOctaves:3,
                 parts: [
                     {
                         index: 0,
