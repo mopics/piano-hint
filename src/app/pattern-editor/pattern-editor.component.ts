@@ -23,8 +23,6 @@ import { PianoComponent } from '../piano/piano.component';
 })
 export class PatternEditorComponent implements OnInit {
 
-  // @Output() partselected:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
-  @Output() requestScrollUpdate:EventEmitter<Vector2> = new EventEmitter<Vector2>();
 
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
 
@@ -132,8 +130,8 @@ export class PatternEditorComponent implements OnInit {
         this.reIndex();
         let px:number = e.part.pattern.width+e.part.pattern.posX - this.gss.editorScrolLeft + 12;
         if( px > window.innerWidth ){
-          let nx:number = e.part.pattern.width+e.part.pattern.posX - window.innerWidth + 12;
-          this.requestScrollUpdate.emit( new Vector2( nx, this.gss.editorScrolTop ) );
+          let nx:number = e.part.pattern.width+e.part.pattern.posX - window.innerWidth + 20;
+          this.gss.requestScrollUpdate.emit( new Vector2( nx, this.gss.editorScrolTop ) );
         }
       case PartChangeEvent.REMOVE_CELL_COLLUMN:
         this.reIndex();

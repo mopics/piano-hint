@@ -33,6 +33,7 @@ export class TickNoteChange {
 
     ngOnInit(){
         this.patternRect = new Rectangle( this.parent.part.pattern.posX-2, 141, this.parent.part.pattern.width, this.parent.numOctaves*12*PatternPartComponent.CELL_HEIGHT );
+        this.tickNote.directive = this;
     }
   
     @HostListener('mouseenter', ['$event']) mouseenter(e){
@@ -49,6 +50,13 @@ export class TickNoteChange {
                 this.tickNote.length = (nw)/PatternPartComponent.CELL_WIDTH;
                 this.tickNote.width = nw;
                 // console.log( `cw:${cw} nw:${nw} => ${this.tickNote.length}` );
+                if( this.gss.selectedNotes.length>1 ){
+                    // update multiple selection
+                    this.gss.selectedNotes.forEach( tn=>{
+                        if( tn!==this )
+                            tn.resizeFromOutside( nw );
+                    })
+                }
           }
           else { // in moveMode
                 let scrollY:number = this.gss.editorScrolTop;
@@ -112,7 +120,9 @@ export class TickNoteChange {
         this.startLayerPos = new Vector2( e.layerX, e.layerY );
         this.dragging = true;
         this.gss.draggingNote = this;
-        this.gss.selectedNotes = Array( this.tickNote );
+        if( !this.gss.selectedNotes.find( tn=>tn===this) ){
+            this.gss.selectedNotes = Array( this );
+        }
         if( this.gss.patternEditMenuVisible ) { 
             this.patternRect.y = 141;
         } else {
@@ -132,4 +142,10 @@ export class TickNoteChange {
       }
       
     };
+
+    resizeFromOutside( nw:number ){
+        this.renderer.setElementStyle( this.el.nativeElement, "width", nw+"px");
+        this.tickNote.length = (nw)/PatternPartComponent.CELL_WIDTH;
+        this.tickNote.width = nw;
+    }
   }

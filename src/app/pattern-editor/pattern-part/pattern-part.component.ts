@@ -14,6 +14,7 @@ import { TickNoteChange } from './pattern-note.directive';
 
 // components
 import { PatternEditorComponent } from '../pattern-editor.component';
+import { PatternNoteDirective } from './';
 
 class MenuLabels {
   static SELECT_ROOT:string = "Select Root";
@@ -62,7 +63,7 @@ export class PatternPartComponent implements OnInit {
   
           this.activeNotes.forEach( an=>{
             this.gss.selectedNotes.forEach( sn=>{
-              if( an===sn ){
+              if( an===sn.tickNote ){
                 toBeRemoved.push( an );
               }
             });
@@ -305,12 +306,12 @@ export class PatternPartComponent implements OnInit {
   }
   onPatternBackgroundSelection( rect:Rectangle ):void {
     let cellH:number = 11;
-    let a:TickNote[] = Array();
+    let a:PatternNoteDirective[] = Array();
     rect.x -= this.part.pattern.posX;
     rect.y -= 150;
     this.activeNotes.forEach( tn=>{
       if( tn.posX+tn.width > rect.x && tn.posY+cellH > rect.y && tn.posX < rect.x+rect.width && tn.posY < rect.y+rect.height ){
-        a.push( tn );
+        a.push( tn.directive );
       } 
     });
     this.gss.selectedNotes = a;
@@ -320,7 +321,7 @@ export class PatternPartComponent implements OnInit {
     // deselect active selection
     if( this.gss.selectedNotes.length>0 ){
       this.gss.selectedNotes.forEach( tn=>{
-        tn.selected = false;
+        tn.tickNote.selected = false; 
       });
       this.gss.selectedNotes = Array();
     }
@@ -337,7 +338,11 @@ export class PatternPartComponent implements OnInit {
     if( this.cellDown!==event.target ){
       return;
     }
-    this.deselectSelectedNotes();
+    if( this.gss.selectedNotes.length>0 ){
+      this.deselectSelectedNotes();
+      return;
+    }
+    
 
     this.tone.triggerAttackRelease( note.fullName, "16n", this.selectedVelocity/10, this.tone.context.currentTime );
     this.setNoteActive( note, index, event.target.offsetLeft, event.target.offsetTop );

@@ -5,6 +5,7 @@ var Tone = require("Tone");
 import { Map } from 'immutable';
 
 import { Note, Notes, Chord, Chords, Scale, Scales, Progression, ProgressionPart, Pattern } from './';
+import { PatternNoteDirective } from '../pattern-editor/pattern-part/';
 
 
 export class SequenceEvent {
@@ -23,6 +24,7 @@ export class TickNote {
 	start:number = 0;
 	width:number = 30;
 	selected:boolean = false;
+	directive:PatternNoteDirective;
 
 	// get fullName():string { return this.name+this.octave; }
 	/*clone():TickNote { 

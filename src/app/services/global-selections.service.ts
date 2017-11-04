@@ -21,11 +21,13 @@ export class GlobalSelectionsService   {
   private _selectedProgressionEmitter:EventEmitter<Progression> = new EventEmitter();
   private _editorScrollX:number = 0;
   private _editorScrollY:number = 0;
+  requestScrollUpdate:EventEmitter<Vector2> = new EventEmitter();
+
   private _busy:boolean = false;
   private _busyMessage:string = "Loading Samples...";
   private _busyEmitter:EventEmitter<boolean> = new EventEmitter();
   private _draggingNote:PatternNoteDirective;
-  private _selectedNotes:TickNote[] = Array();
+  private _selectedNotes:PatternNoteDirective[] = Array();
   updatePartViewEmitter:EventEmitter<number> = new EventEmitter();
 
   private _selectedPartIndex:number;
@@ -57,6 +59,7 @@ export class GlobalSelectionsService   {
   get editorScrolLeft():number { return this._editorScrollX; }
   set editorScrolTop( n:number ){ this._editorScrollY = n; }
   get editorScrolTop():number { return this._editorScrollY; }
+
   
   set appBusy( b:boolean ) { this._busy = b; this._busyEmitter.emit( b ); }
   get appBusy():boolean { return this._busy; }
@@ -90,16 +93,16 @@ export class GlobalSelectionsService   {
   get pianoChordVisible(){ return this._pianoChordVisible; }
   get patternEditMenuVisible(){ return this._patternEditMenuVisible; }
 
-  set selectedNotes( n:TickNote[] ){ 
+  set selectedNotes( n:PatternNoteDirective[] ){ 
     // de-select old ones
     if( this._selectedNotes.length>0 ){
       this._selectedNotes.forEach( tn=>{
-        tn.selected = false;
+        tn.tickNote.selected = false;
       });
     }
     // select new ones
     n.forEach( tn=>{
-      tn.selected = true;
+      tn.tickNote.selected = true; 
     })
     this._selectedNotes = n;
   }

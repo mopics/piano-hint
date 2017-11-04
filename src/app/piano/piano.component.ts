@@ -233,6 +233,10 @@ export class PianoComponent implements OnInit {
       }
       this.cd.markForCheck();
     });
+    this.gss.requestScrollUpdate.subscribe( s=>{
+      this.gss.editorScrolLeft = this.editor.nativeElement.scrollLeft = s.x;
+      this.gss.editorScrolTop = this.editor.nativeElement.scrollTop = s.y;
+    })
     this.pianoViewHideItem.visible = this.pianoState==='visible' ? true: false;
     this.patternEditMenuViewItem.visible = this.gss.patternEditMenuVisible;
   }
