@@ -45,16 +45,18 @@ export class TickNoteChange {
         let scrollX:number = this.gss.editorScrolLeft;
           if( this.resizeMode ){
                 let nw:number = e.pageX + scrollX - this.tickNote.posX - this.patternRect.x;
+                let translateW:number = 0;
                 let cw:number = PatternPartComponent.CELL_WIDTH;
                 this.renderer.setElementStyle( this.el.nativeElement, "width", nw+"px");
                 this.tickNote.length = (nw)/PatternPartComponent.CELL_WIDTH;
+                translateW = nw-this.tickNote.width;
                 this.tickNote.width = nw;
-                // console.log( `cw:${cw} nw:${nw} => ${this.tickNote.length}` );
+
                 if( this.gss.selectedNotes.length>1 ){
                     // update multiple selection
                     this.gss.selectedNotes.forEach( tn=>{
                         if( tn!==this )
-                            tn.resizeFromOutside( nw );
+                            tn.resizeFromOutside( translateW );
                     })
                 }
           }
@@ -72,11 +74,14 @@ export class TickNoteChange {
                 let newPos:Vector2 = new Vector2( 
                     Math.floor( (mouse.x-8-this.patternRect.x-this.startLayerPos.x )/xSnapResolutionRatio )*xSnapResolutionRatio, 
                     Math.floor( (mouse.y-this.patternRect.y-this.startLayerPos.y)/ch)*ch + 2 );
+                let translatePos:Vector2 = new Vector2(0,0);
 
                 if( newPos.x < 2 ){ newPos.x = 2; }
                 if( newPos.x + this.tickNote.width/snap > this.patternRect.width ){ newPos.x = this.patternRect.width-this.tickNote.width/snap }
                 if( newPos.y < 2 ){ newPos.y = 2; }
                 if( newPos.y > this.patternRect.height ){ newPos.y = this.patternRect.height - ch; }
+                translatePos.x = newPos.x - this.tickNote.posX;
+                translatePos.y = newPos.y - this.tickNote.posY;
                 this.tickNote.posX = newPos.x;
                 this.tickNote.posY = newPos.y;
                 // todo update actual pattern note data
@@ -92,6 +97,14 @@ export class TickNoteChange {
                 this.tickNote.name = note.name;
                 this.tickNote.octave = note.octave;
                 this.tickNote.fill = note.fill;
+
+                if( this.gss.selectedNotes.length>1 ){
+                    // update multiple selection
+                    this.gss.selectedNotes.forEach( tn=>{
+                        if( tn!==this )
+                            tn.moveFromOutside( translatePos );
+                    })
+                }
                 
           }
       }
@@ -143,9 +156,30 @@ export class TickNoteChange {
       
     };
 
-    resizeFromOutside( nw:number ){
+    resizeFromOutside( translateWidth:number ){
+        let nw:number = this.tickNote.width + translateWidth;
         this.renderer.setElementStyle( this.el.nativeElement, "width", nw+"px");
         this.tickNote.length = (nw)/PatternPartComponent.CELL_WIDTH;
         this.tickNote.width = nw;
+    }
+    moveFromOutside( translatePos:Vector2 ){
+        this.tickNote.posX += translatePos.x; this.tickNote.posY += translatePos.y;
+        let snap:number = PatternPartComponent.CELL_SNAP;
+
+        if( this.tickNote.posX < 2 ){ this.tickNote.posX = 2; }
+        if( this.tickNote.posX + this.tickNote.width/snap > this.patternRect.width ){ this.tickNote.posX = this.patternRect.width-this.tickNote.width/snap }
+        if( this.tickNote.posY < 2 ){ this.tickNote.posY = 2; }
+        if( this.tickNote.posY > this.patternRect.height ){ this.tickNote.posY = this.patternRect.height - PatternPartComponent.CELL_HEIGHT; }
+
+        this.tickNote.col = Math.floor( this.tickNote.posX / PatternPartComponent.CELL_HEIGHT );
+        if( this.tickNote.posX < 2 )
+            this.tickNote.start = this.parent.getNoteLengthFromWidth( (this.tickNote.posX - this.tickNote.col* PatternPartComponent.CELL_WIDTH) );
+        else 
+            this.tickNote.start = 0;
+        // set new note
+        let note:Note = this.parent.getNoteByPos( this.tickNote.posY );
+        this.tickNote.name = note.name;
+        this.tickNote.octave = note.octave;
+        this.tickNote.fill = note.fill;
     }
   }
