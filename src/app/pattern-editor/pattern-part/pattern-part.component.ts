@@ -24,6 +24,18 @@ class MenuLabels {
   static DELETE_PART:string = "Delete part";
 }
 
+export class PartChangeEvent {
+  static ADD_CELL_COLUMN:number = 0;
+  static REMOVE_CELL_COLLUMN:number = 1;
+  static CHORD_CHANGE:number = 2;
+  static ROOT_CHANGE:number = 3;
+  static SCALE_CHANGE:number = 4;
+  static NOTES_CHANGE:number = 5;
+  type:number;
+  part:ProgressionPart;
+  constructor( t:number, p:ProgressionPart ){ this.type=t; this.part = p; }
+}
+
 @Component({
   selector: 'app-pattern-part',
   templateUrl: './pattern-part.component.html',
@@ -36,7 +48,7 @@ export class PatternPartComponent implements OnInit {
   @Input() numOctaves:number = 4;
   @Input() startOctave:number = 1;
 
-  @Output() change:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
+  @Output() change:EventEmitter<PartChangeEvent> = new EventEmitter<PartChangeEvent>();
   @Output() delete:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @Output() add2next:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
   @Output() add2end:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
@@ -258,7 +270,7 @@ export class PatternPartComponent implements OnInit {
     this.tone.playNote( n, 3 );
     this.reColorCells();
     this.recolorActiveNotes();
-    this.emitPartChange();
+    this.emitPartChange( PartChangeEvent.ROOT_CHANGE );
   }
   onChordChange( chord:Chord ):void {
     this.part.chord = chord;
@@ -272,7 +284,7 @@ export class PatternPartComponent implements OnInit {
     } else {
       this.reColorCells();
       this.recolorActiveNotes();
-      this.emitPartChange();
+      this.emitPartChange( PartChangeEvent.CHORD_CHANGE );
     }
   }
   onScaleChange(scale:Scale, triggeredBySelect:boolean=true ):void {
@@ -283,7 +295,7 @@ export class PatternPartComponent implements OnInit {
 
     this.reColorCells();
     this.recolorActiveNotes();
-    this.emitPartChange();
+    this.emitPartChange( PartChangeEvent.SCALE_CHANGE );
   }
   // pattern listeners
   onPatternBackgroundMousedown():void {
@@ -372,8 +384,8 @@ export class PatternPartComponent implements OnInit {
   }
 
 
-  emitPartChange():void {
-    this.change.emit( this.part );
+  emitPartChange( type:number ):void {
+    this.change.emit( new PartChangeEvent( type, this.part ) );
   }
   onCopyMenuSelect( item:MenuItem ):void {
     if( item.label===MenuLabels.DELETE_PART) {
@@ -401,12 +413,12 @@ export class PatternPartComponent implements OnInit {
   addTickCollumn():void {
     this.part.pattern.ticks.push( new Array<TickNote>() );
     this.tickIndexes.push( this.tickIndexes.length );
-    this.emitPartChange();
+    this.emitPartChange( PartChangeEvent.ADD_CELL_COLUMN );
   }
   removeTickCollumn():void {
     this.part.pattern.ticks.pop( );
     this.tickIndexes.pop();
-    this.emitPartChange();
+    this.emitPartChange( PartChangeEvent.REMOVE_CELL_COLLUMN );
   }
   selectPart():void {
     if( !this.partActive ){

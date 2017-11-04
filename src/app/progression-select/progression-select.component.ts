@@ -32,7 +32,7 @@ export class ProgressionSelectComponent implements OnInit {
     this.progService.getProgressions().then( progressions => {
       this.progressions = progressions;
       //auto select first one
-      this.globalSelections.selectProgression( this.progressions[1] );
+      this.globalSelections.selectProgression( this.progressions[0] );
     }  );
     this.globalSelections.selectedProgressionEmitter.subscribe( p => this.selectedProgression = p.name );
   }

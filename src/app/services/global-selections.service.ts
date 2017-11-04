@@ -3,6 +3,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Progression, ProgressionPart } from './progression.models';
 import { PatternPartComponent, PatternNoteDirective } from '../pattern-editor/pattern-part';
 import { TickNote } from './tone.service';
+import { Vector2 } from '../shared/models';
 
 export class VisibilityEvent {
   static PIANO:string = "piano";

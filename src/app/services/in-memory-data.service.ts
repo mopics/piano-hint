@@ -5,75 +5,34 @@ export class InMemoryDataService implements InMemoryDbService {
         const progressions = [
             {
                 id: 0,
-                name: "C-minor(I-II-V)",
-                bpm: 120,
-                startOctave:2,
-                numOctaves:3,
+                name: "Uncle Remus ( by George Duke )",
+                bpm: 78,
+                startOctave: 2,
+                numOctaves: 3,
                 parts: [
                     {
                         index: 0,
-                        root: {
-                            index: 0,
-                            octave: 1,
-                            name: "C"
-                        },
-                        scale: {
-                            index: Scales.Aeolian,
-                            name: "Aeolian"
-                        },
-                        chord: {
-                            index: Chords.Minor,
-                            name: "Minor"
-                        },
-                        measures: 1,
-                        chordPattern: 0,
-                        pattern: {
-                            ticks: [
-                                [{ name: "C", octave: 3, length: 2, velocity: 5 }], // tick 1
-                                [], // tick 2
-                                [{ name: "Eb", octave: 4, length: 2, velocity: 5 }], // tick 3
-                                [], // tick 4
-                                [{ name: "C", octave: 4, length: 2, velocity: 5 }], // tick 5
-                                [], // tick 6
-                                [{ name: "G", octave: 3, length: 2, velocity: 5 }], // tick 7
-                                [], // tick 8
-                            ],
-                            time: { parts: 2, ofLength: 4 }
-                        }
-                    },
-                    {
-                        index: 1,
                         root: {
                             index: 2,
                             octave: 1,
                             name: "D"
                         },
                         scale: {
-                            index: Scales.Symmetrical_Diminished,
-                            name: "Symmetrical Diminished"
+                            index: 5,
+                            name: "Aeolian"
                         },
                         chord: {
-                            index: Chords.FullDim,
-                            name: "FullDim"
+                            index: 1,
+                            name: "Minor"
                         },
                         measures: 1,
                         chordPattern: 0,
                         pattern: {
-                            ticks: [
-                                [{ name: "D", octave: 3, length: 2, velocity: 5 }], // tick 1
-                                [], // tick 2
-                                [{ name: "F", octave: 4, length: 2, velocity: 5 }], // tick 3
-                                [], // tick 4
-                                [{ name: "D", octave: 3, length: 2, velocity: 5 }], // tick 5
-                                [], // tick 6
-                                [{ name: "Ab", octave: 4, length: 2, velocity: 5 }], // tick 7
-                                [], // tick 8
-                            ],
+                            ticks: [[{ name: "D", octave: 3, length: 3.5625, velocity: 8 }, { name: "A", octave: 3, length: 3.625, velocity: 8 }, { name: "D", octave: 4, length: 3.625, velocity: 8 }, { name: "F", octave: 4, length: 3.625, velocity: 8 }, { name: "A", octave: 4, length: 3.625, velocity: 8 },], [], [], [], [{ name: "D", octave: 4, length: 3.6875, velocity: 8 }, { name: "F", octave: 4, length: 3.625, velocity: 8 }, { name: "A", octave: 3, length: 3.625, velocity: 8 },], [], [], [], [{ name: "C", octave: 3, length: 3.75, velocity: 8 }, { name: "A", octave: 3, length: 3.75, velocity: 8 }, { name: "D", octave: 4, length: 3.875, velocity: 8 }, { name: "F", octave: 4, length: 3.625, velocity: 8 },], [], [], [], [{ name: "F", octave: 4, length: 1, velocity: 8 }, { name: "G", octave: 4, length: 1, velocity: 8 }, { name: "A", octave: 4, length: 1, velocity: 8 },], [], [{ name: "F", octave: 4, length: 1, velocity: 8 },], [{ name: "G", octave: 4, length: 1, velocity: 8 },],],
                             time: { parts: 2, ofLength: 4 }
                         }
-                    },
-                    {
-                        index: 2,
+                    }, {
+                        index: 1,
                         root: {
                             index: 7,
                             octave: 1,
@@ -81,7 +40,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         },
                         scale: {
                             index: 4,
-                            name: "Myxolydian"
+                            name: "Mixolydian"
                         },
                         chord: {
                             index: 2,
@@ -90,59 +49,270 @@ export class InMemoryDataService implements InMemoryDbService {
                         measures: 1,
                         chordPattern: 0,
                         pattern: {
-                            ticks: [
-                                [{ name: "G", octave: 4, length: 2, velocity: 5 }], // tick 1
-                                [], // tick 2
-                                [{ name: "B", octave: 3, length: 2, velocity: 5 }], // tick 3
-                                [], // tick 4
-                                [{ name: "G", octave: 4, length: 2, velocity: 5 }], // tick 5
-                                [], // tick 6
-                                [{ name: "D", octave: 3, length: 2, velocity: 5 }], // tick 7
-                                [], // tick 8
-                            ],
+                            ticks: [[{ name: "G", octave: 3, length: 3.5625, velocity: 8 }, { name: "D", octave: 4, length: 3.625, velocity: 8 }, { name: "B", octave: 2, length: 3.5, velocity: 8 },], [], [], [], [{ name: "G", octave: 3, length: 1.875, velocity: 8 }, { name: "D", octave: 4, length: 1.8125, velocity: 8 }, { name: "B", octave: 2, length: 1.9375, velocity: 8 }, { name: "F", octave: 4, length: 1.8125, velocity: 8 },], [], [{ name: "G", octave: 3, length: 0.8125, velocity: 8 },], [{ name: "B", octave: 2, length: 0.875, velocity: 8 },],],
                             time: { parts: 2, ofLength: 4 }
                         }
-                    },
-                    {
-                        index: 3,
+                    }, {
+                        index: 2,
                         root: {
-                            index: 0,
+                            index: 7,
                             octave: 1,
-                            name: "C"
+                            name: "G"
                         },
                         scale: {
-                            index: Scales.Aeolian,
-                            name: "Aeolian"
+                            index: 1,
+                            name: "Dorian"
                         },
                         chord: {
-                            index: Chords.Minor,
+                            index: 1,
                             name: "Minor"
                         },
                         measures: 1,
-                        chordPattern: 1,
+                        chordPattern: 0,
                         pattern: {
-                            ticks: [
-                                [{ name: "C", octave: 3, length: 2, velocity: 5 }], // tick 1
-                                [], // tick 2
-                                [{ name: "Eb", octave: 4, length: 2, velocity: 5 }], // tick 3
-                                [], // tick 4
-                                [{ name: "C", octave: 3, length: 2, velocity: 5 }], // tick 5
-                                [], // tick 6
-                                [{ name: "G", octave: 4, length: 2, velocity: 5 }], // tick 7
-                                [], // tick 8
-                            ]
-                            ,
+                            ticks: [[{ name: "G", octave: 3, length: 2.6875, velocity: 8 }, { name: "D", octave: 4, length: 2.625, velocity: 8 }, { name: "Bb", octave: 2, length: 2.625, velocity: 8 }, { name: "F", octave: 4, length: 2.625, velocity: 8 },], [], [], [{ name: "Bb", octave: 2, length: 1, velocity: 8 },],],
                             time: { parts: 2, ofLength: 4 }
                         }
-                    }
+                    }, {
+                        index: 3,
+                        root: {
+                            index: 9,
+                            octave: 1,
+                            name: "A"
+                        },
+                        scale: {
+                            index: 2,
+                            name: "Phrygian"
+                        },
+                        chord: {
+                            index: 1,
+                            name: "Minor"
+                        },
+                        measures: 1,
+                        chordPattern: 0,
+                        pattern: {
+                            ticks: [[{ name: "A", octave: 2, length: 1.75, velocity: 8 }, { name: "G", octave: 3, length: 1.5625, velocity: 8 }, { name: "C", octave: 4, length: 1.625, velocity: 8 }, { name: "E", octave: 4, length: 1.625, velocity: 8 },], [], [{ name: "A", octave: 2, length: 1.8125, velocity: 8 }, { name: "G", octave: 3, length: 1.8125, velocity: 8 }, { name: "E", octave: 4, length: 1.6875, velocity: 8 }, { name: "C", octave: 4, length: 1.625, velocity: 8 }, { name: "A", octave: 4, length: 1.75, velocity: 8 },], [],],
+                            time: { parts: 2, ofLength: 4 }
+                        }
+                    }, {
+                        index: 4,
+                        root: {
+                            index: 7,
+                            octave: 1,
+                            name: "G"
+                        },
+                        scale: {
+                            index: 1,
+                            name: "Dorian"
+                        },
+                        chord: {
+                            index: 1,
+                            name: "Minor"
+                        },
+                        measures: 1,
+                        chordPattern: 0,
+                        pattern: {
+                            ticks: [[{ name: "G", octave: 3, length: 1.75, velocity: 8 }, { name: "D", octave: 4, length: 1.6875, velocity: 8 }, { name: "G", octave: 2, length: 1.8125, velocity: 8 }, { name: "Bb", octave: 3, length: 1.6875, velocity: 8 },], [], [{ name: "G", octave: 3, length: 0.9375, velocity: 8 },], [{ name: "G", octave: 2, length: 1, velocity: 8 },],],
+                            time: { parts: 2, ofLength: 4 }
+                        }
+                    }, {
+                        index: 5,
+                        root: {
+                            index: 2,
+                            octave: 1,
+                            name: "D"
+                        },
+                        scale: {
+                            index: 5,
+                            name: "Aeolian"
+                        },
+                        chord: {
+                            index: 1,
+                            name: "Minor"
+                        },
+                        measures: 1,
+                        chordPattern: 0,
+                        pattern: {
+                            ticks: [[{ name: "G", octave: 3, length: 1.8125, velocity: 8 }, { name: "Bb", octave: 3, length: 1.6875, velocity: 8 }, { name: "D", octave: 4, length: 1.75, velocity: 8 },], [], [{ name: "E", octave: 3, length: 3.875, velocity: 8 }, { name: "A", octave: 3, length: 3.875, velocity: 8 }, { name: "D", octave: 4, length: 3.75, velocity: 8 }, { name: "A", octave: 2, length: 3.75, velocity: 8 },], [], [], [], [{ name: "A", octave: 3, length: 0.9375, velocity: 8 }, { name: "D", octave: 4, length: 0.875, velocity: 8 },], [{ name: "C", octave: 4, length: 1, velocity: 8 },], [{ name: "A", octave: 2, length: 0.875, velocity: 8 }, { name: "E", octave: 3, length: 1.8125, velocity: 8 }, { name: "G", octave: 3, length: 1.9375, velocity: 8 }, { name: "D", octave: 4, length: 1.6875, velocity: 8 },], [], [{ name: "D", octave: 4, length: 1.8125, velocity: 8 }, { name: "E", octave: 4, length: 1.8125, velocity: 8 }, { name: "A", octave: 4, length: 1.8125, velocity: 8 }, { name: "G", octave: 3, length: 1.9375, velocity: 8 },], [],],
+                            time: { parts: 2, ofLength: 4 }
+                        }
+                    }, {
+                        index: 6,
+                        root: {
+                            index: 7,
+                            octave: 1,
+                            name: "G"
+                        },
+                        scale: {
+                            index: 4,
+                            name: "Mixolydian"
+                        },
+                        chord: {
+                            index: 2,
+                            name: "Dom7"
+                        },
+                        measures: 1,
+                        chordPattern: 0,
+                        pattern: {
+                            ticks: [[{ name: "G", octave: 3, length: 2.5625, velocity: 8 }, { name: "C", octave: 4, length: 2.6875, velocity: 8 }, { name: "G", octave: 2, length: 2.75, velocity: 8 }, { name: "F", octave: 4, length: 2.6875, velocity: 8 },], [], [], [{ name: "G", octave: 2, length: 1, velocity: 8 },], [{ name: "G", octave: 3, length: 0.9375, velocity: 8 }, { name: "C", octave: 4, length: 1, velocity: 8 },], [{ name: "F", octave: 2, length: 0.6875, velocity: 8 },],],
+                            time: { parts: 2, ofLength: 4 }
+                        }
+                    }, {
+                        index: 7,
+                        root: {
+                            index: 10,
+                            octave: 1,
+                            name: "Bb"
+                        },
+                        scale: {
+                            index: 4,
+                            name: "Mixolydian"
+                        },
+                        chord: {
+                            index: 2,
+                            name: "Dom7"
+                        },
+                        measures: 1,
+                        chordPattern: 0,
+                        pattern: {
+                            ticks: [[{ name: "Bb", octave: 2, length: 2.625, velocity: 8 }, { name: "F", octave: 3, length: 2.75, velocity: 8 }, { name: "Bb", octave: 3, length: 2.5, velocity: 8 }, { name: "D", octave: 4, length: 2.625, velocity: 8 },], [], [], [{ name: "Bb", octave: 2, length: 1, velocity: 8 },], [{ name: "D", octave: 4, length: 1, velocity: 8 }, { name: "Bb", octave: 3, length: 1, velocity: 8 },], [{ name: "F", octave: 3, length: 0.9375, velocity: 8 },], [{ name: "Bb", octave: 3, length: 1, velocity: 8 }, { name: "D", octave: 4, length: 1, velocity: 8 },], [{ name: "F", octave: 3, length: 1, velocity: 8 }, { name: "Bb", octave: 3, length: 1, velocity: 8 },], [{ name: "G", octave: 3, length: 1, velocity: 8 },], [{ name: "G", octave: 3, length: 1, velocity: 8 },],],
+                            time: { parts: 2, ofLength: 4 }
+                        }
+                    }, {
+                        index: 8,
+                        root: {
+                            index: 5,
+                            octave: 1,
+                            name: "F"
+                        },
+                        scale: {
+                            index: 4,
+                            name: "Mixolydian"
+                        },
+                        chord: {
+                            index: 0,
+                            name: "Major"
+                        },
+                        measures: 1,
+                        chordPattern: 0,
+                        pattern: {
+                            ticks: [[{ name: "F", octave: 2, length: 1.75, velocity: 8 }, { name: "F", octave: 3, length: 1.625, velocity: 8 }, { name: "A", octave: 3, length: 1.6875, velocity: 8 }, { name: "C", octave: 4, length: 1.625, velocity: 8 },], [], [{ name: "F", octave: 3, length: 1, velocity: 8 }, { name: "A", octave: 3, length: 1, velocity: 8 }, { name: "C", octave: 4, length: 1, velocity: 8 }, { name: "F", octave: 2, length: 1, velocity: 8 },], [{ name: "F", octave: 2, length: 1, velocity: 8 },], [{ name: "D", octave: 3, length: 1.875, velocity: 8 }, { name: "F", octave: 3, length: 1.875, velocity: 8 }, { name: "Bb", octave: 3, length: 1.8125, velocity: 8 }, { name: "D", octave: 4, length: 1.75, velocity: 8 },], [], [{ name: "F", octave: 3, length: 3.875, velocity: 8 }, { name: "A", octave: 3, length: 3.75, velocity: 8 }, { name: "C", octave: 4, length: 3.75, velocity: 8 },], [], [], [], [{ name: "A", octave: 2, length: 1.9375, velocity: 8 },], [], [{ name: "Bb", octave: 2, length: 1, velocity: 8 }, { name: "F", octave: 3, length: 1.375, velocity: 8 }, { name: "Bb", octave: 3, length: 1.4375, velocity: 8 },], [], [{ name: "B", octave: 2, length: 1, velocity: 8 },], [{ name: "F", octave: 3, length: 1, velocity: 8 }, { name: "G", octave: 3, length: 1, velocity: 8 },],],
+                            time: { parts: 2, ofLength: 4 }
+                        }
+                    }, {
+                        index: 9,
+                        root: {
+                            index: 10,
+                            octave: 1,
+                            name: "Bb"
+                        },
+                        scale: {
+                            index: 4,
+                            name: "Mixolydian"
+                        },
+                        chord: {
+                            index: 2,
+                            name: "Dom7"
+                        },
+                        measures: 1,
+                        chordPattern: 0,
+                        pattern: {
+                            ticks: [[{ name: "C", octave: 3, length: 1.8125, velocity: 8 }, { name: "F", octave: 3, length: 1.875, velocity: 8 }, { name: "Bb", octave: 3, length: 1.6875, velocity: 8 }, { name: "D", octave: 4, length: 1.6875, velocity: 8 },], [], [{ name: "Bb", octave: 3, length: 1.8125, velocity: 8 }, { name: "D", octave: 4, length: 1.875, velocity: 8 },], [], [{ name: "C", octave: 3, length: 1.75, velocity: 8 }, { name: "G", octave: 3, length: 1.75, velocity: 8 },], [], [{ name: "C", octave: 3, length: 1, velocity: 8 }, { name: "Bb", octave: 3, length: 1, velocity: 8 }, { name: "D", octave: 4, length: 1, velocity: 8 }, { name: "F", octave: 4, length: 1, velocity: 8 }, { name: "Bb", octave: 4, length: 1, velocity: 8 },], [{ name: "Bb", octave: 3, length: 1, velocity: 8 }, { name: "D", octave: 4, length: 1, velocity: 8 }, { name: "F", octave: 4, length: 1, velocity: 8 }, { name: "Bb", octave: 4, length: 1, velocity: 8 },], [{ name: "C", octave: 3, length: 1, velocity: 8 },], [{ name: "C", octave: 3, length: 1, velocity: 8 },], [{ name: "C", octave: 3, length: 1, velocity: 8 }, { name: "Bb", octave: 3, length: 1, velocity: 8 }, { name: "D", octave: 4, length: 1, velocity: 8 }, { name: "F", octave: 4, length: 1, velocity: 8 }, { name: "Bb", octave: 4, length: 1, velocity: 8 },], [{ name: "C", octave: 3, length: 1, velocity: 8 },], [{ name: "Bb", octave: 3, length: 1, velocity: 8 },], [{ name: "C", octave: 3, length: 1, velocity: 8 },], [{ name: "Ab", octave: 3, length: 1, velocity: 8 }, { name: "D", octave: 4, length: 1, velocity: 8 },], [{ name: "Bb", octave: 2, length: 1, velocity: 8 },],],
+                            time: { parts: 2, ofLength: 4 }
+                        }
+                    }, {
+                        index: 10,
+                        root: {
+                            index: 2,
+                            octave: 1,
+                            name: "D"
+                        },
+                        scale: {
+                            index: 5,
+                            name: "Aeolian"
+                        },
+                        chord: {
+                            index: 1,
+                            name: "Minor"
+                        },
+                        measures: 1,
+                        chordPattern: 0,
+                        pattern: {
+                            ticks: [[{ name: "D", octave: 3, length: 1.8125, velocity: 8 }, { name: "A", octave: 3, length: 1.8125, velocity: 8 }, { name: "C", octave: 4, length: 1.6875, velocity: 8 }, { name: "A", octave: 4, length: 1.75, velocity: 8 }, { name: "F", octave: 4, length: 1.6875, velocity: 8 },], [], [{ name: "D", octave: 3, length: 1.8125, velocity: 8 }, { name: "A", octave: 3, length: 1.75, velocity: 8 }, { name: "C", octave: 4, length: 1.9375, velocity: 8 }, { name: "F", octave: 4, length: 1.9375, velocity: 8 }, { name: "A", octave: 4, length: 1.875, velocity: 8 },], [], [{ name: "D", octave: 3, length: 1.75, velocity: 8 }, { name: "A", octave: 3, length: 1.75, velocity: 8 }, { name: "D", octave: 4, length: 1.8125, velocity: 8 }, { name: "F", octave: 4, length: 1.75, velocity: 8 },], [],],
+                            time: { parts: 2, ofLength: 4 }
+                        }
+                    }, {
+                        index: 11,
+                        root: {
+                            index: 7,
+                            octave: 1,
+                            name: "G"
+                        },
+                        scale: {
+                            index: 4,
+                            name: "Mixolydian"
+                        },
+                        chord: {
+                            index: 2,
+                            name: "Dom7"
+                        },
+                        measures: 1,
+                        chordPattern: 0,
+                        pattern: {
+                            ticks: [[{ name: "G", octave: 2, length: 3.75, velocity: 8 }, { name: "G", octave: 3, length: 3.6875, velocity: 8 }, { name: "B", octave: 3, length: 3.6875, velocity: 8 }, { name: "F", octave: 4, length: 3.875, velocity: 8 },], [], [], [], [{ name: "G", octave: 3, length: 1.6875, velocity: 8 }, { name: "B", octave: 3, length: 1.8125, velocity: 8 },], [], [{ name: "F", octave: 4, length: 1.8125, velocity: 8 }, { name: "A", octave: 4, length: 1.875, velocity: 8 }, { name: "G", octave: 4, length: 1, velocity: 8 }, { name: "B", octave: 2, length: 2, velocity: 8 },], [], [{ name: "F", octave: 4, length: 1, velocity: 8 },], [{ name: "G", octave: 4, length: 1, velocity: 8 },],],
+                            time: { parts: 2, ofLength: 4 }
+                        }
+                    }, {
+                        index: 12,
+                        root: {
+                            index: 10,
+                            octave: 1,
+                            name: "Bb"
+                        },
+                        scale: {
+                            index: 1,
+                            name: "Dorian"
+                        },
+                        chord: {
+                            index: 1,
+                            name: "Minor"
+                        },
+                        measures: 1,
+                        chordPattern: 0,
+                        pattern: {
+                            ticks: [[{ name: "Bb", octave: 2, length: 1.8125, velocity: 8 }, { name: "Bb", octave: 3, length: 1.75, velocity: 8 }, { name: "Db", octave: 4, length: 1.75, velocity: 8 }, { name: "F", octave: 4, length: 1.75, velocity: 8 }, { name: "Bb", octave: 4, length: 1.8125, velocity: 8 },], [], [{ name: "Bb", octave: 2, length: 1, velocity: 8 },], [{ name: "Bb", octave: 2, length: 1, velocity: 8 },], [{ name: "Bb", octave: 3, length: 1, velocity: 8 }, { name: "Db", octave: 4, length: 1, velocity: 8 }, { name: "F", octave: 4, length: 1, velocity: 8 }, { name: "Bb", octave: 4, length: 1, velocity: 8 },], [{ name: "Bb", octave: 3, length: 1, velocity: 8 }, { name: "Db", octave: 4, length: 1, velocity: 8 }, { name: "F", octave: 4, length: 1, velocity: 8 }, { name: "Bb", octave: 4, length: 1, velocity: 8 },], [{ name: "Bb", octave: 3, length: 1.8125, velocity: 8 }, { name: "Db", octave: 4, length: 1.75, velocity: 8 }, { name: "F", octave: 4, length: 1.75, velocity: 8 }, { name: "Bb", octave: 4, length: 1.6875, velocity: 8 },], [], [{ name: "Bb", octave: 2, length: 1.8125, velocity: 8 }, { name: "Bb", octave: 3, length: 1.875, velocity: 8 }, { name: "Db", octave: 4, length: 1.8125, velocity: 8 }, { name: "F", octave: 4, length: 1.75, velocity: 8 }, { name: "Bb", octave: 4, length: 1.6875, velocity: 8 },], [],],
+                            time: { parts: 2, ofLength: 4 }
+                        }
+                    }, {
+                        index: 13,
+                        root: {
+                            index: 9,
+                            octave: 1,
+                            name: "A"
+                        },
+                        scale: {
+                            index: 10,
+                            name: "Altered"
+                        },
+                        chord: {
+                            index: 2,
+                            name: "Dom7"
+                        },
+                        measures: 1,
+                        chordPattern: 0,
+                        pattern: {
+                            ticks: [[{ name: "A", octave: 2, length: 5.5, velocity: 8 }, { name: "G", octave: 3, length: 5.3125, velocity: 8 }, { name: "Db", octave: 4, length: 5.5, velocity: 8 }, { name: "F", octave: 4, length: 5.5, velocity: 8 },], [], [], [], [], [],],
+                            time: { parts: 2, ofLength: 4 }
+                        }
+                    },
                 ]
             },
             {
                 id: 0,
                 name: "Moonlight Sonata",
                 bpm: 41,
-                startOctave:1,
-                numOctaves:5,
+                startOctave: 1,
+                numOctaves: 5,
                 parts: [
                     {
                         index: 0,

@@ -177,6 +177,15 @@ export class PianoComponent implements OnInit {
   @HostListener( 'window:resize', ['$event'] ) windowresize(e){
     this.setpianoActualHeight();
   }
+  @HostListener( 'window:keyup', ['$event'] ) keyup(e){
+    if( e.code==="Space" ){
+      if( this.playing ){
+        this.pauseProgression();
+      } else {
+         this.playProgression();
+      }
+    }
+  }
 
   constructor( 
     private progService:ProgressionsService,
@@ -298,7 +307,7 @@ export class PianoComponent implements OnInit {
   playProgression():void{
     if( this.progression ){
       this.playing = true;
-      this.ts.playProgression( this.progression );
+      this.ts.playProgression( this.progression, this.gss.selectedPartIndex );
     }
   }
   pauseProgression():void{

@@ -162,9 +162,18 @@ export class ToneService {
 			}, 200 );
 	}
 
-	buildProgression( p:Progression ):void {
+	buildProgression( p:Progression, partStartIndex:number = 0, partStartTickIndex:number = 0 ):void {
 		this.score = new Ticks();
-		p.parts.forEach( part=>{
+		let parts:ProgressionPart[];
+		
+		if( partStartIndex>0 ){
+			parts  = p.parts.slice( partStartIndex );
+			parts = parts.concat( p.parts.slice( 0, partStartIndex ) );
+		} else {
+			parts = p.parts;
+		}
+		
+		parts.forEach( part=>{
 			let pattern:Pattern = part.pattern;
 			for( let m:number=0; m<part.measures; m++ ){
 				pattern.ticks.forEach( (tickNotes,i)=>{
@@ -191,7 +200,7 @@ export class ToneService {
 			}
 		});
 	}
-  	playProgression( p:Progression ):void{
+  	playProgression( p:Progression, partStartIndex:number = 0, partStartTickIndex:number = 0 ):void{
 		  if( this.paused ){
 			  Tone.Transport.start();
 			  this.paused = false;
@@ -202,7 +211,7 @@ export class ToneService {
 		this.setBPM( p.bpm );
 		this.currPart = 0;
 		this.currMeasure = 0;
-		this.buildProgression(p);
+		this.buildProgression(p,partStartIndex, partStartTickIndex);
 		this.initBuildScoreSequencer();
 		Tone.Transport.start();
 		this.sequencer.start();

@@ -148,4 +148,26 @@ export class Progression {
             ]
         }`
     }
+    toMusicXML():string {
+        let xml:string = `
+        <score-partwise version="3.0">
+            <part-list>
+                <score-part id="P1">
+                    <part-name>Piano</part-name>
+                    <score-instrument id="P1-I1">
+                        <instrument-name>Acoustic Grand Piano</instrument-name>
+                    </score-instrument>
+                    <midi-instrument id="P1-I1">
+                        <midi-channel>2</midi-channel>
+                        <midi-program>1</midi-program>
+                        <volume>80</volume>
+                        <pan>0</pan>
+                    </midi-instrument>
+                </score-part>
+            </part-list>
+        `;
+
+        xml += "</score-partwise>";
+        return xml;
+    }
 }

@@ -8,9 +8,11 @@ import { SassVars } from '../sass.vars';
 import { ProgressionsService, GlobalSelectionsService, ToneService, VisibilityEvent } from '../services';
 import { SuiModalService, ModalSize } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../shared/modals/modal-confirm/modal-confirm.component';
+import { Vector2 } from '../shared/models';
+
 // components
 import { PianoOctaveComponent } from '../shared/piano-octave/piano-octave.component';
-import { PatternPartComponent, PatternNoteDirective } from './pattern-part/';
+import { PatternPartComponent, PartChangeEvent, PatternNoteDirective } from './pattern-part/';
 import { PianoComponent } from '../piano/piano.component';
 
 @Component({
@@ -21,7 +23,8 @@ import { PianoComponent } from '../piano/piano.component';
 })
 export class PatternEditorComponent implements OnInit {
 
-  @Output() partselected:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
+  // @Output() partselected:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
+  @Output() requestScrollUpdate:EventEmitter<Vector2> = new EventEmitter<Vector2>();
 
   @ViewChild(PianoOctaveComponent) piano:PianoOctaveComponent;
 
@@ -117,11 +120,25 @@ export class PatternEditorComponent implements OnInit {
     this.pianoInitiated = true;
   }
 
-  handlePartChange( part:ProgressionPart ):void {
+  handlePartChange( e:PartChangeEvent ):void {
     // this.progression.parts[ part.index ] = part;
-    this.piano.updateKeys( part );
-    this.reIndex();
-    this.partselected.emit( part );
+    switch( e.type ){
+      case PartChangeEvent.ROOT_CHANGE:
+      case PartChangeEvent.CHORD_CHANGE:
+      case PartChangeEvent.SCALE_CHANGE:
+        this.piano.updateKeys( e.part );
+        break;
+      case PartChangeEvent.ADD_CELL_COLUMN:
+        this.reIndex();
+        let px:number = e.part.pattern.width+e.part.pattern.posX - this.gss.editorScrolLeft + 12;
+        if( px > window.innerWidth ){
+          let nx:number = e.part.pattern.width+e.part.pattern.posX - window.innerWidth + 12;
+          this.requestScrollUpdate.emit( new Vector2( nx, this.gss.editorScrolTop ) );
+        }
+      case PartChangeEvent.REMOVE_CELL_COLLUMN:
+        this.reIndex();
+    }
+    // this.partselected.emit( e.part );
     // TODO send change to service
   }
   // adding part's
