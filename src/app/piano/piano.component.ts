@@ -258,7 +258,8 @@ export class PianoComponent implements OnInit {
     this.piano.keyWidth = 80;
     //this.piano.setProgression( this.progression );
     this.piano.createKeys( this.progression.parts[0] );
-    this.piano.keyClicked.subscribe( n=> this.ts.playNote(n,n.octave) );
+    this.piano.keyClicked.subscribe( n=> this.ts.triggerAttack(n.fullName) );
+    this.piano.keyUp.subscribe( n=>{ this.ts.triggerRelease(n.fullName); });
 
     this.ts.sequenceEmitter.subscribe( event=> {
       this.ngZone.run( ()=> {

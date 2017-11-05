@@ -2,7 +2,10 @@
   <g id="all" [attr.transform]="transform">
       <g id="piano-keyboard">
             <rect *ngFor="let wk of whiteKeys"
-                  (mousedown)="onKeyClick(wk)"
+                  (mousedown)="onKeyClick(wk)" 
+                  (mouseup)="onKeyUp(wk)" 
+                  (mouseleave)="onKeyUp(wk)"
+                  (mousemove)="onKeyHover(wk)"
                   id="{{wk.fullname}}" [attr.fill-opacity]="wk.highlight" stroke="#555555" stroke-opacity="0.5" [attr.fill]="wk.fill" 
                   rx="6" ry="6"
                   [attr.x]="wk.xPos" y="-6" [attr.width]="keyWidth" [attr.height]="keyHeight"></rect>
@@ -12,12 +15,19 @@
                   [attr.x]="bk.xPos" y="-8" [attr.width]="blackKeyWidth" [attr.height]="blackKeyHeight"></rect>
             <rect *ngFor="let bk of blackKeys"
                   (mousedown)="onKeyClick(bk)"
+                  (mouseup)="onKeyUp(bk)" 
+                  (mouseleave)="onKeyUp(bk)"
+                  (mousemove)="onKeyHover(bk)"
                   id="{{bk.fullName}}" [attr.fill-opacity]="bk.highlight" [attr.fill]="bk.fill" 
                   rx="8" ry="8"
                   [attr.x]="bk.xPos" y="-8" [attr.width]="blackKeyWidth" [attr.height]="blackKeyHeight"></rect>
       </g>
       <g id="scale-hints" *ngIf="scaleVisible">
-            <ellipse *ngFor="let h of scaleHints" (mousedown)="onKeyClick(h.note)"
+            <ellipse *ngFor="let h of scaleHints" 
+                  (mousedown)="onKeyClick(h.note)" 
+                  (mouseup)="onKeyUp(h.note)" 
+                  (mouseleave)="onKeyUp(h.note)"
+                  (mousemove)="onKeyHover(h.note)"
                   [attr.cx]="h.x" [attr.cy]="h.y" [attr.rx]="h.rx" [attr.ry]="h.ry" style="fill:#5DCEB8" />
       </g>
       </g>

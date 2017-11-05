@@ -31,6 +31,8 @@ export class PianoOctaveComponent implements OnInit {
   @Input() equalWidth:boolean = false;
   @Input() hintWidth:number = 70;
   @Output() keyClicked:EventEmitter<Note>=new EventEmitter();
+  @Output() keyUp:EventEmitter<Note>=new EventEmitter();
+  mouseDownKey:Note = null;
 
   octaves:number[];
   keys:Note[];
@@ -82,6 +84,16 @@ export class PianoOctaveComponent implements OnInit {
     this.chordVisible = this.gss.pianoChordVisible;
   }
   
+  highlightTickNote( note:Note, b:boolean ){
+    this._ngZone.run( ()=>{
+      if( b )
+        note.highlight = Note.HI;
+      else
+        note.highlight = Note.NO;
+
+      //this.cd.markForCheck();
+    });
+  }
   highlightTickNotes( notes:TickNote[] ) {
     notes.forEach( en=> {
       let n:Note = this.allKeys[en.name+en.octave];
@@ -244,7 +256,21 @@ export class PianoOctaveComponent implements OnInit {
 
   // key click events
   onKeyClick( note:Note ):void {
+    this.mouseDownKey = note;
     this.keyClicked.emit( note );
+    this.highlightTickNote( note, true );
+  }
+  onKeyHover( note:Note ){
+    if( this.mouseDownKey ){
+      if( this.mouseDownKey!==note ){
+        this.onKeyClick( note );
+      }
+    }
+  }
+  onKeyUp( note:Note ){
+    this.mouseDownKey = null;
+    this.keyUp.emit( note );
+    this.highlightTickNote( note, false );
   }
 
   totalHeight():number {

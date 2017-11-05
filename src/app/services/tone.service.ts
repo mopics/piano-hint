@@ -131,7 +131,7 @@ export class ToneService {
 		this.piano.triggerAttackRelease( note, length, time, velocity );
 	}
 	triggerAttack( note:string, velocity:number = 1 ){
-		this.piano.triggerAttack( note, velocity );
+		this.piano.triggerAttack( note, Tone.context.currentTime, velocity );
 	}
 	triggerRelease( note:string ):void {
 		this.piano.triggerRelease( note );
