@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, NgZone, Directive, ElementRef, HostListener, Renderer, ChangeDetectionStrategy, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChild, ViewChildren, QueryList, NgZone, Directive, ElementRef, HostListener, Renderer, ChangeDetectionStrategy, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 import { List } from 'immutable';
 
 // components
 // import { SuiSelect } from 'ng2-semantic-ui';
 import { PianoOctaveComponent } from '../../shared/piano-octave/piano-octave.component';
 import { SelectComponent } from '../../shared/select/select.component';
+import { SideMenuComponent } from '../../shared/side-menu/side-menu.component';
 
 // models & services
 import { Chords, Chord, ChordSteps, Notes, Note, Scales, Scale, ScaleSteps, TickNote, GlobalSelectionsService, VisibilityEvent, NoteMenuItems, KeyboardService } from '../../services';
@@ -23,6 +24,8 @@ class MenuLabels {
   static COPY_2_NEXT:string = "Copy part to next";
   static COPY_2_END:string = "Copy part to end";
   static DELETE_PART:string = "Delete part";
+  static ADD_TICK:string = "Add tick collumn";
+  static REMOVE_TICK:string = "Remove tick collumn";
 }
 
 export class PartChangeEvent {
@@ -43,7 +46,7 @@ export class PartChangeEvent {
   styleUrls: ['./pattern-part.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PatternPartComponent implements OnInit {
+export class PatternPartComponent implements OnInit, AfterViewInit {
   @Input() part:ProgressionPart;
 
   @Input() numOctaves:number = 4;
@@ -55,6 +58,8 @@ export class PatternPartComponent implements OnInit {
   @Output() add2end:EventEmitter<ProgressionPart> = new EventEmitter<ProgressionPart>();
 
   @ViewChild('selectionRect') selectionRect:ElementRef;
+  @ViewChildren(SideMenuComponent) sideMenus: QueryList<SideMenuComponent>;
+
   @HostListener('window:keydown', ['$event']) keydown(e){
     if( e.code==="Delete" || e.code==="Backspace" ){
       if( this.gss.selectedNotes.length > 0 && this.gss.selectedPartIndex===this.part.index ){
@@ -106,6 +111,14 @@ export class PatternPartComponent implements OnInit {
     { label:MenuLabels.COPY_2_NEXT, icon:"", items:Array(), component:null, parent:null, active:false }as MenuItem, 
     { label:MenuLabels.COPY_2_END, icon:"", items:Array(), component:null, parent:null, active:false }as MenuItem, 
     { label:MenuLabels.DELETE_PART, icon:"", items:Array(), component:null, parent:null, active:false }as MenuItem );
+  copyPlusCollumnItems:MenuItem[] = new Array(
+    { label:MenuLabels.COPY_2_NEXT, icon:"", items:Array(), component:null, parent:null, active:false }as MenuItem, 
+    { label:MenuLabels.COPY_2_END, icon:"", items:Array(), component:null, parent:null, active:false }as MenuItem, 
+    { label:MenuLabels.DELETE_PART, icon:"", items:Array(), component:null, parent:null, active:false }as MenuItem,
+
+    { label:MenuLabels.ADD_TICK, icon:"", items:Array(), component:null, parent:null, active:false }as MenuItem,
+    { label:MenuLabels.REMOVE_TICK , icon:"", items:Array(), component:null, parent:null, active:false }as MenuItem,
+  );
 
   constructor(private tone:ToneService, private ngZone:NgZone, private cd: ChangeDetectorRef, private gss:GlobalSelectionsService ) { }
 
@@ -134,6 +147,17 @@ export class PatternPartComponent implements OnInit {
 
     this.updatePartClasses();
     this.setActiveTonalityItems();
+  }
+  ngAfterViewInit() {
+    this.checkTicksTooNarrow();
+  }
+  checkTicksTooNarrow():void {
+    if( this.part.pattern.ticks.length<5 ){
+      this.sideMenus.last.items = this.copyPlusCollumnItems;
+    }
+    else {
+      this.sideMenus.last.items = this.copyMenuItems;
+    }
   }
   setActiveTonalityItems():void {
     this.tonalityMenuItems[0].items.forEach( i=>{ 
@@ -393,14 +417,21 @@ export class PatternPartComponent implements OnInit {
     this.change.emit( new PartChangeEvent( type, this.part ) );
   }
   onCopyMenuSelect( item:MenuItem ):void {
-    if( item.label===MenuLabels.DELETE_PART) {
+    switch( item.label ){
+      case MenuLabels.DELETE_PART:
       return this.delete.emit( this.part );
-    }
-    else if( item.label===MenuLabels.COPY_2_END) {
+      
+      case MenuLabels.COPY_2_END:
       return this.add2end.emit( this.part.clone() );
-    }
-    else if( item.label===MenuLabels.COPY_2_NEXT ) {
+
+      case MenuLabels.COPY_2_NEXT:
       return this.add2next.emit( this.part.clone() );
+
+      case MenuLabels.ADD_TICK:
+      return this.addTickCollumn();
+
+      case MenuLabels.REMOVE_TICK:
+      return this.removeTickCollumn();
     }
   }
   onTonalityMenuSelect( item:MenuItem ):void {
@@ -418,11 +449,13 @@ export class PatternPartComponent implements OnInit {
   addTickCollumn():void {
     this.part.pattern.ticks.push( new Array<TickNote>() );
     this.tickIndexes.push( this.tickIndexes.length );
+    this.checkTicksTooNarrow();
     this.emitPartChange( PartChangeEvent.ADD_CELL_COLUMN );
   }
   removeTickCollumn():void {
     this.part.pattern.ticks.pop( );
     this.tickIndexes.pop();
+    this.checkTicksTooNarrow();
     this.emitPartChange( PartChangeEvent.REMOVE_CELL_COLLUMN );
   }
   selectPart():void {

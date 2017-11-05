@@ -13,20 +13,20 @@
       </div>
   </div>
   <div class="edit-menu">
-      <div class="item">
-          <app-side-menu 
-          [title]="'Copy or delete part'"
-          [alignRight]="false" 
-          [xAdjust]="-20"
-          [items]="copyMenuItems" 
-          [iconClasses]="copyMenuItemClasses" 
-          (select)="onCopyMenuSelect($event)"
-          (click)="selectPart()" ></app-side-menu>
-      </div>
-      <div class="item">
-          <i title="remove collumn" (click)="removeTickCollumn()" class="minus circle icon"></i>
-      </div>
     <div class="item">
+        <app-side-menu 
+            [title]="'Copy or delete part'"
+            [alignRight]="false" 
+            [xAdjust]="-20"
+            [items]="copyMenuItems" 
+            [iconClasses]="copyMenuItemClasses" 
+            (select)="onCopyMenuSelect($event)"
+            (click)="selectPart()" #editSideMenu></app-side-menu>
+    </div>
+    <div class="item" *ngIf="part.pattern.ticks.length>4">
+        <i title="remove collumn" (click)="removeTickCollumn()" class="minus circle icon"></i>
+    </div>
+    <div class="item" *ngIf="part.pattern.ticks.length>4">
         <i title="add collumn" (click)="addTickCollumn()" class="add circle icon"></i>
     </div>
     
