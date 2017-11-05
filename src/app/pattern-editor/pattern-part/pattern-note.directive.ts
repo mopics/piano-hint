@@ -27,6 +27,7 @@ export class TickNoteChange {
     patternRect:Rectangle;
     startLayerPos:Vector2;
     tickNoteChange:TickNoteChange;
+    moved:boolean = false;
   
     constructor(private el: ElementRef, private renderer: Renderer, private gss:GlobalSelectionsService ) {}
     
@@ -34,6 +35,7 @@ export class TickNoteChange {
     ngOnInit(){
         this.patternRect = new Rectangle( this.parent.part.pattern.posX-2, 141, this.parent.part.pattern.width, this.parent.numOctaves*12*PatternPartComponent.CELL_HEIGHT );
         this.tickNote.directive = this;
+        this.tickNoteChange = new TickNoteChange( this.tickNote, this.tickNote.col );
     }
   
     @HostListener('mouseenter', ['$event']) mouseenter(e){
@@ -61,6 +63,8 @@ export class TickNoteChange {
                 }
           }
           else { // in moveMode
+                this.moved = true;
+
                 let scrollY:number = this.gss.editorScrolTop;
                 let cw:number = PatternPartComponent.CELL_WIDTH;
                 let ch:number = PatternPartComponent.CELL_HEIGHT;
@@ -133,9 +137,19 @@ export class TickNoteChange {
         this.startLayerPos = new Vector2( e.layerX, e.layerY );
         this.dragging = true;
         this.gss.draggingNote = this;
-        if( !this.gss.selectedNotes.find( tn=>tn===this) ){
-            this.gss.selectedNotes = Array( this );
+        
+        if( e.shiftKey ){
+            if( this.gss.selectedNotes.find(tn=>tn===this)){
+                this.gss.removeSelectedNote( this );
+            } else {
+                this.gss.addSelectedNote( this ); 
+            }
         }
+        /*else {
+            this.gss.selectedNotes = Array( this );
+        }*/
+        
+
         if( this.gss.patternEditMenuVisible ) { 
             this.patternRect.y = 141;
         } else {
@@ -145,14 +159,18 @@ export class TickNoteChange {
       //this.parent.setNoteNotActive( this.tickNote, this.tickNote.col );
     };
     @HostListener('mouseup', ['$event']) mouseup(e) {
+      
+      if( this.tickNoteChange.prevCol!==this.tickNote.col ) {
+        this.parent.updateActiveNotes( Array( this.tickNoteChange ) );
+      }
+      else if( !e.shiftKey && !this.moved ) {
+        this.gss.selectedNotes = Array( this );
+      }
+
       this.dragging = false;
       this.gss.draggingNote = null;
       window.document.body.style.cursor = "default";
-      if( this.tickNoteChange ){
-          if( this.tickNoteChange.prevCol!==this.tickNote.col ) {
-                this.parent.updateActiveNotes( Array( this.tickNoteChange ) );
-            }
-      }
+      this.moved = false;
       
     };
 

@@ -106,5 +106,18 @@ export class GlobalSelectionsService   {
     })
     this._selectedNotes = n;
   }
+  addSelectedNote( n:PatternNoteDirective ){
+    this._selectedNotes.push( n );
+    n.tickNote.selected = true;
+  }
+  removeSelectedNote( n:PatternNoteDirective ){
+    let i:number = this._selectedNotes.findIndex( tn=>tn===n);
+    if( i ){
+      let a = this._selectedNotes.slice( 0, i );
+      let b = this._selectedNotes.slice( i );
+      b.shift().tickNote.selected = false;
+      this._selectedNotes = a.concat(b);
+    }
+  }
   get selectedNotes( ) { return this._selectedNotes; }
 }
