@@ -40,4 +40,7 @@ export class AppComponent {
   logSongData():void {
     console.log(  this.gss.selectedProgression.logData() );
   }
+  toMidi():void {
+    this.gss.selectedProgression.toMidi();
+  }
 }

@@ -57,3 +57,4 @@
 </div>
 
 <div class="selection-rect" #selectionRect></div> <!-- used by PatternBackgroundDirective to visualize note selection -->
+<div *ngIf="displayChord" class="chord-display">{{this.part.root.name}}-{{this.part.chord.name}}</div>

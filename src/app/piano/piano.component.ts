@@ -28,11 +28,18 @@ class VisibilityMenuItem implements MenuItem {
   labelVisible:string;
   labelHidden:string;
   _visible:boolean;
-  constructor( id:string, l:string, i:string, iv:string, ih:string, lv:string, lh:string, v:boolean ){
+  constructor( id:string, iv:string, ih:string, lv:string, lh:string, v:boolean ){
     this.id = id;
-    this.label = l; this.icon = i; this.labelVisible = lv;
+    this.labelVisible = lv;
     this.iconVisible = iv; this.iconHidden = ih;
     this.labelHidden = lh; this._visible = v;
+    if( v ){ 
+      this.label = this.labelVisible; 
+      this.icon = this.iconVisible;
+    } else { 
+      this.label = this.labelHidden; 
+      this.icon = this.iconHidden;
+    }
   }
   set visible( b:boolean ){
     this._visible = b;
@@ -157,16 +164,18 @@ export class PianoComponent implements OnInit {
   pianoState:string = 'visible';
 
   // view hide functionality:
-  pianoViewHideItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PIANO, "Hide Piano", "hide", "hide", "unhide", "Hide Piano", "Show Piano", true );
-  patternEditMenuViewItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PATTERN_EDIT_MENUS, "Hide pattern edit menu's", "setting", "setting", "setting", "Hide pattern edit menu's", "Show pattern edit menu's", true );
-  pianoScaleVHItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PIANO_SCALE,"Show scale on piano", "music", "music", "music","Hide scale on piano", "Show scale on piano", false );
-  pianoChordVHItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PIANO_CHORD, "Show chord on piano", "music", "music", "music","Hide chord on piano", "Show chord on piano", false );
+  pianoViewHideItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PIANO, "hide", "unhide", "Hide Piano", "Show Piano", true );
+  patternEditMenuViewItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PATTERN_EDIT_MENUS, "setting", "setting", "Hide pattern edit menu's", "Show pattern edit menu's", true );
+  pianoScaleVHItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PIANO_SCALE, "music", "music","Hide scale on piano", "Show scale on piano", false );
+  pianoChordVHItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PIANO_CHORD, "music", "music","Hide chord on piano", "Show chord on piano", false );
+  partChordVHItem:VisibilityMenuItem = new VisibilityMenuItem( VisibilityEvent.PART_CHORD, "music", "music","Hide chord in parts", "Show chord in parts", false );
   viewHideMenuIconClasses = new Array<string>( "unhide", "view-edit-icon", "icon" );
   viewHideMenuItems:MenuItem[] = new Array(
     this.pianoViewHideItem,
     this.patternEditMenuViewItem,
     this.pianoScaleVHItem,
-    this.pianoChordVHItem
+    this.pianoChordVHItem,
+    this.partChordVHItem
   );
   
 
@@ -193,9 +202,7 @@ export class PianoComponent implements OnInit {
     private ts:ToneService,
     private ngZone:NgZone,
     private cd:ChangeDetectorRef
-  ) { 
-    
-  }
+  ) { }
 
   ngOnInit() {
     this.progression = this.gss.selectedProgression;
@@ -229,6 +236,9 @@ export class PianoComponent implements OnInit {
         break;
         case VisibilityEvent.PIANO_CHORD:
         this.pianoChordVHItem.visible = e.visible;
+        break;
+        case VisibilityEvent.PART_CHORD:
+        this.partChordVHItem.visible = e.visible;
         break;
       }
       this.cd.markForCheck();
@@ -347,13 +357,15 @@ export class PianoComponent implements OnInit {
   onViewHideMenuSelect( itm:VisibilityMenuItem ){
     switch( itm.id ){
       case VisibilityEvent.PIANO:
-      this.gss.pianoVisible = !itm.visible; break;
+        this.gss.pianoVisible = !itm.visible; break;
       case VisibilityEvent.PATTERN_EDIT_MENUS:
-      this.gss.patternEditMenuVisible = !itm.visible; break;
+        this.gss.patternEditMenuVisible = !itm.visible; break;
       case VisibilityEvent.PIANO_SCALE:
-      this.gss.pianoScaleVisible = !itm.visible; break;
+        this.gss.pianoScaleVisible = !itm.visible; break;
       case VisibilityEvent.PIANO_CHORD:
-      this.gss.pianoChordVisible = !itm.visible; break;
+        this.gss.pianoChordVisible = !itm.visible; break;
+      case VisibilityEvent.PART_CHORD:
+        this.gss.partChordVisible = !itm.visible; break;
     }
   }
   togglePiano( v:boolean ):void {

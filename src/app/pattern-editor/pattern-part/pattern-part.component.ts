@@ -94,6 +94,7 @@ export class PatternPartComponent implements OnInit, AfterViewInit {
   patternBackgroundClasses:Array<string> = new Array<string>( "pattern-background" );
   patternNotesClasses:Array<string> = new Array<string>( "pattern" );
   topMenuVisible:boolean = false;
+  displayChord:boolean = false;
   cellDown:any;
 
   static CELL_WIDTH:number = 16; // 16th note
@@ -140,6 +141,10 @@ export class PatternPartComponent implements OnInit, AfterViewInit {
       if( e.what===VisibilityEvent.PATTERN_EDIT_MENUS ) {
         this.topMenuVisible = e.visible;
         this.updatePartClasses();
+        this.cd.markForCheck();
+      }
+      else if( e.what===VisibilityEvent.PART_CHORD){
+        this.displayChord = e.visible;
         this.cd.markForCheck();
       }
     });

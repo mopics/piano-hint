@@ -1,6 +1,9 @@
 import { Notes, Scales, Chords, Note, Key, Chord, Scale } from './note.models';
 import { TickNote } from './tone.service';
 
+declare var require: any;
+var Midi = require('jsmidgen');
+
 
 export class TimeSignature {
     parts:number;
@@ -148,6 +151,7 @@ export class Progression {
             ]
         }`
     }
+    // TODO: write MusicXML export??
     toMusicXML():string {
         let xml:string = `
         <score-partwise version="3.0">
@@ -169,5 +173,39 @@ export class Progression {
 
         xml += "</score-partwise>";
         return xml;
+    }
+    toMidi():void{
+        let file = new Midi.File();
+        let track = new Midi.Track();
+        file.addTrack(track);
+
+        track.setTempo( this.bpm );
+        // track.setTimeSignature( 4, 4 );
+       
+        
+        let tickStep:number = 32;
+        let notes:string[]= Array();
+        let durations:string[] = Array();
+        let waits:string[] = Array();
+        let tick:number = 0;
+        let channel:number = 0;
+
+        this.parts.forEach( p=>{
+            p.pattern.ticks.forEach( pa=>{
+                let i:number = 0;
+                pa.forEach( tn=>{
+                    if( i===0 )
+                        track.addNote( channel, tn.name+tn.octave, Math.round(tn.length*tickStep), tick*tickStep, tn.velocity*10 );
+                    else    
+                        track.addNote( channel, tn.name+tn.octave , Math.round(tn.length*tickStep), tick*tickStep, tn.velocity*10 );
+                });
+                tick ++;
+            });
+        });
+        
+        // Generate a data URI
+        let data = 'data:audio/midi;base64,' + btoa( file.toBytes() ); // file.toBytes().toString('base64');
+        console.log( data );
+
     }
 }

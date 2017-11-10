@@ -8,6 +8,7 @@
             <a routerLink="./pattern" class="item" (click)="sidebar.toggle()" [ngClass]="{inline:inline}">Pattern Editor</a>
             <!--<a routerLink="./progression" class="item" (click)="sidebar.toggle()" [ngClass]="{inline:inline}">Progression Editor</a>-->
             <a class="item" (click)="logSongData()" [ngClass]="{inline:inline}">Log song data(dev-mode)</a>
+            <a class="item" (click)="toMidi()" [ngClass]="{inline:inline}">Save as Midi</a>
     </sui-sidebar>
     <sui-sidebar-sibling [isDimmedWhenVisible]="true">
         <div class="ui top attached menu borderless inverted " id="app-narrow-menu">
@@ -23,6 +24,7 @@
                     <a routerLink="./pattern" class="item" [ngClass]="{inline:inline}">Pattern Editor</a>
                     <!--<a routerLink="./progression" class="item" [ngClass]="{inline:inline}">Progression Editor</a>-->
                     <a class="item" (click)="logSongData()" [ngClass]="{inline:inline}">Log song data(dev-mode)</a>
+                    <a class="item" (click)="toMidi()" [ngClass]="{inline:inline}">Save as Midi</a>
                 <div class="right menu borderless"><app-progression-select></app-progression-select></div>
             </div>
         </div>
